@@ -190,91 +190,128 @@ public class NativeJavaClass extends NativeJavaObject implements Function
         return construct(cx, scope, args);
     }
 
-    public Scriptable construct(final Context cx, final Scriptable scope, Object[] args)
-    {
-        Class<?> classObject = getClassObject();
-        int modifiers = classObject.getModifiers();
-        if (! (Modifier.isInterface(modifiers) ||
-               Modifier.isAbstract(modifiers)))
-        {
-            MemberBox[] ctors = members.ctors;
-            int index = NativeJavaMethod.findFunction(cx, ctors, args);
-            if (index < 0) {
-                String sig = NativeJavaMethod.scriptSignature(args);
-                throw Context.reportRuntimeError2(
-                    "msg.no.java.ctor", classObject.getName(), sig);
-            }
+	public Scriptable construct(final Context pContext, final Scriptable pScope, Object[] pArguments) {
+		final Class<?> classObject = getClassObject();
+		final int modifiers = classObject.getModifiers();
+		final boolean isInterface = Modifier.isInterface(modifiers);
+		final boolean isAbstract = Modifier.isAbstract(modifiers);
+		if(!(isInterface || isAbstract)) {
+			MemberBox[] ctors = members.ctors;
+			final int index = NativeJavaMethod.findFunction(pContext, ctors, pArguments);
+			if(index < 0) {
+				final String signature = NativeJavaMethod.scriptSignature(pArguments);
+				throw Context.reportRuntimeError2("msg.no.java.ctor", classObject.getName(), signature);
+			}
 
-            // Found the constructor, so try invoking it.
-            return constructSpecific(cx, scope, args, ctors[index]);
-        } else {
-            Scriptable topLevel = ScriptableObject.getTopLevelScope(this);
-            String msg = "";
-            try {
-                // trying to construct an interface; use JavaAdapter to
-                // construct a new class on the fly that implements this
-                // interface.
-                Object v = topLevel.get("JavaAdapter", topLevel);
-                if (v != NOT_FOUND) {
-                	final Slot[] slots = ((NativeObject)args[0]).slots; 
-                    InvocationHandler handler = new InvocationHandler() {
-                    	@Override
-                    	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-                    		final String methodName = method.getName();
+			// Found the constructor, so try invoking it.
+			return constructSpecific(pContext, pScope, pArguments, ctors[index]);
+		} else {
+			Scriptable topLevel = ScriptableObject.getTopLevelScope(this);
+			String msg = "";
+			try {
+				// trying to construct an interface; use JavaAdapter to
+				// construct a new class on the fly that implements this interface.
+				Object v = topLevel.get("JavaAdapter", topLevel); // TODO Needed?
+				if(v != NOT_FOUND) {
+					final Slot[] slots = ((NativeObject) pArguments[pArguments.length - 1]).slots;
+					InvocationHandler handler = new InvocationHandler() {
+						// TODO This InvocatioHandler was only tested for interfaces yet!
+						@Override
+						public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+							final String methodName = method.getName();
 							if(methodName.equals("unwrap")) {
 								/* Method called from Rhino to check cast compatibility and perform casting. */
-                    			return proxy;
+								return proxy;
 							} else if(methodName.equals("get")) {
-                    			/* Methods called from Javascript. */
-	                    		for(int i = 0; i < slots.length; i++) {
-	                    			final Slot slot = slots[i];
+								/* Methods called from Javascript. */
+								for(int i = 0; i < slots.length; i++) {
+									final Slot slot = slots[i];
 									if(slot != null) {
-	                    				if(slot.name.equals((String)args[0])) {
-	                    					final InterpretedFunction interpretedFunction = (InterpretedFunction)slot.value;
+										if(slot.name.equals((String) args[0])) {
+											final InterpretedFunction interpretedFunction = (InterpretedFunction) slot.value;
 											return interpretedFunction;
-	                    				}
-	                    			}
-	                    		}
-                    		} else {
-                    			/* Methods called from Java on a Javascript object. */
-                    			for(int i = 0; i < slots.length; i++) {
-                    				final Slot slot = slots[i];
-                    				if(slot != null) {
-                    					if(slot.name.equals(methodName)) {
-	                    					final InterpretedFunction interpretedFunction = (InterpretedFunction)slot.value;
-											return interpretedFunction.call(cx, scope, NativeJavaClass.this, args);
-                    					}
-                    				}
-                    			}
-                    		}
-							
+										}
+									}
+								}
+							} else {
+								/* Methods called from Java on a Javascript object. */
+								for(int i = 0; i < slots.length; i++) {
+									final Slot slot = slots[i];
+									if(slot != null) {
+										if(slot.name.equals(methodName)) {
+											final InterpretedFunction interpretedFunction = (InterpretedFunction) slot.value;
+											return interpretedFunction.call(pContext, pScope, NativeJavaClass.this, args);
+										}
+									}
+								}
+							}
+
 							/* No method found, try superclass. */
 							return ProxyBuilder.callSuper(proxy, method, args);
-                    	}
-                    };
-                    // TODO The cache direcrory should be in sth like "/Android/data/com.package.you/files/cache/dx/" with Context.MODE_PRIVATE.
-                    final File dexCache = new File(FileUtils.getAbsolutePathOnExternalStorage("dx/"));
-                    
-                    /* Ensure directory exists. */
-                    dexCache.mkdirs();
+						}
+					};
+					// TODO The cache direcrory should be in sth like "/Android/data/com.package.you/files/cache/dx/" with Context.MODE_PRIVATE.
+					final File dexCache = new File(FileUtils.getAbsolutePathOnExternalStorage("dx/"));
 
-                    /* Build proxy. */
-					return ProxyBuilder.forClass(NativeJavaObject.class)
-                    		.dexCache(dexCache)
-                    		.implementing(classObject) // TODO Allow multiple interfaces!
-                    		.handler(handler)
-                    		.build();
-                }
-            } catch (Exception ex) {
-                // fall through to error
-                String m = ex.getMessage();
-                if (m != null)
-                    msg = m;
-            }
-            throw Context.reportRuntimeError2(
-                "msg.cant.instantiate", msg, classObject.getName());
-        }
-    }
+					/* Ensure directory exists. */
+					dexCache.mkdirs();
+
+					/* Build proxy. */
+					if(isInterface) {
+						final Object object = ProxyBuilder
+								.forClass(Object.class)
+								.dexCache(dexCache)
+								.implementing(classObject) // TODO Allow multiple interfaces. Is JavaAdapter cable of this?
+								.handler(handler)
+								.build();
+						
+						return pContext.getWrapFactory().wrapNewObject(pContext, topLevel, object);
+					} else {
+						// TODO Stripping out the last parameter is likely not very safe. The solution could be to find the first 'non-JS' parameter starting from the back.
+						MemberBox[] ctors = members.ctors;
+						Object[] arguments = new Object[pArguments.length - 1];
+						System.arraycopy(pArguments, 0, arguments, 0, pArguments.length - 1);
+						
+						final int index = NativeJavaMethod.findFunction(pContext, ctors, arguments);
+						if(index < 0) {
+							final String signature = NativeJavaMethod.scriptSignature(arguments);
+							throw Context.reportRuntimeError2("msg.no.java.ctor", classObject.getName(), signature);
+						}
+						
+						// Taken from NativeJavaClass.constructSpecific(...). Extract method?
+						Class<?>[] argTypes = ctors[index].argTypes;
+						Object[] origArgs = arguments;
+			            for (int i = 0; i < arguments.length; i++) {
+			                Object arg = arguments[i];
+			                Object x = Context.jsToJava(arg, argTypes[i]);
+			                if (x != arg) {
+			                    if (arguments == origArgs) {
+			                    	arguments = origArgs.clone();
+			                    }
+			                    arguments[i] = x;
+			                }
+			            }
+						
+						final Object object = ProxyBuilder
+							.forClass(classObject)
+							.dexCache(dexCache)
+							.constructorArgTypes(argTypes)
+							.constructorArgValues(arguments)
+							.handler(handler)
+							.build();
+
+						return pContext.getWrapFactory().wrapNewObject(pContext, topLevel, object);
+					}
+				}
+			} catch (Exception ex) {
+				// fall through to error
+				String m = ex.getMessage();
+				if(m != null)
+					msg = m;
+			}
+			throw Context.reportRuntimeError2("msg.cant.instantiate", msg, classObject.getName());
+		}
+	}
 
     static Scriptable constructSpecific(Context cx, Scriptable scope,
                                         Object[] args, MemberBox ctor)
