@@ -136,7 +136,7 @@ public abstract class ScriptableObject implements Scriptable, Serializable,
         REMOVED.wasDeleted = true;
     }
 
-    private transient Slot[] slots;
+    public transient Slot[] slots;
     // If count >= 0, it gives number of keys or if count < 0,
     // it indicates sealed object where ~count gives number of keys
     private int count;
@@ -156,7 +156,7 @@ public abstract class ScriptableObject implements Scriptable, Serializable,
     private static final int SLOT_MODIFY_GETTER_SETTER = 4;
     private static final int SLOT_MODIFY_CONST = 5;
 
-    private static class Slot implements Serializable
+    public static class Slot implements Serializable
     {
         private static final long serialVersionUID = -6090581677123995491L;
         String name; // This can change due to caching

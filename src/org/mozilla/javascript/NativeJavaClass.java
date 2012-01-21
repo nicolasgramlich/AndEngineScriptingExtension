@@ -43,8 +43,17 @@
 
 package org.mozilla.javascript;
 
-import java.lang.reflect.*;
+import java.io.File;
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Map;
+
+import org.andengine.util.FileUtils;
+import org.mozilla.javascript.ScriptableObject.Slot;
+
+import com.google.dexmaker.stock.ProxyBuilder;
 
 /**
  * This class reflects Java classes into the JavaScript environment, mainly
@@ -181,7 +190,7 @@ public class NativeJavaClass extends NativeJavaObject implements Function
         return construct(cx, scope, args);
     }
 
-    public Scriptable construct(Context cx, Scriptable scope, Object[] args)
+    public Scriptable construct(final Context cx, final Scriptable scope, Object[] args)
     {
         Class<?> classObject = getClassObject();
         int modifiers = classObject.getModifiers();
@@ -207,9 +216,54 @@ public class NativeJavaClass extends NativeJavaObject implements Function
                 // interface.
                 Object v = topLevel.get("JavaAdapter", topLevel);
                 if (v != NOT_FOUND) {
-                    Function f = (Function) v;
-                    Object[] adapterArgs = { this, args[0] };
-                    return f.construct(cx, topLevel,adapterArgs);
+                	final Slot[] slots = ((NativeObject)args[0]).slots; 
+                    InvocationHandler handler = new InvocationHandler() {
+                    	@Override
+                    	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+                    		final String methodName = method.getName();
+							if(methodName.equals("unwrap")) {
+								/* Method called from Rhino to check cast compatibility and perform casting. */
+                    			return proxy;
+							} else if(methodName.equals("get")) {
+                    			/* Methods called from Javascript. */
+	                    		for(int i = 0; i < slots.length; i++) {
+	                    			final Slot slot = slots[i];
+									if(slot != null) {
+	                    				if(slot.name.equals((String)args[0])) {
+	                    					final InterpretedFunction interpretedFunction = (InterpretedFunction)slot.value;
+											return interpretedFunction;
+	                    				}
+	                    			}
+	                    		}
+                    		} else {
+                    			/* Methods called from Java on a Javascript object. */
+                    			for(int i = 0; i < slots.length; i++) {
+                    				final Slot slot = slots[i];
+                    				if(slot != null) {
+                    					if(slot.name.equals(methodName)) {
+	                    					final InterpretedFunction interpretedFunction = (InterpretedFunction)slot.value;
+											return interpretedFunction.call(cx, scope, NativeJavaClass.this, args);
+                    					}
+                    				}
+                    			}
+                    		}
+							
+							/* No method found, try superclass. */
+							return ProxyBuilder.callSuper(proxy, method, args);
+                    	}
+                    };
+                    // TODO The cache direcrory should be in sth like "/Android/data/com.package.you/files/cache/dx/" with Context.MODE_PRIVATE.
+                    final File dexCache = new File(FileUtils.getAbsolutePathOnExternalStorage("dx/"));
+                    
+                    /* Ensure directory exists. */
+                    dexCache.mkdirs();
+
+                    /* Build proxy. */
+					return ProxyBuilder.forClass(NativeJavaObject.class)
+                    		.dexCache(dexCache)
+                    		.implementing(classObject) // TODO Allow multiple interfaces!
+                    		.handler(handler)
+                    		.build();
                 }
             } catch (Exception ex) {
                 // fall through to error
