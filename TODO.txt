@@ -1,0 +1,2 @@
+- Allow javascript-side subclassing (not only interface implementation)
+- Allow javascript-side implementation of multiple interfaces
