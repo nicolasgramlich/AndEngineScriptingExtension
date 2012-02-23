@@ -16,6 +16,7 @@
 
 package com.google.dexmaker.stock;
 
+import com.android.dx.dex.file.DebugInfoConstants;
 import com.google.dexmaker.Code;
 import com.google.dexmaker.Comparison;
 import com.google.dexmaker.DexMaker;
@@ -43,6 +44,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+
+import org.andengine.util.debug.DebugTimer;
 
 /**
  * Creates dynamic proxies of concrete classes.
@@ -244,12 +247,12 @@ public final class ProxyBuilder<T> {
         String generatedName = getMethodNameForProxyOf(baseClass);
         TypeId<? extends T> generatedType = TypeId.get("L" + generatedName + ";");
         TypeId<T> superType = TypeId.get(baseClass);
-        generateConstructorsAndFields(dexMaker, generatedType, superType, baseClass);
+        generateConstructorsAndFields(dexMaker, generatedType, superType, baseClass); // SLOW
         Method[] methodsToProxy = getMethodsToProxyRecursive();
-        generateCodeForAllMethods(dexMaker, generatedType, methodsToProxy, superType);
+        generateCodeForAllMethods(dexMaker, generatedType, methodsToProxy, superType); // SLOW
         dexMaker.declare(generatedType, generatedName + ".generated", PUBLIC, superType,
                 getInterfacesAsTypeIds());
-        ClassLoader classLoader = dexMaker.generateAndLoad(parentClassLoader, dexCache);
+        ClassLoader classLoader = dexMaker.generateAndLoad(parentClassLoader, dexCache); // Very SLOW
         try {
             proxyClass = loadClass(classLoader, generatedName);
         } catch (IllegalAccessError e) {

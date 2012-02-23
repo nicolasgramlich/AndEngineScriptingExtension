@@ -41,12 +41,13 @@ package org.mozilla.javascript;
 import java.lang.reflect.Method;
 
 import org.andengine.util.exception.MethodNotSupportedException;
+import org.mozilla.javascript.ScriptableObject.Slot;
 
 /**
  * Adapter to use JS function as implementation of Java interfaces with
  * single method or multiple methods with the same signature.
  */
-public class InterfaceAdapter {
+public class AnonymousSubclassAdapter {
 	private final Object proxyHelper;
 
 	/**
@@ -57,15 +58,11 @@ public class InterfaceAdapter {
 	 * @return The glue object or null if <tt>cl</tt> is not interface or
 	 *         has methods with different signatures.
 	 */
-	static Object create(final Context cx, final Class<?> cl, final ScriptableObject object) {
-		if(!cl.isInterface()) {
-			throw new IllegalArgumentException();
-		}
-
+	static Object create(final Context cx, final Class<?> cl, final ScriptableObject object, final Object o, final Slot[] pSlots) {
 		final Scriptable topScope = ScriptRuntime.getTopCallScope(cx);
 		final ClassCache cache = ClassCache.get(topScope);
-		InterfaceAdapter adapter;
-		adapter = (InterfaceAdapter) cache.getInterfaceAdapter(cl);
+		AnonymousSubclassAdapter adapter;
+		adapter = (AnonymousSubclassAdapter) cache.getAnonymousSubclassAdapter(cl);
 		final ContextFactory cf = cx.getFactory();
 		if(adapter == null) {
 			if(object instanceof Callable) {
@@ -87,21 +84,28 @@ public class InterfaceAdapter {
 					}
 				}
 			}
-			adapter = new InterfaceAdapter(cf, cl);
+			adapter = new AnonymousSubclassAdapter(cf, cl);
 			cache.cacheInterfaceAdapter(cl, adapter);
 		}
-		return VMBridge.instance.newInterfaceProxy(adapter.proxyHelper, cf, adapter, object, topScope);
+		return VMBridge.instance.newAnonymousSubclassProxy(adapter.proxyHelper, cf, adapter, object, topScope, o, pSlots);
 	}
 
-	private InterfaceAdapter(final ContextFactory cf, final Class<?> cl) {
-		this.proxyHelper = VMBridge.instance.getInterfaceProxyHelper(cf, new Class[] { cl });
+	private AnonymousSubclassAdapter(final ContextFactory cf, final Class cl) {
+		this.proxyHelper = VMBridge.instance.getAnonymousSubclassProxyHelper(cf, cl);
 	}
 
-	public Object invoke(final ContextFactory cf, final Object target, final Scriptable topScope, final Method method, final Object[] args) {
+	public Object invoke(final ContextFactory cf, final Object target, final Scriptable topScope, final Method method, final Object[] args, final Object pO, final Slot[] pSlots) {
 		final ContextAction action = new ContextAction() {
 			@Override
 			public Object run(final Context cx) {
-				return InterfaceAdapter.this.invokeImpl(cx, target, topScope, method, args);
+				try {
+					return AnonymousSubclassAdapter.this.invokeImpl(cx, target, topScope, method, args);
+				} catch (MethodNotSupportedException e) {
+					final Object o = pO;
+					final Slot[] slots = pSlots;
+
+					return AnonymousSubclassAdapter.this.invokeImpl(cx, o, topScope, method, args);
+				}
 			}
 		};
 		return cf.call(action);

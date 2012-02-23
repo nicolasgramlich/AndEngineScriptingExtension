@@ -41,11 +41,20 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import org.mozilla.javascript.*;
+import org.andengine.util.exception.MethodNotSupportedException;
+import org.mozilla.javascript.AnonymousSubclassAdapter;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ContextFactory;
+import org.mozilla.javascript.InterfaceAdapter;
+import org.mozilla.javascript.Kit;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject.Slot;
+import org.mozilla.javascript.VMBridge;
 
 public class VMBridge_jdk13 extends VMBridge
 {
@@ -125,6 +134,24 @@ public class VMBridge_jdk13 extends VMBridge
         }
         return c;
     }
+    
+    @Override
+    protected Object getAnonymousSubclassProxyHelper(ContextFactory cf,
+    		Class<?> anonymoussubclass)
+    {
+    	// XXX: How to handle interfaces array withclasses from different
+    	// class loaders? Using cf.getApplicationClassLoader() ?
+    	ClassLoader loader = anonymoussubclass.getClassLoader();
+    	Class<?> cl = Proxy.getProxyClass(loader, anonymoussubclass.getInterfaces());
+    	Constructor<?> c;
+    	try {
+    		c = cl.getConstructor(new Class[] { InvocationHandler.class });
+    	} catch (NoSuchMethodException ex) {
+    		// Should not happen
+    		throw Kit.initCause(new IllegalStateException(), ex);
+    	}
+    	return c;
+    }
 
     @Override
     protected Object newInterfaceProxy(Object proxyHelper,
@@ -140,7 +167,17 @@ public class VMBridge_jdk13 extends VMBridge
                                      Method method,
                                      Object[] args)
                 {
-                    return adapter.invoke(cf, target, topScope, method, args);
+                	try {
+                		return adapter.invoke(cf, target, topScope, method, args);
+	                } catch (MethodNotSupportedException e) {
+						Context.reportWarning(ScriptRuntime.getMessage1("msg.undefined.function.interface", method.getName()));
+						final Class<?> resultType = method.getReturnType();
+						if(resultType == Void.TYPE) {
+							return null;
+						} else {
+							return Context.jsToJava(null, resultType);
+						}
+					}
                 }
             };
         Object proxy;
@@ -157,7 +194,41 @@ public class VMBridge_jdk13 extends VMBridge
         }
         return proxy;
     }
-    
+
+	@Override
+	protected Object newAnonymousSubclassProxy(final Object proxyHelper, final ContextFactory cf, final AnonymousSubclassAdapter adapter, final Object target, final Scriptable topScope, final Object pO, final Slot[] pSlots) {
+		Constructor<?> c = (Constructor<?>) proxyHelper;
+
+		InvocationHandler handler = new InvocationHandler() {
+			public Object invoke(Object proxy, Method method, Object[] args) {
+				try {
+					return adapter.invoke(cf, target, topScope, method, args, pO, pSlots);
+				} catch (MethodNotSupportedException e) {
+					Context.reportWarning(ScriptRuntime.getMessage1("msg.undefined.function.interface", method.getName()));
+					final Class<?> resultType = method.getReturnType();
+					if(resultType == Void.TYPE) {
+						return null;
+					} else {
+						return Context.jsToJava(null, resultType);
+					}
+				}
+			}
+		};
+		Object proxy;
+		try {
+			proxy = c.newInstance(new Object[] { handler });
+		} catch (InvocationTargetException ex) {
+			throw Context.throwAsScriptRuntimeEx(ex);
+		} catch (IllegalAccessException ex) {
+			// Shouls not happen
+			throw Kit.initCause(new IllegalStateException(), ex);
+		} catch (InstantiationException ex) {
+			// Shouls not happen
+			throw Kit.initCause(new IllegalStateException(), ex);
+		}
+		return proxy;
+	}
+
     @Override
     protected boolean isVarArgs(Member member) {
       return false;

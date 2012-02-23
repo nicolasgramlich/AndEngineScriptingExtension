@@ -42,10 +42,18 @@
 
 package org.mozilla.javascript;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.Map;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Date;
+import java.util.Map;
+
+import org.mozilla.javascript.ScriptableObject.Slot;
 
 /**
  * This class reflects non-Array Java objects into the JavaScript environment.  It
@@ -102,6 +110,19 @@ public class NativeJavaObject implements Scriptable, Wrapper, Serializable
     }
 
     public Object get(String name, Scriptable start) {
+    	if(javaObject instanceof Proxy) {
+    		try {
+				final Method proxyMethod = Scriptable.class.getMethod("get", String.class, Scriptable.class);
+				Proxy.getInvocationHandler(javaObject).invoke(javaObject, proxyMethod, new Object[] {name, start});
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+    	}
+
         if (fieldAndMethods != null) {
             Object result = fieldAndMethods.get(name);
             if (result != null) {
@@ -395,11 +416,9 @@ WrapFactory#wrap(Context, Scriptable, Object, Class)}
                 }
             }
             else if (to.isInterface()) {
-                if (fromObj instanceof Function) {
-                    // See comments in coerceType
-                    if (to.getMethods().length == 1) {
-                        return 1;
-                    }
+            	if (fromObj instanceof NativeObject || fromObj instanceof NativeFunction) {
+            		// See comments in createInterfaceAdapter
+            		return 1;
                 }
                 return 11;
             }
@@ -657,8 +676,8 @@ WrapFactory#wrap(Context, Scriptable, Object, Class)}
                 Object Result = Array.newInstance(arrayType, (int)length);
                 for (int i = 0 ; i < length ; ++i) {
                     try  {
-                        Array.set(Result, i, coerceType(arrayType,
-                                                        array.get(i, array)));
+                        Array.set(Result, i, coerceTypeImpl(
+                        								arrayType, array.get(i, array)));
                     }
                     catch (EvaluatorException ee) {
                         reportConversionError(value, type);
@@ -673,31 +692,11 @@ WrapFactory#wrap(Context, Scriptable, Object, Class)}
                     return value;
                 reportConversionError(value, type);
             }
-            else if (type.isInterface() && value instanceof Callable) {
-                // Try to use function as implementation of Java interface.
-                //
-                // XXX: Currently only instances of ScriptableObject are
-                // supported since the resulting interface proxies should
-                // be reused next time conversion is made and generic
-                // Callable has no storage for it. Weak references can
-                // address it but for now use this restriction.
-                if (value instanceof ScriptableObject) {
-                    ScriptableObject so = (ScriptableObject)value;
-                    Object key = Kit.makeHashKeyFromPair(
-                        COERCED_INTERFACE_KEY, type);
-                    Object old = so.getAssociatedValue(key);
-                    if (old != null) {
-                        // Function was already wrapped
-                        return old;
-                    }
-                    Context cx = Context.getContext();
-                    Object glue
-                        = InterfaceAdapter.create(cx, type, (Callable)value);
-                    // Store for later retrival
-                    glue = so.associateValue(key, glue);
-                    return glue;
-                }
-                reportConversionError(value, type);
+
+            else if (type.isInterface() && (value instanceof NativeObject
+                    || value instanceof NativeFunction)) {
+                // Try to use function/object as implementation of Java interface.
+                return createInterfaceAdapter(type, (ScriptableObject) value);
             } else {
                 reportConversionError(value, type);
             }
@@ -705,6 +704,47 @@ WrapFactory#wrap(Context, Scriptable, Object, Class)}
         }
 
         return value;
+    }
+
+
+    protected static Object createInterfaceAdapter(Class<?>type, ScriptableObject so) {
+        // XXX: Currently only instances of ScriptableObject are
+        // supported since the resulting interface proxies should
+        // be reused next time conversion is made and generic
+        // Callable has no storage for it. Weak references can
+        // address it but for now use this restriction.
+
+        Object key = Kit.makeHashKeyFromPair(COERCED_INTERFACE_KEY, type);
+        Object old = so.getAssociatedValue(key);
+        if (old != null) {
+        	// Function was already wrapped
+            return old;
+        }
+        Context cx = Context.getContext();
+        Object glue = InterfaceAdapter.create(cx, type, so);
+        // Store for later retrieval
+        glue = so.associateValue(key, glue);
+        return glue;
+    }
+
+	protected static Object createAnonymousSubclassAdapter(Class<?> type, ScriptableObject so, Object o, Slot[] pSlots) {
+    	// XXX: Currently only instances of ScriptableObject are
+    	// supported since the resulting interface proxies should
+    	// be reused next time conversion is made and generic
+    	// Callable has no storage for it. Weak references can
+    	// address it but for now use this restriction.
+    	
+    	Object key = Kit.makeHashKeyFromPair(COERCED_ANONYMOUS_SUBCLAS_KEY, type);
+    	Object old = so.getAssociatedValue(key);
+    	if (old != null) {
+    		// Function was already wrapped
+    		return old;
+    	}
+    	Context cx = Context.getContext();
+    	Object glue = AnonymousSubclassAdapter.create(cx, type, so, o, pSlots);
+    	// Store for later retrieval
+    	glue = so.associateValue(key, glue);
+    	return glue;
     }
 
     private static Object coerceToNumber(Class<?> type, Object value)
@@ -972,6 +1012,7 @@ WrapFactory#wrap(Context, Scriptable, Object, Class)}
     private transient Map<String,FieldAndMethods> fieldAndMethods;
     private transient boolean isAdapter;
 
+    private static final Object COERCED_ANONYMOUS_SUBCLAS_KEY = "Coerced Anonymous Subclass";
     private static final Object COERCED_INTERFACE_KEY = "Coerced Interface";
     private static Method adapter_writeAdapterObject;
     private static Method adapter_readAdapterObject;

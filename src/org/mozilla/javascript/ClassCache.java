@@ -58,6 +58,7 @@ public class ClassCache implements Serializable
     private volatile boolean cachingIsEnabled = true;
     private transient HashMap<Class<?>,JavaMembers> classTable;
     private transient HashMap<JavaAdapter.JavaAdapterSignature,Class<?>> classAdapterCache;
+    private transient HashMap<Class<?>,Object> anonymousSubclassAdapterCache;
     private transient HashMap<Class<?>,Object> interfaceAdapterCache;
     private int generatedClassSerial;
 
@@ -116,6 +117,7 @@ public class ClassCache implements Serializable
         classTable = null;
         classAdapterCache = null;
         interfaceAdapterCache = null;
+        anonymousSubclassAdapterCache = null;
     }
 
     /**
@@ -219,5 +221,22 @@ public class ClassCache implements Serializable
             }
             interfaceAdapterCache.put(cl, iadapter);
         }
+    }
+    
+    Object getAnonymousSubclassAdapter(Class<?> cl)
+    {
+    	return anonymousSubclassAdapterCache == null 
+    			? null 
+    					: anonymousSubclassAdapterCache.get(cl);
+    }
+    
+    synchronized void cacheAnonymousSubclassAdapter(Class<?> cl, Object iadapter)
+    {
+    	if (cachingIsEnabled) {
+    		if (anonymousSubclassAdapterCache == null) {
+    			anonymousSubclassAdapterCache = new HashMap<Class<?>,Object>();
+    		}
+    		anonymousSubclassAdapterCache.put(cl, iadapter);
+    	}
     }
 }
