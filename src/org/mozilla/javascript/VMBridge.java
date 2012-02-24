@@ -39,11 +39,9 @@
 
 package org.mozilla.javascript;
 
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Member;
 import java.util.Iterator;
-
-import org.mozilla.javascript.ScriptableObject.Slot;
 
 public abstract class VMBridge
 {
@@ -137,24 +135,6 @@ public abstract class VMBridge
     }
 
     /**
-     * Create helper object to create later proxies implementing the specified
-     * anonymous subclasses later. Under JDK 1.3 the implementation can look like:
-     * <pre>
-     * return java.lang.reflect.Proxy.getProxyClass(..., interfaces).
-     *     getConstructor(new Class[] {
-     *         java.lang.reflect.InvocationHandler.class });
-     * </pre>
-     *
-     * @param interfaces Array with one or more interface class objects.
-     */
-    protected Object getAnonymousSubclassProxyHelper(ContextFactory cf,
-    		Class<?> anonymoussubclass)
-    {
-    	throw Context.reportRuntimeError(
-    			"VMBridge.getInterfaceProxyHelper is not supported");
-    }
-
-    /**
      * Create proxy object for {@link InterfaceAdapter}. The proxy should call
      * {@link InterfaceAdapter#invoke(ContextFactory cf,
      *                                Object target,
@@ -175,31 +155,6 @@ public abstract class VMBridge
     {
         throw Context.reportRuntimeError(
             "VMBridge.newInterfaceProxy is not supported");
-    }
-
-    /**
-     * Create proxy object for {@link InterfaceAdapter}. The proxy should call
-     * {@link InterfaceAdapter#invoke(ContextFactory cf,
-     *                                Object target,
-     *                                Scriptable topScope,
-     *                                Method method,
-     *                                Object[] args)}
-     * as implementation of interface methods associated with
-     * <tt>proxyHelper</tt>.
-     *
-     * @param proxyHelper The result of the previous call to
-     *        {@link #getAnonymousSubclassProxyHelper(ContextFactory, Class[])}.
-     */
-    protected Object newAnonymousSubclassProxy(Object proxyHelper,
-    		ContextFactory cf,
-    		AnonymousSubclassAdapter adapter,
-    		Object target,
-    		Scriptable topScope,
-    		Object o, 
-    		Slot[] pSlots)
-    {
-    	throw Context.reportRuntimeError(
-    			"VMBridge.newAnonymousSubclassProxy is not supported");
     }
 
     /**

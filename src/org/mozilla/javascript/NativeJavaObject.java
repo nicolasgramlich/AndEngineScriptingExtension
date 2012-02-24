@@ -110,19 +110,6 @@ public class NativeJavaObject implements Scriptable, Wrapper, Serializable
     }
 
     public Object get(String name, Scriptable start) {
-    	if(javaObject instanceof Proxy) {
-    		try {
-				final Method proxyMethod = Scriptable.class.getMethod("get", String.class, Scriptable.class);
-				Proxy.getInvocationHandler(javaObject).invoke(javaObject, proxyMethod, new Object[] {name, start});
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-			} catch (Throwable e) {
-				e.printStackTrace();
-			}
-    	}
-
         if (fieldAndMethods != null) {
             Object result = fieldAndMethods.get(name);
             if (result != null) {
@@ -725,26 +712,6 @@ WrapFactory#wrap(Context, Scriptable, Object, Class)}
         // Store for later retrieval
         glue = so.associateValue(key, glue);
         return glue;
-    }
-
-	protected static Object createAnonymousSubclassAdapter(Class<?> type, ScriptableObject so, Object o, Slot[] pSlots) {
-    	// XXX: Currently only instances of ScriptableObject are
-    	// supported since the resulting interface proxies should
-    	// be reused next time conversion is made and generic
-    	// Callable has no storage for it. Weak references can
-    	// address it but for now use this restriction.
-    	
-    	Object key = Kit.makeHashKeyFromPair(COERCED_ANONYMOUS_SUBCLAS_KEY, type);
-    	Object old = so.getAssociatedValue(key);
-    	if (old != null) {
-    		// Function was already wrapped
-    		return old;
-    	}
-    	Context cx = Context.getContext();
-    	Object glue = AnonymousSubclassAdapter.create(cx, type, so, o, pSlots);
-    	// Store for later retrieval
-    	glue = so.associateValue(key, glue);
-    	return glue;
     }
 
     private static Object coerceToNumber(Class<?> type, Object value)
