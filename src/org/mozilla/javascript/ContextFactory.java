@@ -40,6 +40,9 @@
 
 package org.mozilla.javascript;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 /**
  * Factory class that Rhino runtime uses to create new {@link Context}
  * instances.  A <code>ContextFactory</code> can also notify listeners
@@ -209,6 +212,27 @@ public class ContextFactory
         global = factory;
     }
 
+    public interface GlobalSetter {
+        public void setContextFactoryGlobal(ContextFactory factory);
+        public ContextFactory getContextFactoryGlobal();
+    }
+
+    public synchronized static GlobalSetter getGlobalSetter() {
+        if (hasCustomGlobal) {
+            throw new IllegalStateException();
+        }
+        hasCustomGlobal = true;
+        class GlobalSetterImpl implements GlobalSetter {
+            public void setContextFactoryGlobal(ContextFactory factory) {
+                global = factory == null ? new ContextFactory() : factory;
+            }
+            public ContextFactory getContextFactoryGlobal() {
+                return global;
+            }
+        }
+        return new GlobalSetterImpl();
+    }
+
     /**
      * Create new {@link Context} instance to be associated with the current
      * thread.
@@ -253,7 +277,7 @@ public class ContextFactory
             return false;
 
           case Context.FEATURE_RESERVED_KEYWORD_AS_IDENTIFIER:
-            return false;
+            return true;
 
           case Context.FEATURE_TO_STRING_AS_SOURCE:
             version = cx.getLanguageVersion();
@@ -310,10 +334,10 @@ public class ContextFactory
      * {@link org.mozilla.javascript.xml.XMLLib.Factory XMLLib.Factory}
      * to be used by the <code>Context</code> instances produced by this
      * factory. See {@link Context#getE4xImplementationFactory} for details.
-     * 
+     *
      * May return null, in which case E4X functionality is not supported in
      * Rhino.
-     * 
+     *
      * The default implementation now prefers the DOM3 E4X implementation.
      */
     protected org.mozilla.javascript.xml.XMLLib.Factory
@@ -347,9 +371,13 @@ public class ContextFactory
      * is installed.
      * Application can override the method to provide custom class loading.
      */
-    protected GeneratedClassLoader createClassLoader(ClassLoader parent)
+    protected GeneratedClassLoader createClassLoader(final ClassLoader parent)
     {
-        return new DefiningClassLoader(parent);
+        return AccessController.doPrivileged(new PrivilegedAction<DefiningClassLoader>() {
+            public DefiningClassLoader run(){
+                return new DefiningClassLoader(parent);
+            }
+        });
     }
 
     /**
@@ -395,7 +423,8 @@ public class ContextFactory
                                Context cx, Scriptable scope,
                                Scriptable thisObj, Object[] args)
     {
-        return callable.call(cx, scope, thisObj, args);
+        Object result = callable.call(cx, scope, thisObj, args);
+        return result instanceof ConsString ? result.toString() : result;
     }
 
     /**
@@ -508,16 +537,16 @@ public class ContextFactory
     }
 
     /**
-     * Get a context associated with the current thread, creating one if need 
-     * be. The Context stores the execution state of the JavaScript engine, so 
-     * it is required that the context be entered before execution may begin. 
-     * Once a thread has entered a Context, then getCurrentContext() may be 
+     * Get a context associated with the current thread, creating one if need
+     * be. The Context stores the execution state of the JavaScript engine, so
+     * it is required that the context be entered before execution may begin.
+     * Once a thread has entered a Context, then getCurrentContext() may be
      * called to find the context that is associated with the current thread.
      * <p>
-     * Calling <code>enterContext()</code> will return either the Context 
-     * currently associated with the thread, or will create a new context and 
-     * associate it with the current thread. Each call to 
-     * <code>enterContext()</code> must have a matching call to 
+     * Calling <code>enterContext()</code> will return either the Context
+     * currently associated with the thread, or will create a new context and
+     * associate it with the current thread. Each call to
+     * <code>enterContext()</code> must have a matching call to
      * {@link Context#exit()}.
      * <pre>
      *      Context cx = contextFactory.enterContext();
@@ -528,8 +557,8 @@ public class ContextFactory
      *          Context.exit();
      *      }
      * </pre>
-     * Instead of using <tt>enterContext()</tt>, <tt>exit()</tt> pair consider 
-     * using {@link #call(ContextAction)} which guarantees proper association 
+     * Instead of using <tt>enterContext()</tt>, <tt>exit()</tt> pair consider
+     * using {@link #call(ContextAction)} which guarantees proper association
      * of Context instances with the current thread.
      * With this method the above example becomes:
      * <pre>
@@ -550,7 +579,7 @@ public class ContextFactory
     {
         return enterContext(null);
     }
-    
+
     /**
      * @deprecated use {@link #enterContext()} instead
      * @return a Context associated with the current thread
@@ -569,7 +598,7 @@ public class ContextFactory
     }
 
     /**
-     * Get a Context associated with the current thread, using the given 
+     * Get a Context associated with the current thread, using the given
      * Context if need be.
      * <p>
      * The same as <code>enterContext()</code> except that <code>cx</code>

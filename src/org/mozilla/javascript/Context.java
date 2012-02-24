@@ -56,6 +56,8 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Locale;
 
+import org.mozilla.javascript.ast.AstRoot;
+import org.mozilla.javascript.ast.ScriptNode;
 import org.mozilla.javascript.debug.DebuggableScript;
 import org.mozilla.javascript.debug.Debugger;
 import org.mozilla.javascript.xml.XMLLib;
@@ -142,6 +144,11 @@ public class Context
     public static final int VERSION_1_7 =      170;
 
     /**
+     * JavaScript 1.8
+     */
+    public static final int VERSION_1_8 =      180;
+
+    /**
      * Controls behaviour of <tt>Date.prototype.getYear()</tt>.
      * If <tt>hasFeature(FEATURE_NON_ECMA_GET_YEAR)</tt> returns true,
      * Date.prototype.getYear subtructs 1900 only if 1900 <= date < 2000.
@@ -204,12 +211,12 @@ public class Context
      */
     public static final int FEATURE_PARENT_PROTO_PROPERTIES = 5;
 
-	/**
-	 * @deprecated In previous releases, this name was given to
-	 * FEATURE_PARENT_PROTO_PROPERTIES.
-	 */
+        /**
+         * @deprecated In previous releases, this name was given to
+         * FEATURE_PARENT_PROTO_PROPERTIES.
+         */
     public static final int FEATURE_PARENT_PROTO_PROPRTIES = 5;
-	
+
     /**
      * Control if support for E4X(ECMAScript for XML) extension is available.
      * If hasFeature(FEATURE_E4X) returns true, the XML syntax is available.
@@ -266,11 +273,11 @@ public class Context
      * When the feature is on Rhino will add a "fileName" and "lineNumber"
      * properties to Error objects automatically. When the feature is off, you
      * have to explicitly pass them as the second and third argument to the
-     * Error constructor. Note that neither behavior is fully ECMA 262 
-     * compliant (as 262 doesn't specify a three-arg constructor), but keeping 
+     * Error constructor. Note that neither behavior is fully ECMA 262
+     * compliant (as 262 doesn't specify a three-arg constructor), but keeping
      * the feature off results in Error objects that don't have
      * additional non-ECMA properties when constructed using the ECMA-defined
-     * single-arg constructor and is thus desirable if a stricter ECMA 
+     * single-arg constructor and is thus desirable if a stricter ECMA
      * compliance is desired, specifically adherence to the point 15.11.5. of
      * the standard.
      * <p>
@@ -297,7 +304,7 @@ public class Context
     public static final int FEATURE_WARNING_AS_ERROR = 12;
 
     /**
-     * Enables enhanced access to Java. 
+     * Enables enhanced access to Java.
      * Specifically, controls whether private and protected members can be
      * accessed, and whether scripts can catch all Java exceptions.
      * <p>
@@ -308,7 +315,6 @@ public class Context
      */
     public static final int FEATURE_ENHANCED_JAVA_ACCESS = 13;
 
-
     public static final String languageVersionProperty = "language version";
     public static final String errorReporterProperty   = "error reporter";
 
@@ -318,14 +324,14 @@ public class Context
     public static final Object[] emptyArgs = ScriptRuntime.emptyArgs;
 
     /**
-     * Creates a new Context. The context will be associated with the {@link 
+     * Creates a new Context. The context will be associated with the {@link
      * ContextFactory#getGlobal() global context factory}.
      *
      * Note that the Context must be associated with a thread before
      * it can be used to execute a script.
-     * @deprecated this constructor is deprecated because it creates a 
-     * dependency on a static singleton context factory. Use 
-     * {@link ContextFactory#enter()} or 
+     * @deprecated this constructor is deprecated because it creates a
+     * dependency on a static singleton context factory. Use
+     * {@link ContextFactory#enter()} or
      * {@link ContextFactory#call(ContextAction)} instead. If you subclass
      * this class, consider using {@link #Context(ContextFactory)} constructor
      * instead in the subclasses' constructors.
@@ -334,13 +340,13 @@ public class Context
     {
         this(ContextFactory.getGlobal());
     }
-    
+
     /**
      * Creates a new context. Provided as a preferred super constructor for
      * subclasses in place of the deprecated default public constructor.
      * @param factory the context factory associated with this context (most
      * likely, the one that created the context). Can not be null. The context
-     * features are inherited from the factory, and the context will also 
+     * features are inherited from the factory, and the context will also
      * otherwise use its factory's services.
      * @throws IllegalArgumentException if factory parameter is null.
      */
@@ -396,7 +402,7 @@ public class Context
      * is not associated with any other thread.
      * @param cx a Context to associate with the thread if possible
      * @return a Context associated with the current thread
-     * @deprecated use {@link ContextFactory#enterContext(Context)} instead as 
+     * @deprecated use {@link ContextFactory#enterContext(Context)} instead as
      * this method relies on usage of a static singleton "global" ContextFactory.
      * @see ContextFactory#enterContext(Context)
      * @see ContextFactory#call(ContextAction)
@@ -405,7 +411,7 @@ public class Context
     {
         return enter(cx, ContextFactory.getGlobal());
     }
-    
+
     static final Context enter(Context cx, ContextFactory factory)
     {
         Object helper = VMBridge.instance.getThreadContextHelper();
@@ -438,9 +444,9 @@ public class Context
      *
      * Calling <code>exit()</code> will remove the association between
      * the current thread and a Context if the prior call to
-     * {@link ContextFactory#enterContext()} on this thread newly associated a 
-     * Context with this thread. Once the current thread no longer has an 
-     * associated Context, it cannot be used to execute JavaScript until it is 
+     * {@link ContextFactory#enterContext()} on this thread newly associated a
+     * Context with this thread. Once the current thread no longer has an
+     * associated Context, it cannot be used to execute JavaScript until it is
      * again associated with a Context.
      * @see ContextFactory#enterContext()
      */
@@ -458,7 +464,7 @@ public class Context
             cx.factory.onContextReleased(cx);
         }
     }
-    
+
     /**
      * Call {@link ContextAction#run(Context cx)}
      * using the Context instance associated with the current thread.
@@ -467,8 +473,8 @@ public class Context
      * construct new Context instance. The instance will be temporary
      * associated with the thread during call to
      * {@link ContextAction#run(Context)}.
-     * @deprecated use {@link ContextFactory#call(ContextAction)} instead as 
-     * this method relies on usage of a static singleton "global" 
+     * @deprecated use {@link ContextFactory#call(ContextAction)} instead as
+     * this method relies on usage of a static singleton "global"
      * ContextFactory.
      * @return The result of {@link ContextAction#run(Context)}.
      */
@@ -487,8 +493,8 @@ public class Context
      * new Context instance. The instance will be temporary associated
      * with the thread during call to {@link ContextAction#run(Context)}.
      * <p>
-     * It is allowed but not advisable to use null for <tt>factory</tt> 
-     * argument in which case the global static singleton ContextFactory 
+     * It is allowed but not advisable to use null for <tt>factory</tt>
+     * argument in which case the global static singleton ContextFactory
      * instance will be used to create new context instances.
      * @see ContextFactory#call(ContextAction)
      */
@@ -505,7 +511,7 @@ public class Context
             }
         });
     }
-    
+
     /**
      * The method implements {@link ContextFactory#call(ContextAction)} logic.
      */
@@ -521,7 +527,7 @@ public class Context
 
     /**
      * @deprecated
-     * @see ContextFactory#addListener(ContextFactory.Listener)
+     * @see ContextFactory#addListener(org.mozilla.javascript.ContextFactory.Listener)
      * @see ContextFactory#getGlobal()
      */
     public static void addContextListener(ContextListener listener)
@@ -550,7 +556,7 @@ public class Context
 
     /**
      * @deprecated
-     * @see ContextFactory#removeListener(ContextFactory.Listener)
+     * @see ContextFactory#removeListener(org.mozilla.javascript.ContextFactory.Listener)
      * @see ContextFactory#getGlobal()
      */
     public static void removeContextListener(ContextListener listener)
@@ -649,8 +655,8 @@ public class Context
         Object listeners = propertyListeners;
         if (listeners != null && version != this.version) {
             firePropertyChangeImpl(listeners, languageVersionProperty,
-                               new Integer(this.version),
-                               new Integer(version));
+                               Integer.valueOf(this.version),
+                               Integer.valueOf(version));
         }
         this.version = version;
     }
@@ -667,6 +673,7 @@ public class Context
             case VERSION_1_5:
             case VERSION_1_6:
             case VERSION_1_7:
+            case VERSION_1_8:
                 return true;
         }
         return false;
@@ -1137,11 +1144,11 @@ public class Context
             return null;
         }
     }
-    
+
     /**
      * Execute script that may pause execution by capturing a continuation.
      * Caller must be prepared to catch a ContinuationPending exception
-     * and resume execution by calling 
+     * and resume execution by calling
      * {@link #resumeContinuation(Object, Scriptable, Object)}.
      * @param script The script to execute. Script must have been compiled
      *      with interpreted mode (optimization level -1)
@@ -1164,11 +1171,11 @@ public class Context
         return callFunctionWithContinuations((InterpretedFunction) script,
                 scope, ScriptRuntime.emptyArgs);
     }
-    
+
     /**
      * Call function that may pause execution by capturing a continuation.
      * Caller must be prepared to catch a ContinuationPending exception
-     * and resume execution by calling 
+     * and resume execution by calling
      * {@link #resumeContinuation(Object, Scriptable, Object)}.
      * @param function The function to call. The function must have been
      *      compiled with interpreted mode (optimization level -1)
@@ -1196,10 +1203,10 @@ public class Context
         isContinuationsTopCall = true;
         return ScriptRuntime.doTopCall(function, this, scope, scope, args);
     }
-    
+
     /**
      * Capture a continuation from the current execution. The execution must
-     * have been started via a call to 
+     * have been started via a call to
      * {@link #executeScriptWithContinuations(Script, Scriptable)} or
      * {@link #callFunctionWithContinuations(Callable, Scriptable, Object[])}.
      * This implies that the code calling
@@ -1214,7 +1221,7 @@ public class Context
         return new ContinuationPending(
                 Interpreter.captureContinuation(this));
     }
-    
+
     /**
      * Restarts execution of the JavaScript suspended at the call
      * to {@link #captureContinuation()}. Execution of the code will resume
@@ -1223,7 +1230,7 @@ public class Context
      * Execution of the script will either conclude normally and the
      * result returned, another continuation will be captured and
      * thrown, or the script will terminate abnormally and throw an exception.
-     * @param continuation The value returned by 
+     * @param continuation The value returned by
      * {@link ContinuationPending#getContinuation()}
      * @param functionResult This value will appear to the code being resumed
      *      as the result of the function that captured the continuation
@@ -1329,7 +1336,8 @@ public class Context
      *
      * @param source the source string
      * @param sourceName a string describing the source, such as a filename
-     * @param lineno the starting line number for reporting errors
+     * @param lineno the starting line number for reporting errors. Use
+     *        0 if the line number is unknown.
      * @param securityDomain an arbitrary object that specifies security
      *        information about the origin or owner of the script. For
      *        implementations that don't care about security, this value
@@ -1476,9 +1484,12 @@ public class Context
      *              against
      * @return the new object
      */
-    public final Scriptable newObject(Scriptable scope)
+    public Scriptable newObject(Scriptable scope)
     {
-        return newObject(scope, "Object", ScriptRuntime.emptyArgs);
+        NativeObject result = new NativeObject();
+        ScriptRuntime.setBuiltinProtoAndParent(result, scope,
+                TopLevel.Builtins.Object);
+        return result;
     }
 
     /**
@@ -1491,7 +1502,7 @@ public class Context
      * @param constructorName the name of the constructor to call
      * @return the new object
      */
-    public final Scriptable newObject(Scriptable scope, String constructorName)
+    public Scriptable newObject(Scriptable scope, String constructorName)
     {
         return newObject(scope, constructorName, ScriptRuntime.emptyArgs);
     }
@@ -1515,8 +1526,8 @@ public class Context
      * @param args the array of arguments for the constructor
      * @return the new object
      */
-    public final Scriptable newObject(Scriptable scope, String constructorName,
-                                      Object[] args)
+    public Scriptable newObject(Scriptable scope, String constructorName,
+                                Object[] args)
     {
         scope = ScriptableObject.getTopLevelScope(scope);
         Function ctor = ScriptRuntime.getExistingCtor(this, scope,
@@ -1533,10 +1544,11 @@ public class Context
      *               additional properties added dynamically).
      * @return the new array object
      */
-    public final Scriptable newArray(Scriptable scope, int length)
+    public Scriptable newArray(Scriptable scope, int length)
     {
         NativeArray result = new NativeArray(length);
-        ScriptRuntime.setObjectProtoAndParent(result, scope);
+        ScriptRuntime.setBuiltinProtoAndParent(result, scope,
+                TopLevel.Builtins.Array);
         return result;
     }
 
@@ -1550,12 +1562,13 @@ public class Context
      *                 SomeObjectSubclass[].
      * @return the new array object.
      */
-    public final Scriptable newArray(Scriptable scope, Object[] elements)
+    public Scriptable newArray(Scriptable scope, Object[] elements)
     {
         if (elements.getClass().getComponentType() != ScriptRuntime.ObjectClass)
             throw new IllegalArgumentException();
         NativeArray result = new NativeArray(elements);
-        ScriptRuntime.setObjectProtoAndParent(result, scope);
+        ScriptRuntime.setBuiltinProtoAndParent(result, scope,
+                TopLevel.Builtins.Array);
         return result;
     }
 
@@ -1835,7 +1848,7 @@ public class Context
     {
         return optimizationLevel;
     }
-    
+
     /**
      * Set the current optimization level.
      * <p>
@@ -1881,17 +1894,17 @@ public class Context
     }
 
     /**
-     * Returns the maximum stack depth (in terms of number of call frames) 
+     * Returns the maximum stack depth (in terms of number of call frames)
      * allowed in a single invocation of interpreter. If the set depth would be
      * exceeded, the interpreter will throw an EvaluatorException in the script.
-     * Defaults to Integer.MAX_VALUE. The setting only has effect for 
+     * Defaults to Integer.MAX_VALUE. The setting only has effect for
      * interpreted functions (those compiled with optimization level set to -1).
      * As the interpreter doesn't use the Java stack but rather manages its own
-     * stack in the heap memory, a runaway recursion in interpreted code would 
-     * eventually consume all available memory and cause OutOfMemoryError 
+     * stack in the heap memory, a runaway recursion in interpreted code would
+     * eventually consume all available memory and cause OutOfMemoryError
      * instead of a StackOverflowError limited to only a single thread. This
      * setting helps prevent such situations.
-     *  
+     *
      * @return The current maximum interpreter stack depth.
      */
     public final int getMaximumInterpreterStackDepth()
@@ -1900,21 +1913,21 @@ public class Context
     }
 
     /**
-     * Sets the maximum stack depth (in terms of number of call frames) 
+     * Sets the maximum stack depth (in terms of number of call frames)
      * allowed in a single invocation of interpreter. If the set depth would be
      * exceeded, the interpreter will throw an EvaluatorException in the script.
-     * Defaults to Integer.MAX_VALUE. The setting only has effect for 
+     * Defaults to Integer.MAX_VALUE. The setting only has effect for
      * interpreted functions (those compiled with optimization level set to -1).
      * As the interpreter doesn't use the Java stack but rather manages its own
-     * stack in the heap memory, a runaway recursion in interpreted code would 
-     * eventually consume all available memory and cause OutOfMemoryError 
+     * stack in the heap memory, a runaway recursion in interpreted code would
+     * eventually consume all available memory and cause OutOfMemoryError
      * instead of a StackOverflowError limited to only a single thread. This
      * setting helps prevent such situations.
-     * 
+     *
      * @param max the new maximum interpreter stack depth
      * @throws IllegalStateException if this context's optimization level is not
      * -1
-     * @throws IllegalArgumentException if the new depth is not at least 1 
+     * @throws IllegalArgumentException if the new depth is not at least 1
      */
     public final void setMaximumInterpreterStackDepth(int max)
     {
@@ -1927,7 +1940,7 @@ public class Context
         }
         maximumInterpreterStackDepth = max;
     }
-    
+
     /**
      * Set the security controller for this context.
      * <p> SecurityController may only be set if it is currently null
@@ -1960,20 +1973,40 @@ public class Context
      * @throws SecurityException if there is already a ClassShutter
      *         object for this Context
      */
-    public final void setClassShutter(ClassShutter shutter)
+    public synchronized final void setClassShutter(ClassShutter shutter)
     {
         if (sealed) onSealedMutation();
         if (shutter == null) throw new IllegalArgumentException();
-        if (classShutter != null) {
+        if (hasClassShutter) {
             throw new SecurityException("Cannot overwrite existing " +
                                         "ClassShutter object");
         }
         classShutter = shutter;
+        hasClassShutter = true;
     }
 
-    final ClassShutter getClassShutter()
+    final synchronized ClassShutter getClassShutter()
     {
         return classShutter;
+    }
+
+    public interface ClassShutterSetter {
+        public void setClassShutter(ClassShutter shutter);
+        public ClassShutter getClassShutter();
+    }
+
+    public final synchronized ClassShutterSetter getClassShutterSetter() {
+        if (hasClassShutter)
+            return null;
+        hasClassShutter = true;
+        return new ClassShutterSetter() {
+            public void setClassShutter(ClassShutter shutter) {
+                classShutter = shutter;
+            }
+            public ClassShutter getClassShutter() {
+                return classShutter;
+            }
+        };
     }
 
     /**
@@ -2023,27 +2056,6 @@ public class Context
         if (threadLocalMap == null)
             return;
         threadLocalMap.remove(key);
-    }
-
-    /**
-     * @deprecated
-     * @see #FEATURE_DYNAMIC_SCOPE
-     * @see #hasFeature(int)
-     */
-    public final boolean hasCompileFunctionsWithDynamicScope()
-    {
-        return compileFunctionsWithDynamicScopeFlag;
-    }
-
-    /**
-     * @deprecated
-     * @see #FEATURE_DYNAMIC_SCOPE
-     * @see #hasFeature(int)
-     */
-    public final void setCompileFunctionsWithDynamicScope(boolean flag)
-    {
-        if (sealed) onSealedMutation();
-        compileFunctionsWithDynamicScopeFlag = flag;
     }
 
     /**
@@ -2159,21 +2171,21 @@ public class Context
         ContextFactory f = getFactory();
         return f.hasFeature(this, featureIndex);
     }
-	
-	/**
-		Returns an object which specifies an E4X implementation to use within
-		this <code>Context</code>.  Note
-		that the XMLLib.Factory interface should be considered experimental.
-	 
-		The default implementation uses the implementation provided by this
-		<code>Context</code>'s {@link ContextFactory}.
-	 
-		@return An XMLLib.Factory.  Should not return <code>null</code> if
-			{@link #FEATURE_E4X} is enabled.  See {@link #hasFeature}.
-	 */
-	public XMLLib.Factory getE4xImplementationFactory() {
-		return getFactory().getE4xImplementationFactory();
-	}
+
+    /**
+     * Returns an object which specifies an E4X implementation to use within
+     * this <code>Context</code>. Note that the XMLLib.Factory interface should
+     * be considered experimental.
+     *
+     * The default implementation uses the implementation provided by this
+     * <code>Context</code>'s {@link ContextFactory}.
+     *
+     * @return An XMLLib.Factory. Should not return <code>null</code> if
+     *         {@link #FEATURE_E4X} is enabled. See {@link #hasFeature}.
+     */
+    public XMLLib.Factory getE4xImplementationFactory() {
+        return getFactory().getE4xImplementationFactory();
+    }
 
     /**
      * Get threshold of executed instructions counter that triggers call to
@@ -2223,7 +2235,7 @@ public class Context
      * calls to accumulate an estimate of the instructions executed.
      */
     public void setGenerateObserverCount(boolean generateObserverCount) {
-    	this.generateObserverCount = generateObserverCount;
+        this.generateObserverCount = generateObserverCount;
     }
 
     /**
@@ -2363,18 +2375,18 @@ public class Context
         if (returnFunction) {
             p.calledByCompileFunction = true;
         }
-        ScriptOrFnNode tree;
+        AstRoot ast;
         if (sourceString != null) {
-            tree = p.parse(sourceString, sourceName, lineno);
+            ast = p.parse(sourceString, sourceName, lineno);
         } else {
-            tree = p.parse(sourceReader, sourceName, lineno);
+            ast = p.parse(sourceReader, sourceName, lineno);
         }
         if (returnFunction) {
-            if (!(tree.getFunctionCount() == 1
-                  && tree.getFirstChild() != null
-                  && tree.getFirstChild().getType() == Token.FUNCTION))
+            // parser no longer adds function to script node
+            if (!(ast.getFirstChild() != null
+                  && ast.getFirstChild().getType() == Token.FUNCTION))
             {
-                // XXX: the check just look for the first child
+                // XXX: the check just looks for the first child
                 // and allows for more nodes after it for compatibility
                 // with sources like function() {};;;
                 throw new IllegalArgumentException(
@@ -2382,16 +2394,21 @@ public class Context
             }
         }
 
+        IRFactory irf = new IRFactory(compilerEnv, compilationErrorReporter);
+        ScriptNode tree = irf.transformTree(ast);
+
+        // discard everything but the IR tree
+        p = null;
+        ast = null;
+        irf = null;
+
         if (compiler == null) {
             compiler = createCompiler();
         }
 
-        String encodedSource = p.getEncodedSource();
-
         Object bytecode = compiler.compile(compilerEnv,
-                                           tree, encodedSource,
+                                           tree, tree.getEncodedSource(),
                                            returnFunction);
-
         if (debugger != null) {
             if (sourceString == null) Kit.codeBug();
             if (bytecode instanceof DebuggableScript) {
@@ -2589,6 +2606,7 @@ public class Context
     int version;
 
     private SecurityController securityController;
+    private boolean hasClassShutter;
     private ClassShutter classShutter;
     private ErrorReporter errorReporter;
     RegExpProxy regExpProxy;
@@ -2596,7 +2614,6 @@ public class Context
     private boolean generatingDebug;
     private boolean generatingDebugChanged;
     private boolean generatingSource=true;
-    boolean compileFunctionsWithDynamicScopeFlag;
     boolean useDynamicScope;
     private int optimizationLevel;
     private int maximumInterpreterStackDepth;
@@ -2635,5 +2652,5 @@ public class Context
     Scriptable scratchScriptable;
 
     // Generate an observer count on compiled code
-	public boolean generateObserverCount = false;
+    public boolean generateObserverCount = false;
 }

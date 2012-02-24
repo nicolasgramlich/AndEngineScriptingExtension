@@ -87,9 +87,9 @@ public class FunctionObject extends BaseFunction
      *
      * Otherwise, if the FunctionObject will <i>not</i> be used to define a
      * constructor, the member must be a static Method with parameters
+     * <pre>
      *      (Context cx, Scriptable thisObj, Object[] args,
      *       Function funObj) </pre>
-     * <pre>
      * and an Object result.<p>
      *
      * When the function varargs form is called as part of a function call,
@@ -224,7 +224,7 @@ public class FunctionObject extends BaseFunction
           case JAVA_INT_TYPE:
               if (arg instanceof Integer)
                 return arg;
-            return new Integer(ScriptRuntime.toInt32(arg));
+            return Integer.valueOf(ScriptRuntime.toInt32(arg));
           case JAVA_BOOLEAN_TYPE:
               if (arg instanceof Boolean)
                 return arg;
@@ -406,6 +406,14 @@ public class FunctionObject extends BaseFunction
     {
         Object result;
         boolean checkMethodResult = false;
+        int argsLength = args.length;
+
+        for (int i = 0; i < argsLength; i++) {
+            // flatten cons-strings before passing them as arguments
+            if (args[i] instanceof ConsString) {
+                args[i] = args[i].toString();
+            }
+        }
 
         if (parmsLength < 0) {
             if (parmsLength == VARARGS_METHOD) {
@@ -446,7 +454,7 @@ public class FunctionObject extends BaseFunction
             }
 
             Object[] invokeArgs;
-            if (parmsLength == args.length) {
+            if (parmsLength == argsLength) {
                 // Do not allocate new argument array if java arguments are
                 // the same as the original js ones.
                 invokeArgs = args;
@@ -465,7 +473,7 @@ public class FunctionObject extends BaseFunction
             } else {
                 invokeArgs = new Object[parmsLength];
                 for (int i = 0; i != parmsLength; ++i) {
-                    Object arg = (i < args.length)
+                    Object arg = (i < argsLength)
                                  ? args[i]
                                  : Undefined.instance;
                     invokeArgs[i] = convertArg(cx, scope, arg, typeTags[i]);

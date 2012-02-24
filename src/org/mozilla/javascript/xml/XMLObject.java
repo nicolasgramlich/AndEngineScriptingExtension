@@ -49,6 +49,9 @@ import org.mozilla.javascript.*;
  */
 public abstract class XMLObject extends IdScriptableObject
 {
+    
+    static final long serialVersionUID = 8455156490438576500L;
+    
     public XMLObject()
     {
     }
@@ -61,22 +64,27 @@ public abstract class XMLObject extends IdScriptableObject
     /**
      * Implementation of ECMAScript [[Has]].
      */
-    public abstract boolean ecmaHas(Context cx, Object id);
+    public abstract boolean has(Context cx, Object id);
 
     /**
      * Implementation of ECMAScript [[Get]].
      */
-    public abstract Object ecmaGet(Context cx, Object id);
+    public abstract Object get(Context cx, Object id);
 
     /**
      * Implementation of ECMAScript [[Put]].
      */
-    public abstract void ecmaPut(Context cx, Object id, Object value);
+    public abstract void put(Context cx, Object id, Object value);
 
     /**
      * Implementation of ECMAScript [[Delete]].
      */
-    public abstract boolean ecmaDelete(Context cx, Object id);
+    public abstract boolean delete(Context cx, Object id);
+
+
+    public abstract Object getFunctionProperty(Context cx, String name);
+
+    public abstract Object getFunctionProperty(Context cx, int id);
 
     /**
      * Return an additional object to look for methods that runtime should
@@ -125,4 +133,14 @@ public abstract class XMLObject extends IdScriptableObject
         return Scriptable.NOT_FOUND;
     }
 
+    /**
+     * Gets the value returned by calling the typeof operator on this object.
+     * @see org.mozilla.javascript.ScriptableObject#getTypeOf()
+     * @return "xml" or "undefined" if {@link #avoidObjectDetection()} returns <code>true</code>
+     */
+    @Override
+    public String getTypeOf()
+    {
+    	return avoidObjectDetection() ? "undefined" : "xml";
+    }
 }

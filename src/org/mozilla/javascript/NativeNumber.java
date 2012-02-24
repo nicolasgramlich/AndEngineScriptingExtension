@@ -61,7 +61,7 @@ final class NativeNumber extends IdScriptableObject
         obj.exportAsJSClass(MAX_PROTOTYPE_ID, scope, sealed);
     }
 
-    private NativeNumber(double number)
+    NativeNumber(double number)
     {
         doubleValue = number;
     }
@@ -146,7 +146,7 @@ final class NativeNumber extends IdScriptableObject
           case Id_toLocaleString:
             {
                 // toLocaleString is just an alias for toString for now
-                int base = (args.length == 0)
+                int base = (args.length == 0 || args[0] == Undefined.instance)
                     ? 10 : ScriptRuntime.toInt32(args[0]);
                 return ScriptRuntime.numberToString(value, base);
             }
@@ -161,13 +161,44 @@ final class NativeNumber extends IdScriptableObject
             return num_to(value, args, DToA.DTOSTR_FIXED,
                           DToA.DTOSTR_FIXED, -20, 0);
 
-          case Id_toExponential:
-            return num_to(value, args, DToA.DTOSTR_STANDARD_EXPONENTIAL,
-                          DToA.DTOSTR_EXPONENTIAL, 0, 1);
+          case Id_toExponential: {
+              // Handle special values before range check
+              if(Double.isNaN(value)) {
+                  return "NaN";
+              }
+              if(Double.isInfinite(value)) {
+                  if(value >= 0) {
+                      return "Infinity";
+                  }
+                  else {
+                      return "-Infinity";
+                  }
+              }
+              // General case
+              return num_to(value, args, DToA.DTOSTR_STANDARD_EXPONENTIAL,
+                      DToA.DTOSTR_EXPONENTIAL, 0, 1);
+          }
 
-          case Id_toPrecision:
-            return num_to(value, args, DToA.DTOSTR_STANDARD,
-                          DToA.DTOSTR_PRECISION, 1, 0);
+          case Id_toPrecision: {
+              // Undefined precision, fall back to ToString()
+              if(args.length == 0 || args[0] == Undefined.instance) {
+                  return ScriptRuntime.numberToString(value, 10);
+              }
+              // Handle special values before range check
+              if(Double.isNaN(value)) {
+                  return "NaN";
+              }
+              if(Double.isInfinite(value)) {
+                  if(value >= 0) {
+                      return "Infinity";
+                  }
+                  else {
+                      return "-Infinity";
+                  }
+              }
+              return num_to(value, args, DToA.DTOSTR_STANDARD,
+                      DToA.DTOSTR_PRECISION, 1, 0);
+          }
 
           default: throw new IllegalArgumentException(String.valueOf(id));
         }
@@ -197,7 +228,7 @@ final class NativeNumber extends IdScriptableObject
                 throw ScriptRuntime.constructError("RangeError", msg);
             }
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         DToA.JS_dtostr(sb, oneArgMode, precision + precisionOffset, val);
         return sb.toString();
     }

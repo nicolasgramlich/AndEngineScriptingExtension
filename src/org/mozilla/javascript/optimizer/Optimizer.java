@@ -40,6 +40,7 @@
 package org.mozilla.javascript.optimizer;
 
 import org.mozilla.javascript.*;
+import org.mozilla.javascript.ast.ScriptNode;
 
 class Optimizer
 {
@@ -50,7 +51,7 @@ class Optimizer
 
     // It is assumed that (NumberType | AnyType) == AnyType
 
-    void optimize(ScriptOrFnNode scriptOrFn)
+    void optimize(ScriptNode scriptOrFn)
     {
         //  run on one function at a time for now
         int functionCount = scriptOrFn.getFunctionCount();
@@ -181,7 +182,6 @@ class Optimizer
                     Node child = n.getFirstChild();
                     // "child" will be GETVAR or GETPROP or GETELEM
                     if (child.getType() == Token.GETVAR) {
-                        ;
                         if (rewriteForNumberVariables(child, NumberType) == NumberType &&
                             !convertParameter(child))
                         {
@@ -189,7 +189,7 @@ class Optimizer
                             markDCPNumberContext(child);
                             return NumberType;
                         }
-                      return NoType;                       
+                      return NoType;
                     }
                     else if (child.getType() == Token.GETELEM) {
                         return rewriteForNumberVariables(child, NumberType);

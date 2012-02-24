@@ -123,18 +123,18 @@ public final class OptRuntime extends ScriptRuntime
     {
         if (val1 instanceof Scriptable)
             val1 = ((Scriptable) val1).getDefaultValue(null);
-        if (!(val1 instanceof String))
+        if (!(val1 instanceof CharSequence))
             return wrapDouble(toNumber(val1) + val2);
-        return ((String)val1).concat(toString(val2));
+        return new ConsString((CharSequence)val1, toString(val2));
     }
 
     public static Object add(double val1, Object val2)
     {
         if (val2 instanceof Scriptable)
             val2 = ((Scriptable) val2).getDefaultValue(null);
-        if (!(val2 instanceof String))
+        if (!(val2 instanceof CharSequence))
             return wrapDouble(toNumber(val2) + val1);
-        return toString(val1).concat((String)val2);
+        return new ConsString(toString(val1), (CharSequence)val2);
     }
 
     public static Object elemIncrDecr(Object obj, double index,
@@ -291,7 +291,7 @@ public final class OptRuntime extends ScriptRuntime
         public int resumptionPoint;
         static final String resumptionPoint_NAME = "resumptionPoint";
         static final String resumptionPoint_TYPE = "I";
-        
+
         public Scriptable thisObj;
         static final String thisObj_NAME = "thisObj";
         static final String thisObj_TYPE =

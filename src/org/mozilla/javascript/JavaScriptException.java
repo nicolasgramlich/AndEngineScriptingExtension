@@ -71,23 +71,40 @@ public class JavaScriptException extends RhinoException
     {
         recordErrorOrigin(sourceName, lineNumber, null, 0);
         this.value = value;
+        // Fill in fileName and lineNumber automatically when not specified
+        // explicitly, see Bugzilla issue #342807
+        if (value instanceof NativeError && Context.getContext()
+                .hasFeature(Context.FEATURE_LOCATION_INFORMATION_IN_ERROR)) {
+            NativeError error = (NativeError) value;
+            if (!error.has("fileName", error)) {
+                error.put("fileName", error, sourceName);
+            }
+            if (!error.has("lineNumber", error)) {
+                error.put("lineNumber", error, Integer.valueOf(lineNumber));
+            }
+            // set stack property, see bug #549604
+            error.setStackProvider(this);
+        }
     }
 
     @Override
     public String details()
     {
-       try {
-           return ScriptRuntime.toString(value);
-       } catch (RuntimeException rte) {
-           // ScriptRuntime.toString may throw a RuntimeException
-           if (value == null) {
-               return "null";
-           } else if (value instanceof Scriptable) {
-               return ScriptRuntime.defaultObjectToString((Scriptable)value);
-           } else {
-               return value.toString();
-           }
-       }
+        if (value == null) {
+            return "null";
+        } else if (value instanceof NativeError) {
+            return value.toString();
+        }
+        try {
+            return ScriptRuntime.toString(value);
+        } catch (RuntimeException rte) {
+            // ScriptRuntime.toString may throw a RuntimeException
+            if (value instanceof Scriptable) {
+                return ScriptRuntime.defaultObjectToString((Scriptable)value);
+            } else {
+                return value.toString();
+            }
+        }
     }
 
     /**

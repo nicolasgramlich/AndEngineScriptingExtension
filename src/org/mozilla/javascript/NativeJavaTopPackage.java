@@ -98,7 +98,9 @@ public class NativeJavaTopPackage
             Context.reportRuntimeError0("msg.not.classloader");
             return null;
         }
-        return new NativeJavaPackage(true, "", loader);
+        NativeJavaPackage pkg = new NativeJavaPackage(true, "", loader);
+        ScriptRuntime.setObjectProtoAndParent(pkg, scope);
+        return pkg;
     }
 
     public static void init(Context cx, Scriptable scope, boolean sealed)
@@ -122,7 +124,7 @@ public class NativeJavaTopPackage
         // We want to get a real alias, and not a distinct JavaPackage
         // with the same packageName, so that we share classes and top
         // that are underneath.
-        String[] topNames = { "java", "javax", "org", "com", "edu", "net" };
+        String[] topNames = ScriptRuntime.getTopPackageNames();
         NativeJavaPackage[] topPackages = new NativeJavaPackage[topNames.length];
         for (int i=0; i < topNames.length; i++) {
             topPackages[i] = (NativeJavaPackage)top.get(topNames[i], top);

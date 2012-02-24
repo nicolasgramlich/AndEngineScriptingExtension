@@ -24,6 +24,7 @@
  * Contributor(s):
  *   Igor Bukanov, igor@fastmail.fm
  *   Bob Jervis
+ *   Steve Yegge
  *
  * Alternatively, the contents of this file may be used under the terms of
  * the GNU General Public License Version 2 or later (the "GPL"), in which
@@ -41,6 +42,8 @@ package org.mozilla.javascript;
 
 import java.util.Set;
 
+import org.mozilla.javascript.ast.ErrorCollector;
+
 public class CompilerEnvirons
 {
     public CompilerEnvirons()
@@ -48,8 +51,7 @@ public class CompilerEnvirons
         errorReporter = DefaultErrorReporter.instance;
         languageVersion = Context.VERSION_DEFAULT;
         generateDebugInfo = true;
-        useDynamicScope = false;
-        reservedKeywordAsIdentifier = false;
+        reservedKeywordAsIdentifier = true;
         allowMemberExprAsFunctionName = false;
         xmlAvailable = true;
         optimizationLevel = 0;
@@ -57,13 +59,13 @@ public class CompilerEnvirons
         strictMode = false;
         warningAsError = false;
         generateObserverCount = false;
+        allowSharpComments = false;
     }
 
     public void initFromContext(Context cx)
     {
         setErrorReporter(cx.getErrorReporter());
         this.languageVersion = cx.getLanguageVersion();
-        useDynamicScope = cx.compileFunctionsWithDynamicScopeFlag;
         generateDebugInfo = (!cx.isGeneratingDebugChanged()
                              || cx.isGeneratingDebug());
         reservedKeywordAsIdentifier
@@ -80,7 +82,7 @@ public class CompilerEnvirons
 
         generatingSource = cx.isGeneratingSource();
         activationNames = cx.activationNames;
-        
+
         // Observer code generation in compiled code :
         generateObserverCount = cx.generateObserverCount;
     }
@@ -117,11 +119,6 @@ public class CompilerEnvirons
         this.generateDebugInfo = flag;
     }
 
-    public final boolean isUseDynamicScope()
-    {
-        return useDynamicScope;
-    }
-
     public final boolean isReservedKeywordAsIdentifier()
     {
         return reservedKeywordAsIdentifier;
@@ -132,6 +129,10 @@ public class CompilerEnvirons
         reservedKeywordAsIdentifier = flag;
     }
 
+    /**
+     * Extension to ECMA: if 'function &lt;name&gt;' is not followed
+     * by '(', assume &lt;name&gt; starts a {@code memberExpr}
+     */
     public final boolean isAllowMemberExprAsFunctionName()
     {
         return allowMemberExprAsFunctionName;
@@ -168,9 +169,22 @@ public class CompilerEnvirons
         return generatingSource;
     }
 
+    public boolean getWarnTrailingComma() {
+        return warnTrailingComma;
+    }
+
+    public void setWarnTrailingComma(boolean warn) {
+        warnTrailingComma = warn;
+    }
+
     public final boolean isStrictMode()
     {
         return strictMode;
+    }
+
+    public void setStrictMode(boolean strict)
+    {
+        strictMode = strict;
     }
 
     public final boolean reportWarningAsError()
@@ -197,10 +211,10 @@ public class CompilerEnvirons
      * instruction thresholds
      */
     public boolean isGenerateObserverCount() {
-    	return generateObserverCount;
+        return generateObserverCount;
     }
 
-   /**
+    /**
      * Turn on or off generation of code with callbacks to
      * track the count of executed instructions.
      * Currently only affects JVM byte code generation: this slows down the
@@ -215,11 +229,88 @@ public class CompilerEnvirons
         this.generateObserverCount = generateObserverCount;
     }
 
+    public boolean isRecordingComments() {
+        return recordingComments;
+    }
+
+    public void setRecordingComments(boolean record) {
+        recordingComments = record;
+    }
+
+    public boolean isRecordingLocalJsDocComments() {
+        return recordingLocalJsDocComments;
+    }
+
+    public void setRecordingLocalJsDocComments(boolean record) {
+        recordingLocalJsDocComments = record;
+    }
+
+    /**
+     * Turn on or off full error recovery.  In this mode, parse errors do not
+     * throw an exception, and the parser attempts to build a full syntax tree
+     * from the input.  Useful for IDEs and other frontends.
+     */
+    public void setRecoverFromErrors(boolean recover) {
+        recoverFromErrors = recover;
+    }
+
+    public boolean recoverFromErrors() {
+        return recoverFromErrors;
+    }
+
+    /**
+     * Puts the parser in "IDE" mode.  This enables some slightly more expensive
+     * computations, such as figuring out helpful error bounds.
+     */
+    public void setIdeMode(boolean ide) {
+        ideMode = ide;
+    }
+
+    public boolean isIdeMode() {
+        return ideMode;
+    }
+
+    public Set<String> getActivationNames() {
+        return activationNames;
+    }
+
+    public void setActivationNames(Set<String> activationNames) {
+        this.activationNames = activationNames;
+    }
+
+    /**
+     * Mozilla sources use the C preprocessor.
+     */
+    public void setAllowSharpComments(boolean allow) {
+        allowSharpComments = allow;
+    }
+
+    public boolean getAllowSharpComments() {
+        return allowSharpComments;
+    }
+
+    /**
+     * Returns a {@code CompilerEnvirons} suitable for using Rhino
+     * in an IDE environment.  Most features are enabled by default.
+     * The {@link ErrorReporter} is set to an {@link ErrorCollector}.
+     */
+    public static CompilerEnvirons ideEnvirons() {
+        CompilerEnvirons env = new CompilerEnvirons();
+        env.setRecoverFromErrors(true);
+        env.setRecordingComments(true);
+        env.setStrictMode(true);
+        env.setWarnTrailingComma(true);
+        env.setLanguageVersion(170);
+        env.setReservedKeywordAsIdentifier(true);
+        env.setIdeMode(true);
+        env.setErrorReporter(new ErrorCollector());
+        return env;
+    }
+
     private ErrorReporter errorReporter;
 
     private int languageVersion;
     private boolean generateDebugInfo;
-    private boolean useDynamicScope;
     private boolean reservedKeywordAsIdentifier;
     private boolean allowMemberExprAsFunctionName;
     private boolean xmlAvailable;
@@ -228,6 +319,11 @@ public class CompilerEnvirons
     private boolean strictMode;
     private boolean warningAsError;
     private boolean generateObserverCount;
+    private boolean recordingComments;
+    private boolean recordingLocalJsDocComments;
+    private boolean recoverFromErrors;
+    private boolean warnTrailingComma;
+    private boolean ideMode;
+    private boolean allowSharpComments;
     Set<String> activationNames;
 }
-

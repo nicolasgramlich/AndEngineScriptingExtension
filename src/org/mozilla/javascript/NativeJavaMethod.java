@@ -42,6 +42,8 @@
 package org.mozilla.javascript;
 
 import java.lang.reflect.*;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 /**
  * This class reflects Java methods into the JavaScript environment and
@@ -60,6 +62,12 @@ public class NativeJavaMethod extends BaseFunction
     NativeJavaMethod(MemberBox[] methods)
     {
         this.functionName = methods[0].getName();
+        this.methods = methods;
+    }
+
+    NativeJavaMethod(MemberBox[] methods, String name)
+    {
+        this.functionName = name;
         this.methods = methods;
     }
 
@@ -139,10 +147,15 @@ public class NativeJavaMethod extends BaseFunction
     {
         StringBuffer sb = new StringBuffer();
         for (int i = 0, N = methods.length; i != N; ++i) {
-            Method method = methods[i].method();
-            sb.append(JavaMembers.javaSignature(method.getReturnType()));
-            sb.append(' ');
-            sb.append(method.getName());
+            // Check member type, we also use this for overloaded constructors
+            if (methods[i].isMethod()) {
+                Method method = methods[i].method();
+                sb.append(JavaMembers.javaSignature(method.getReturnType()));
+                sb.append(' ');
+                sb.append(method.getName());
+            } else {
+                sb.append(methods[i].getName());
+            }
             sb.append(JavaMembers.liveConnectSignature(methods[i].argTypes));
             sb.append('\n');
         }
@@ -158,7 +171,7 @@ public class NativeJavaMethod extends BaseFunction
             throw new RuntimeException("No methods defined for call");
         }
 
-        int index = findFunction(cx, methods, args);
+        int index = findCachedFunction(cx, args);
         if (index < 0) {
             Class<?> c = methods[0].method().getDeclaringClass();
             String sig = c.getName() + '.' + getFunctionName() + '(' +
@@ -168,16 +181,16 @@ public class NativeJavaMethod extends BaseFunction
 
         MemberBox meth = methods[index];
         Class<?>[] argTypes = meth.argTypes;
-      
+
         if (meth.vararg) {
             // marshall the explicit parameters
             Object[] newArgs = new Object[argTypes.length];
             for (int i = 0; i < argTypes.length-1; i++) {
                 newArgs[i] = Context.jsToJava(args[i], argTypes[i]);
             }
-            
+
             Object varArgs;
-            
+
             // Handle special situation where a single variable parameter
             // is given and it is a Java or ECMA array or is null.
             if (args.length == argTypes.length &&
@@ -186,26 +199,26 @@ public class NativeJavaMethod extends BaseFunction
                  args[args.length-1] instanceof NativeJavaArray))
             {
                 // convert the ECMA array into a native array
-                varArgs = Context.jsToJava(args[args.length-1], 
+                varArgs = Context.jsToJava(args[args.length-1],
                                            argTypes[argTypes.length - 1]);
-            } else {            
+            } else {
                 // marshall the variable parameters
                 Class<?> componentType = argTypes[argTypes.length - 1].
                                          getComponentType();
-                varArgs = Array.newInstance(componentType, 
-                                            args.length - argTypes.length + 1);            
+                varArgs = Array.newInstance(componentType,
+                                            args.length - argTypes.length + 1);
                 for (int i = 0; i < Array.getLength(varArgs); i++) {
-                    Object value = Context.jsToJava(args[argTypes.length-1 + i], 
+                    Object value = Context.jsToJava(args[argTypes.length-1 + i],
                                                     componentType);
                     Array.set(varArgs, i, value);
                 }
             }
-            
+
             // add varargs
             newArgs[argTypes.length-1] = varArgs;
             // replace the original args with the new one
             args = newArgs;
-        } else {  
+        } else {
             // First, we marshall the args.
             Object[] origArgs = args;
             for (int i = 0; i < args.length; i++) {
@@ -270,6 +283,33 @@ public class NativeJavaMethod extends BaseFunction
         return wrapped;
     }
 
+    int findCachedFunction(Context cx, Object[] args) {
+        if (methods.length > 1) {
+            if (overloadCache != null) {
+                for (ResolvedOverload ovl : overloadCache) {
+                    if (ovl.matches(args)) {
+                        return ovl.index;
+                    }
+                }
+            } else {
+                overloadCache = new LinkedList<ResolvedOverload>();
+            }
+            int index = findFunction(cx, methods, args);
+            // As a sanity measure, don't let the lookup cache grow longer
+            // than twice the number of overloaded methods
+            if (overloadCache.size() < methods.length * 2) {
+                synchronized (overloadCache) {
+                    ResolvedOverload ovl = new ResolvedOverload(args, index);
+                    if (!overloadCache.contains(ovl)) {
+                        overloadCache.addFirst(ovl);
+                    }
+                }
+            }
+            return index;
+        }
+        return findFunction(cx, methods, args);
+    }
+
     /**
      * Find the index of the correct function to call given the set of methods
      * or constructors and the arguments.
@@ -284,7 +324,7 @@ public class NativeJavaMethod extends BaseFunction
             MemberBox member = methodsOrCtors[0];
             Class<?>[] argTypes = member.argTypes;
             int alength = argTypes.length;
-            
+
             if (member.vararg) {
                 alength--;
                 if ( alength > args.length) {
@@ -455,7 +495,7 @@ public class NativeJavaMethod extends BaseFunction
         String memberName = firstFitMember.getName();
         String memberClass = firstFitMember.getDeclaringClass().getName();
 
-        if (methodsOrCtors[0].isMethod()) {
+        if (methodsOrCtors[0].isCtor()) {
             throw Context.reportRuntimeError3(
                 "msg.constructor.ambiguous",
                 memberName, scriptSignature(args), buf.toString());
@@ -478,40 +518,16 @@ public class NativeJavaMethod extends BaseFunction
      * Returns one of PREFERENCE_EQUAL, PREFERENCE_FIRST_ARG,
      * PREFERENCE_SECOND_ARG, or PREFERENCE_AMBIGUOUS.
      */
-    private static int preferSignature(Object[] args, 
+    private static int preferSignature(Object[] args,
                                        Class<?>[] sig1,
                                        boolean vararg1,
                                        Class<?>[] sig2,
                                        boolean vararg2 )
     {
-        // TODO: This test is pretty primitive. It basically prefers
-        // a matching no vararg method over a vararg method independent
-        // of the type conversion cost. This can lead to unexpected results.
-        int alength = args.length;
-        if (!vararg1 && vararg2) {
-            // prefer the no vararg signature
-            return PREFERENCE_FIRST_ARG;
-        } else if (vararg1 && !vararg2) {
-            // prefer the no vararg signature
-            return PREFERENCE_SECOND_ARG;
-        } else if (vararg1 && vararg2) {
-            if (sig1.length < sig2.length) {
-                // prefer the signature with more explicit types
-                return PREFERENCE_SECOND_ARG;                
-            } else if (sig1.length > sig2.length) {
-                // prefer the signature with more explicit types
-                return PREFERENCE_FIRST_ARG;                
-            } else {
-                // Both are varargs and have the same length, so make the
-                // decision with the explicit args. 
-                alength = Math.min(args.length, sig1.length-1);
-            }
-        }
-        
         int totalPreference = 0;
-        for (int j = 0; j < alength; j++) {
-            Class<?> type1 = sig1[j];
-            Class<?> type2 = sig2[j];
+        for (int j = 0; j < args.length; j++) {
+            Class<?> type1 = vararg1 && j >= sig1.length ? sig1[sig1.length-1] : sig1[j];
+            Class<?> type2 = vararg2 && j >= sig2.length ? sig2[sig2.length-1] : sig2[j];
             if (type1 == type2) {
                 continue;
             }
@@ -576,5 +592,52 @@ public class NativeJavaMethod extends BaseFunction
 
     MemberBox[] methods;
     private String functionName;
+    private transient LinkedList<ResolvedOverload> overloadCache;
 }
 
+class ResolvedOverload {
+    final Class<?>[] types;
+    final int index;
+
+    ResolvedOverload(Object[] args, int index) {
+        this.index = index;
+        types = new Class<?>[args.length];
+        for (int i = 0, l = args.length; i < l; i++) {
+            Object arg = args[i];
+            if (arg instanceof Wrapper)
+                arg = ((Wrapper)arg).unwrap();
+            types[i] = arg == null ? null : arg.getClass();
+        }
+    }
+
+    boolean matches(Object[] args) {
+        if (args.length != types.length) {
+            return false;
+        }
+        for (int i = 0, l = args.length; i < l; i++) {
+            Object arg = args[i];
+            if (arg instanceof Wrapper)
+                arg = ((Wrapper)arg).unwrap();
+            if (arg == null) {
+                if (types[i] != null) return false;
+            } else if (arg.getClass() != types[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof ResolvedOverload)) {
+            return false;
+        }
+        ResolvedOverload ovl = (ResolvedOverload) other;
+        return Arrays.equals(types, ovl.types) && index == ovl.index;
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(types);
+    }
+}
