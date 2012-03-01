@@ -7,7 +7,9 @@
 
 class C_Entity : public Wrapper {
 	protected:
+		/* Constructors */ 
 		C_Entity();
+
 	public:
 		/* Constructors. */ 
 		C_Entity(float, float);

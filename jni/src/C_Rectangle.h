@@ -6,6 +6,9 @@
 #include "C_Entity.h"
 
 class C_Rectangle : public C_Entity {
+	protected:
+		/* Constructors */
+ 		C_Rectangle();
 	public:
 		/* Constructors */ 
 		C_Rectangle(float, float, float, float, jobject);

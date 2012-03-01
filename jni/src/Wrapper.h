@@ -7,6 +7,9 @@ class Wrapper {
 	protected:
 		jobject mUnwrapped;
 
+		/* Constructors */ 
+		Wrapper();
+
 	public:
 		/* Unwrapper. */
 		jobject unwrap();

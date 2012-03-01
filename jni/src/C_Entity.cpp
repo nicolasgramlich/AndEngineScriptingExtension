@@ -4,7 +4,7 @@ C_Entity::C_Entity () {
 	/* Intentionally empty. */
 }
 
-C_Entity::C_Entity (float pX, float pY) {
+C_Entity::C_Entity(float pX, float pY) {
 	jclass clazz = JNI_ENV()->FindClass("org/andengine/entity/Entity");
 
 	jmethodID constructor = JNI_ENV()->GetMethodID(clazz, "<init>", "(FF)V");
