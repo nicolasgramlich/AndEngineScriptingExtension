@@ -3,7 +3,7 @@
 
 #include <jni.h>
 #include "ScriptingEnvironment.h"
-#include "EntityProxy.h"
+#include "ShapeProxy.h"
 
 extern "C" {
 	// ===========================================================
@@ -12,9 +12,10 @@ extern "C" {
 	
 	JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_primitive_RectangleProxy_nativeOnAttached(JNIEnv*, jobject, jlong);
 	JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_primitive_RectangleProxy_nativeOnDetached(JNIEnv*, jobject, jlong);
+	JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_primitive_RectangleProxy_nativeOnAreaTouched(JNIEnv*, jobject, jlong, jobject, jfloat, jfloat);
 }
 
-class RectangleProxy : public EntityProxy {
+class RectangleProxy : public ShapeProxy {
 	protected:
 		/* Constructors */
  		RectangleProxy();

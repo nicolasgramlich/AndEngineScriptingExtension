@@ -16,6 +16,12 @@ JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_primiti
 	return rectangle->onDetached();
 }
 
+JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_primitive_RectangleProxy_nativeOnAreaTouched(JNIEnv*, jobject pJObject, jlong pAddress, jobject pSceneTouchEvent, jfloat pTouchAreaLocalX, jfloat pTouchAreaLocalY) {
+	RectangleProxy* rectangle = (RectangleProxy*)pAddress;
+
+	return rectangle->onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+}
+
 
 RectangleProxy::RectangleProxy() {
 	/* Intentionally empty. */

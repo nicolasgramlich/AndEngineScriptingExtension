@@ -1,8 +1,8 @@
 package org.andengine.extension.scripting.entity.primitive;
 
 import org.andengine.entity.primitive.Rectangle;
+import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
-import org.andengine.util.debug.Debug;
 
 /**
  * (c) Zynga 2012
@@ -27,12 +27,6 @@ public class RectangleProxy extends Rectangle {
 
 	public RectangleProxy(final long pAddress, final float pX, final float pY, final float pWidth, final float pHeight, final VertexBufferObjectManager pVertexBufferObjectManager) {
 		super(pX, pY, pWidth, pHeight, pVertexBufferObjectManager);
-
-		Debug.d("WORKS!");
-		if(pVertexBufferObjectManager != null) {
-			Debug.d("NOT NULL!");
-			Debug.d("NATIVE CRASH: " + pVertexBufferObjectManager);
-		}
 
 		this.mAddress = pAddress;
 	}
@@ -62,6 +56,18 @@ public class RectangleProxy extends Rectangle {
 	}
 
 	private native boolean nativeOnDetached(final long pAddress);
+
+	@Override
+	public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+		final boolean handledNative = this.nativeOnAreaTouched(this.mAddress, pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+		if(handledNative) {
+			return true;
+		} else {
+			return super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+		}
+	}
+
+	private native boolean nativeOnAreaTouched(final long pAddress, final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY);
 
 	// ===========================================================
 	// Methods

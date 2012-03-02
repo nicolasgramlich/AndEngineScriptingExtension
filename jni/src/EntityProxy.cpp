@@ -18,7 +18,7 @@ JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_EntityP
 
 
 
-EntityProxy::EntityProxy () {
+EntityProxy::EntityProxy() {
 	/* Intentionally empty. */
 }
 
@@ -47,9 +47,7 @@ void EntityProxy::setScale(float pScale) {
 }
 
 bool EntityProxy::onAttached() {
-	this->setScale(2);
-
-	return true;
+	return false;
 }
 
 bool EntityProxy::onDetached() {

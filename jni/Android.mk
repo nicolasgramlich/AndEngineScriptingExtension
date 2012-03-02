@@ -9,6 +9,7 @@ LOCAL_SRC_FILES          := src/ScriptingEnvironment.cpp \
                              src/Wrapper.cpp \
                              src/EngineProxy.cpp \
                              src/EntityProxy.cpp \
+                             src/ShapeProxy.cpp \
                              src/RectangleProxy.cpp \
                              src/Test.cpp
 
