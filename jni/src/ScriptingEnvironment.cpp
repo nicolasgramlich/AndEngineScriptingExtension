@@ -6,7 +6,7 @@
 // ===========================================================
 
 JNIEnv* mJNIEnv;
-C_Engine* mEngine;
+EngineProxy* mEngine;
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* pJavaVM, void* pReserved) {
 	return JNI_VERSION_1_4;
@@ -17,14 +17,14 @@ JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_ScriptingEnviro
 
 	setAPKPath(pJNIEnv, pJClass, pAPKPath);
 
-	mEngine = new C_Engine(pEngine);
+	mEngine = new EngineProxy(pEngine);
 }
 
 JNIEnv* JNI_ENV() {
 	return mJNIEnv;
 }
 
-C_Engine* getEngine() {
+EngineProxy* getEngine() {
 	return mEngine;
 }
 

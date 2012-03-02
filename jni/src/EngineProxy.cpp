@@ -1,11 +1,11 @@
-#include "C_Engine.h"
+#include "EngineProxy.h"
 #include "ScriptingEnvironment.h"
 
-C_Engine::C_Engine (jobject pEngine) {
+EngineProxy::EngineProxy(jobject pEngine) {
 	mUnwrapped = pEngine;
 }
 
-jobject C_Engine::getVertexBufferObjectManager() {
+jobject EngineProxy::getVertexBufferObjectManager() {
 	jclass clazz = JNI_ENV()->FindClass("org/andengine/engine/Engine");
 
 	jmethodID getVertexBufferObjectManagerMethod = JNI_ENV()->GetMethodID(clazz, "getVertexBufferObjectManager", "()Lorg/andengine/opengl/vbo/VertexBufferObjectManager;");
@@ -13,7 +13,7 @@ jobject C_Engine::getVertexBufferObjectManager() {
 	return JNI_ENV()->CallObjectMethod(this->mUnwrapped, getVertexBufferObjectManagerMethod);
 }
 
-jobject C_Engine::getTextureManager() {
+jobject EngineProxy::getTextureManager() {
 	jclass clazz = JNI_ENV()->FindClass("org/andengine/engine/Engine");
 
 	jmethodID getTextureManagerMethod = JNI_ENV()->GetMethodID(clazz, "getTextureManager", "()Lorg/andengine/opengl/texture/TextureManager;");
@@ -21,7 +21,7 @@ jobject C_Engine::getTextureManager() {
 	return JNI_ENV()->CallObjectMethod(this->mUnwrapped, getTextureManagerMethod);
 }
 
-jobject C_Engine::getFontManager() {
+jobject EngineProxy::getFontManager() {
 	jclass clazz = JNI_ENV()->FindClass("org/andengine/engine/Engine");
 
 	jmethodID getFontManagerMethod = JNI_ENV()->GetMethodID(clazz, "getFontManager", "()Lorg/andengine/opengl/font/FontManager;");

@@ -2,7 +2,7 @@
 #define ScriptingEnvironment_H
 
 #include <jni.h>
-#include "C_Engine.h"
+#include "EngineProxy.h"
 
 extern "C" {
 	// ===========================================================
@@ -13,7 +13,7 @@ extern "C" {
 }
 
 JNIEnv* JNI_ENV();
-C_Engine* getEngine();
+EngineProxy* getEngine();
 
 void setAPKPath(JNIEnv*, jclass, jstring);
 

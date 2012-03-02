@@ -7,10 +7,12 @@ LOCAL_MODULE_FILENAME    := libandenginescriptingextension
 LOCAL_CFLAGS             := -Werror
 LOCAL_SRC_FILES          := src/ScriptingEnvironment.cpp \
                              src/Wrapper.cpp \
-                             src/C_Engine.cpp \
-                             src/C_Entity.cpp \
-                             src/C_Rectangle.cpp \
+                             src/EngineProxy.cpp \
+                             src/EntityProxy.cpp \
+                             src/RectangleProxy.cpp \
                              src/Test.cpp
+
+LOCAL_LDLIBS := -llog
 
 # LOCAL_SHARED_LIBRARIES   := andengine_shared
 # LOCAL_SHARED_LIBRARIES   += cutils_shared
