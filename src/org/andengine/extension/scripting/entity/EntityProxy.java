@@ -39,18 +39,18 @@ public class EntityProxy extends Entity {
 
 	@Override
 	public void onAttached() {
-//		if(!this.nativeOnAttached(this.mAddress)) {
+		if(!this.nativeOnAttached(this.mAddress)) {
 			super.onAttached();
-//		}
+		}
 	}
 
 	private native boolean nativeOnAttached(final long pAddress);
 
 	@Override
 	public void onDetached() {
-//		if(!this.nativeOnDetached(this.mAddress)) {
+		if(!this.nativeOnDetached(this.mAddress)) {
 			super.onDetached();
-//		}
+		}
 	}
 
 	private native boolean nativeOnDetached(final long pAddress);

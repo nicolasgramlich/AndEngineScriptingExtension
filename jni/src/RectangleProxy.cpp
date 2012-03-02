@@ -26,5 +26,5 @@ RectangleProxy::RectangleProxy(float pX, float pY, float pWidth, float pHeight, 
 
 	jmethodID constructor = JNI_ENV()->GetMethodID(clazz, "<init>", "(JFFFFLorg/andengine/opengl/vbo/VertexBufferObjectManager;)V");
 
-	this->mUnwrapped = JNI_ENV()->NewObject(clazz, constructor, this, pX, pY, pWidth, pHeight, pVertexBufferObjectManager);
+	this->mUnwrapped = JNI_ENV()->NewObject(clazz, constructor, (jlong)this, pX, pY, pWidth, pHeight, pVertexBufferObjectManager);
 }

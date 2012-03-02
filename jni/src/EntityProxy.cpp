@@ -27,7 +27,7 @@ EntityProxy::EntityProxy(float pX, float pY) {
 
 	jmethodID constructor = JNI_ENV()->GetMethodID(clazz, "<init>", "(JFF)V");
 
-	this->mUnwrapped = JNI_ENV()->NewObject(clazz, constructor, this, pX, pY);
+	this->mUnwrapped = JNI_ENV()->NewObject(clazz, constructor, (jlong)this, pX, pY);
 }
 
 void EntityProxy::setRotation(float pRotation) {
@@ -47,8 +47,9 @@ void EntityProxy::setScale(float pScale) {
 }
 
 bool EntityProxy::onAttached() {
-	// this->setRotation(45);
-	return false;
+	this->setScale(2);
+
+	return true;
 }
 
 bool EntityProxy::onDetached() {
