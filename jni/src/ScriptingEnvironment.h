@@ -9,7 +9,7 @@ extern "C" {
 	// org.andengine.extension.scripting.ScriptingEnvironment
 	// ===========================================================
 	
-	JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_init(JNIEnv*, jclass, jstring, jobject);
+	JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_init(JNIEnv*, jclass, jobject, jstring, jobject);
 }
 
 JNIEnv* JNI_ENV();

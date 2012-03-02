@@ -1,14 +1,12 @@
-package org.andengine.extension.scripting;
-
-import org.andengine.opengl.texture.region.ITextureRegion;
+package org.andengine.extension.scripting.opengl.texture.region;
 
 /**
  * (c) Zynga 2012
  *
  * @author Nicolas Gramlich <ngramlich@zynga.com>
- * @since 17:01:34 - 28.02.2012
+ * @since 10:27:54 - 02.03.2012
  */
-public class Test {
+public class TextureRegionFactoryProxy {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -32,8 +30,6 @@ public class Test {
 	// ===========================================================
 	// Methods
 	// ===========================================================
-
-	public static native Object test(final ITextureRegion pTextureRegion);
 
 	// ===========================================================
 	// Inner and Anonymous Classes

@@ -5,6 +5,7 @@
 // org.andengine.extension.scripting.ScriptingEnvironment
 // ===========================================================
 
+jobject mContext;
 JNIEnv* mJNIEnv;
 EngineProxy* mEngine;
 
@@ -12,7 +13,8 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* pJavaVM, void* pReserved) {
 	return JNI_VERSION_1_4;
 }
 
-JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_init(JNIEnv* pJNIEnv, jclass pJClass, jstring pAPKPath, jobject pEngine) {
+JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_init(JNIEnv* pJNIEnv, jclass pJClass, jobject pContext, jstring pAPKPath, jobject pEngine) {
+    mContext = pContext;
 	mJNIEnv = pJNIEnv;
 
 	setAPKPath(pJNIEnv, pJClass, pAPKPath);

@@ -1,20 +1,19 @@
 #include "ScriptingEnvironment.h"
 #include "Test.h"
 #include "RectangleProxy.h"
+#include "SpriteProxy.h"
 #include "Util.h"
 
 // ===========================================================
 // org.andengine.extension.scripting.Test
 // ===========================================================
 
-JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_Test_mirror(JNIEnv* pJNIEnv, jclass pJClass, jobject pJObject) {
-	return pJObject;
-}
+JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_Test_test(JNIEnv* pJNIEnv, jclass pJClass, jobject pTextureRegion) {
+	int size = 100;
 
-JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_Test_test(JNIEnv* pJNIEnv, jclass pJClass) {
-	RectangleProxy* rect = new RectangleProxy(10, 10, 100, 100, getEngine()->getVertexBufferObjectManager());
+	EntityProxy* entity = new SpriteProxy(360 - (size / 2), 240 - (size / 2), size, size, pTextureRegion, getEngine()->getVertexBufferObjectManager());
 
-	rect->setRotation(45);
+	entity->setRotation(45);
 
-    return rect->unwrap();
+	return entity->unwrap();
 }

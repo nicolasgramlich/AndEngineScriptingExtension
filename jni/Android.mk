@@ -11,6 +11,7 @@ LOCAL_SRC_FILES          := src/ScriptingEnvironment.cpp \
                              src/EntityProxy.cpp \
                              src/ShapeProxy.cpp \
                              src/RectangleProxy.cpp \
+                             src/SpriteProxy.cpp \
                              src/Test.cpp
 
 LOCAL_LDLIBS := -llog

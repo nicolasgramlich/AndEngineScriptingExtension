@@ -2,6 +2,8 @@ package org.andengine.extension.scripting;
 
 import org.andengine.engine.Engine;
 
+import android.content.Context;
+
 /**
  * (c) Zynga 2012
  *
@@ -39,7 +41,7 @@ public class ScriptingEnvironment {
 	// Methods
 	// ===========================================================
 
-	public static native void init(final String pAPKPath, final Engine pEngine);
+	public static native void init(final Context pContext, final String pAPKPath, final Engine pEngine);
 
 	// ===========================================================
 	// Inner and Anonymous Classes
