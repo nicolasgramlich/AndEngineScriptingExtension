@@ -15,6 +15,8 @@ public class RectangleProxy extends Rectangle {
 	// Constants
 	// ===========================================================
 
+	public static native void nativeInitClass();
+
 	// ===========================================================
 	// Fields
 	// ===========================================================

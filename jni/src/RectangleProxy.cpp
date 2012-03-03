@@ -1,4 +1,15 @@
+#include <cstdlib>
 #include "RectangleProxy.h"
+
+static jclass sRectangleProxyClass;
+
+static jmethodID sConstructor;
+
+JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_primitive_RectangleProxy_nativeInitClass(JNIEnv* pJNIEnv, jclass pJClass) {
+	sRectangleProxyClass = (jclass)JNI_ENV()->NewGlobalRef(pJClass);
+
+	sConstructor = JNI_ENV()->GetMethodID(sRectangleProxyClass, "<init>", "(JFFFFLorg/andengine/opengl/vbo/VertexBufferObjectManager;)V");
+}
 
 // ===========================================================
 // org.andengine.extension.scripting.entity.primitive.RectangleProxy
@@ -28,9 +39,5 @@ RectangleProxy::RectangleProxy() {
 }
 
 RectangleProxy::RectangleProxy(float pX, float pY, float pWidth, float pHeight, jobject pVertexBufferObjectManager) {
-	jclass clazz = JNI_ENV()->FindClass("org/andengine/extension/scripting/entity/primitive/RectangleProxy");
-
-	jmethodID constructor = JNI_ENV()->GetMethodID(clazz, "<init>", "(JFFFFLorg/andengine/opengl/vbo/VertexBufferObjectManager;)V");
-
-	this->mUnwrapped = JNI_ENV()->NewObject(clazz, constructor, (jlong)this, pX, pY, pWidth, pHeight, pVertexBufferObjectManager);
+	this->mUnwrapped = JNI_ENV()->NewObject(sRectangleProxyClass, sConstructor, (jlong)this, pX, pY, pWidth, pHeight, pVertexBufferObjectManager);
 }

@@ -1,4 +1,15 @@
+#include <cstdlib>
 #include "SpriteProxy.h"
+
+static jclass sSpriteProxyClass;
+
+static jmethodID sConstructor;
+
+JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_sprite_SpriteProxy_nativeInitClass(JNIEnv* pJNIEnv, jclass pJClass) {
+	sSpriteProxyClass = (jclass)JNI_ENV()->NewGlobalRef(pJClass);
+	
+	sConstructor = JNI_ENV()->GetMethodID(sSpriteProxyClass, "<init>", "(JFFFFLorg/andengine/opengl/texture/region/ITextureRegion;Lorg/andengine/opengl/vbo/VertexBufferObjectManager;)V");
+}
 
 // ===========================================================
 // org.andengine.extension.scripting.entity.sprite.SpriteProxy
@@ -28,9 +39,5 @@ SpriteProxy::SpriteProxy() {
 }
 
 SpriteProxy::SpriteProxy(float pX, float pY, float pWidth, float pHeight, jobject pTextureRegion, jobject pVertexBufferObjectManager) {
-	jclass clazz = JNI_ENV()->FindClass("org/andengine/extension/scripting/entity/sprite/SpriteProxy");
-
-	jmethodID constructor = JNI_ENV()->GetMethodID(clazz, "<init>", "(JFFFFLorg/andengine/opengl/texture/region/ITextureRegion;Lorg/andengine/opengl/vbo/VertexBufferObjectManager;)V");
-
-	this->mUnwrapped = JNI_ENV()->NewObject(clazz, constructor, (jlong)this, pX, pY, pWidth, pHeight, pTextureRegion, pVertexBufferObjectManager);
+	this->mUnwrapped = JNI_ENV()->NewObject(sSpriteProxyClass, sConstructor, (jlong)this, pX, pY, pWidth, pHeight, pTextureRegion, pVertexBufferObjectManager);
 }
