@@ -30,7 +30,7 @@ public class FontProxy extends Font {
 	// Constructors
 	// ===========================================================
 
-	public FontProxy(final long pAddress, FontManager pFontManager, ITexture pTexture, Typeface pTypeface, float pSize, boolean pAntiAlias, int pColorARGBPackedInt) {
+	public FontProxy(final long pAddress, final FontManager pFontManager, final ITexture pTexture, final Typeface pTypeface, final float pSize, final boolean pAntiAlias, final int pColorARGBPackedInt) {
 		super(pFontManager, pTexture, pTypeface, pSize, pAntiAlias, pColorARGBPackedInt);
 
 		this.mAddress = pAddress;

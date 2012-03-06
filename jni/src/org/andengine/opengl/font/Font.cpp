@@ -11,7 +11,7 @@ static jmethodID sUnloadMethod;
 JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_opengl_font_FontProxy_nativeInitClass(JNIEnv* pJNIEnv, jclass pJClass) {
 	sFontClass = (jclass)JNI_ENV()->NewGlobalRef(pJClass);
 
-	sConstructor = JNI_ENV()->GetMethodID(sFontClass, "<init>", "(JLorg/andengine/opengl/font/FontManager;Lorg/andengine/opengl/texture/ITexture;Landroid/graphics/Typeface;FBI)V");
+	sConstructor = JNI_ENV()->GetMethodID(sFontClass, "<init>", "(JLorg/andengine/opengl/font/FontManager;Lorg/andengine/opengl/texture/ITexture;Landroid/graphics/Typeface;FZI)V");
 	sLoadMethod = JNI_ENV()->GetMethodID(sFontClass, "load", "()V");
 	sUnloadMethod = JNI_ENV()->GetMethodID(sFontClass, "unload", "()V");
 }

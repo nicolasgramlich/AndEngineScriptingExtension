@@ -9,8 +9,8 @@ static jmethodID sUnloadTextureMethod;
 JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_opengl_texture_TextureManagerProxy_nativeInitClass(JNIEnv* pJNIEnv, jclass pJClass) {
 	sTextureManagerClass = (jclass)JNI_ENV()->NewGlobalRef(pJClass);
 
-	sLoadTextureMethod = JNI_ENV()->GetMethodID(sTextureManagerClass, "loadTexture", "(Lorg/andengine/opengl/texture/ITexture;)B");
-	sUnloadTextureMethod = JNI_ENV()->GetMethodID(sTextureManagerClass, "unloadTexture", "(Lorg/andengine/opengl/texture/ITexture;)B");
+	sLoadTextureMethod = JNI_ENV()->GetMethodID(sTextureManagerClass, "loadTexture", "(Lorg/andengine/opengl/texture/ITexture;)Z");
+	sUnloadTextureMethod = JNI_ENV()->GetMethodID(sTextureManagerClass, "unloadTexture", "(Lorg/andengine/opengl/texture/ITexture;)Z");
 }
 
 // ===========================================================
