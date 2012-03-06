@@ -15,7 +15,7 @@ extern "C" {
 class TextureRegion : public Texture {
 	public:
 		/* Constructors */
-		TextureRegion(jobject, float, float, float, float);
+		TextureRegion(Texture*, float, float, float, float);
 };
 
 #endif

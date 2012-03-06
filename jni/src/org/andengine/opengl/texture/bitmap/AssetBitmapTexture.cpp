@@ -15,6 +15,6 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_opengl_texture_bit
 // org.andengine.extension.scripting.opengl.texture.bitmap.AssetBitmapTextureProxy
 // ===========================================================
 
-AssetBitmapTexture::AssetBitmapTexture(jobject pTextureManager, jobject pAssetManager, jstring pAssetPath) {
+AssetBitmapTexture::AssetBitmapTexture(TextureManager* pTextureManager, jobject pAssetManager, jstring pAssetPath) {
 	this->mUnwrapped = JNI_ENV()->NewObject(sAssetBitmapTextureClass, sConstructor, (jlong)this, pTextureManager, pAssetManager, pAssetPath);
 }

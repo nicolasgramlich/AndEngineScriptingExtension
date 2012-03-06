@@ -38,6 +38,6 @@ Rectangle::Rectangle() {
 	/* Intentionally empty. */
 }
 
-Rectangle::Rectangle(float pX, float pY, float pWidth, float pHeight, jobject pVertexBufferObjectManager) {
-	this->mUnwrapped = JNI_ENV()->NewObject(sRectangleClass, sConstructor, (jlong)this, pX, pY, pWidth, pHeight, pVertexBufferObjectManager);
+Rectangle::Rectangle(float pX, float pY, float pWidth, float pHeight, VertexBufferObjectManager* pVertexBufferObjectManager) {
+	this->mUnwrapped = JNI_ENV()->NewObject(sRectangleClass, sConstructor, (jlong)this, pX, pY, pWidth, pHeight, pVertexBufferObjectManager->unwrap());
 }

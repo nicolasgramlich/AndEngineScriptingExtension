@@ -3,6 +3,9 @@
 
 #include <jni.h>
 #include "src/Wrapper.h"
+#include "src/org/andengine/opengl/vbo/VertexBufferObjectManager.h"
+#include "src/org/andengine/opengl/texture/TextureManager.h"
+#include "src/org/andengine/opengl/font/FontManager.h"
 
 extern "C" {
 	// ===========================================================
@@ -13,14 +16,19 @@ extern "C" {
 }
 
 class Engine : public Wrapper {
+	private:
+		VertexBufferObjectManager* mVertexBufferObjectManager;
+		TextureManager* mTextureManager;
+		FontManager* mFontManager;
+
 	public:
 		/* Constructors */
 		Engine(jobject);
 
 		/* Getter & Setter */
-		jobject getVertexBufferObjectManager();
-		jobject getTextureManager();
-		jobject getFontManager();
+		VertexBufferObjectManager* getVertexBufferObjectManager();
+		TextureManager* getTextureManager();
+		FontManager* getFontManager();
 };
 
 #endif

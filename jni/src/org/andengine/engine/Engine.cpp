@@ -23,16 +23,20 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_engine_EngineProxy
 
 Engine::Engine(jobject pEngineOptions) {
 	this->mUnwrapped = JNI_ENV()->NewObject(sEngineClass, sConstructor, (jlong)this, pEngineOptions);
+
+	this->mVertexBufferObjectManager = new VertexBufferObjectManager(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sGetVertexBufferObjectManagerMethod));	
+	this->mTextureManager = new TextureManager(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sGetTextureManagerMethod));	
+	this->mFontManager = new FontManager(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sGetFontManagerMethod));	
 }
 
-jobject Engine::getVertexBufferObjectManager() {
-	return JNI_ENV()->CallObjectMethod(this->mUnwrapped, sGetVertexBufferObjectManagerMethod);
+VertexBufferObjectManager* Engine::getVertexBufferObjectManager() {
+	return this->mVertexBufferObjectManager;
 }
 
-jobject Engine::getTextureManager() {
-	return JNI_ENV()->CallObjectMethod(this->mUnwrapped, sGetTextureManagerMethod);
+TextureManager* Engine::getTextureManager() {
+	return this->mTextureManager;
 }
 
-jobject Engine::getFontManager() {
-	return JNI_ENV()->CallObjectMethod(this->mUnwrapped, sGetFontManagerMethod);
+FontManager* Engine::getFontManager() {
+	return this->mFontManager;
 }

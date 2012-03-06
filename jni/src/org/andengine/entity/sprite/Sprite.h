@@ -4,6 +4,8 @@
 #include <jni.h>
 #include "src/ScriptingEnvironment.h"
 #include "src/org/andengine/entity/shape/Shape.h"
+#include "src/org/andengine/opengl/texture/region/TextureRegion.h"
+#include "src/org/andengine/opengl/vbo/VertexBufferObjectManager.h"
 
 extern "C" {
 	// ===========================================================
@@ -23,7 +25,7 @@ class Sprite : public Shape {
  		Sprite();
 	public:
 		/* Constructors */ 
-		Sprite(float, float, float, float, jobject, jobject);
+		Sprite(float, float, float, float, TextureRegion*, VertexBufferObjectManager*);
 };
 
 #endif

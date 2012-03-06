@@ -15,6 +15,6 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_opengl_texture_reg
 // org.andengine.extension.scripting.opengl.texture.bitmap.TextureRegionProxy
 // ===========================================================
 
-TextureRegion::TextureRegion(jobject pTexture, float pTextureX, float pTextureY, float pTextureWidth, float pTextureHeight) {
-	this->mUnwrapped = JNI_ENV()->NewObject(sTextureRegionClass, sConstructor, (jlong)this, pTexture, pTextureX, pTextureY, pTextureWidth, pTextureHeight);
+TextureRegion::TextureRegion(Texture* pTexture, float pTextureX, float pTextureY, float pTextureWidth, float pTextureHeight) {
+	this->mUnwrapped = JNI_ENV()->NewObject(sTextureRegionClass, sConstructor, (jlong)this, pTexture->unwrap(), pTextureX, pTextureY, pTextureWidth, pTextureHeight);
 }

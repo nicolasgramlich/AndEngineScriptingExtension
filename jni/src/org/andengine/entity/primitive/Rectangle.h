@@ -4,6 +4,7 @@
 #include <jni.h>
 #include "src/ScriptingEnvironment.h"
 #include "src/org/andengine/entity/shape/Shape.h"
+#include "src/org/andengine/opengl/vbo/VertexBufferObjectManager.h"
 
 extern "C" {
 	// ===========================================================
@@ -23,7 +24,7 @@ class Rectangle : public Shape {
  		Rectangle();
 	public:
 		/* Constructors */ 
-		Rectangle(float, float, float, float, jobject);
+		Rectangle(float, float, float, float, VertexBufferObjectManager*);
 };
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <jni.h>
 #include "src/org/andengine/opengl/texture/Texture.h"
+#include "src/org/andengine/opengl/texture/TextureManager.h"
 
 extern "C" {
 	// ===========================================================
@@ -15,7 +16,7 @@ extern "C" {
 class AssetBitmapTexture : public Texture {
 	public:
 		/* Constructors */
-		AssetBitmapTexture(jobject, jobject, jstring);
+		AssetBitmapTexture(TextureManager*, jobject, jstring);
 };
 
 #endif

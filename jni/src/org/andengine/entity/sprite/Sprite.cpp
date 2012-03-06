@@ -38,6 +38,6 @@ Sprite::Sprite() {
 	/* Intentionally empty. */
 }
 
-Sprite::Sprite(float pX, float pY, float pWidth, float pHeight, jobject pTextureRegion, jobject pVertexBufferObjectManager) {
-	this->mUnwrapped = JNI_ENV()->NewObject(sSpriteClass, sConstructor, (jlong)this, pX, pY, pWidth, pHeight, pTextureRegion, pVertexBufferObjectManager);
+Sprite::Sprite(float pX, float pY, float pWidth, float pHeight, TextureRegion* pTextureRegion, VertexBufferObjectManager* pVertexBufferObjectManager) {
+	this->mUnwrapped = JNI_ENV()->NewObject(sSpriteClass, sConstructor, (jlong)this, pX, pY, pWidth, pHeight, pTextureRegion->unwrap(), pVertexBufferObjectManager->unwrap());
 }

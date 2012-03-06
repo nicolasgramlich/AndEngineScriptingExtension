@@ -7,9 +7,13 @@ import org.andengine.extension.scripting.entity.EntityProxy;
 import org.andengine.extension.scripting.entity.primitive.RectangleProxy;
 import org.andengine.extension.scripting.entity.shape.ShapeProxy;
 import org.andengine.extension.scripting.entity.sprite.SpriteProxy;
+import org.andengine.extension.scripting.opengl.font.FontManagerProxy;
+import org.andengine.extension.scripting.opengl.font.FontProxy;
+import org.andengine.extension.scripting.opengl.texture.TextureManagerProxy;
 import org.andengine.extension.scripting.opengl.texture.TextureProxy;
 import org.andengine.extension.scripting.opengl.texture.bitmap.AssetBitmapTextureProxy;
 import org.andengine.extension.scripting.opengl.texture.region.TextureRegionProxy;
+import org.andengine.extension.scripting.opengl.vbo.VertexBufferObjectManagerProxy;
 
 import android.content.Context;
 
@@ -64,18 +68,26 @@ public class ScriptingEnvironment {
 	 */
 	public static void init(final Context pContext, final String pAPKPath) {
 		ScriptingEnvironment.nativeInitClass();
-
 		ScriptingEnvironment.nativeInit(pContext, pAPKPath);
 
 		ContextProxy.nativeInitClass();
+
 		EngineProxy.nativeInitClass();
+
+		VertexBufferObjectManagerProxy.nativeInitClass();
+
+		TextureManagerProxy.nativeInitClass();
+		TextureProxy.nativeInitClass();
+		AssetBitmapTextureProxy.nativeInitClass();
+		TextureRegionProxy.nativeInitClass();
+
+		FontManagerProxy.nativeInitClass();
+		FontProxy.nativeInitClass();
+
 		EntityProxy.nativeInitClass();
 		ShapeProxy.nativeInitClass();
 		RectangleProxy.nativeInitClass();
 		SpriteProxy.nativeInitClass();
-		TextureProxy.nativeInitClass();
-		AssetBitmapTextureProxy.nativeInitClass();
-		TextureRegionProxy.nativeInitClass();
 	}
 
 	private static native void nativeInitClass();
