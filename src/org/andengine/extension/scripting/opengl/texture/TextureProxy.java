@@ -1,12 +1,18 @@
-package org.andengine.extension.scripting.opengl.texture.region;
+package org.andengine.extension.scripting.opengl.texture;
+
+import org.andengine.opengl.texture.PixelFormat;
+import org.andengine.opengl.texture.Texture;
+import org.andengine.opengl.texture.TextureManager;
+import org.andengine.opengl.texture.TextureOptions;
+import org.andengine.util.exception.MethodNotSupportedException;
 
 /**
  * (c) Zynga 2012
  *
  * @author Nicolas Gramlich <ngramlich@zynga.com>
- * @since 10:27:54 - 02.03.2012
+ * @since 18:43:18 - 05.03.2012
  */
-public class TextureRegionFactoryProxy {
+public abstract class TextureProxy extends Texture {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -20,6 +26,13 @@ public class TextureRegionFactoryProxy {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
+
+	@Deprecated
+	private TextureProxy(final TextureManager pTextureManager, final PixelFormat pPixelFormat, final TextureOptions pTextureOptions, final ITextureStateListener pTextureStateListener) throws IllegalArgumentException {
+		super(pTextureManager, pPixelFormat, pTextureOptions, pTextureStateListener);
+
+		throw new MethodNotSupportedException();
+	}
 
 	// ===========================================================
 	// Getter & Setter

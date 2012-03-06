@@ -1,12 +1,15 @@
 package org.andengine.extension.scripting.opengl.texture.region;
 
+import org.andengine.opengl.texture.ITexture;
+import org.andengine.opengl.texture.region.TextureRegion;
+
 /**
  * (c) Zynga 2012
  *
  * @author Nicolas Gramlich <ngramlich@zynga.com>
- * @since 10:27:54 - 02.03.2012
+ * @since 18:55:37 - 05.03.2012
  */
-public class TextureRegionFactoryProxy {
+public class TextureRegionProxy extends TextureRegion {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -17,9 +20,17 @@ public class TextureRegionFactoryProxy {
 	// Fields
 	// ===========================================================
 
+	private final long mAddress;
+
 	// ===========================================================
 	// Constructors
 	// ===========================================================
+
+	public TextureRegionProxy(final long pAddress, final ITexture pTexture, final float pTextureX, final float pTextureY, final float pTextureWidth, final float pTextureHeight) {
+		super(pTexture, pTextureX, pTextureY, pTextureWidth, pTextureHeight);
+
+		this.mAddress = pAddress;
+	}
 
 	// ===========================================================
 	// Getter & Setter

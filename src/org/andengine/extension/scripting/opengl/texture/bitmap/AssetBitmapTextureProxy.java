@@ -1,12 +1,19 @@
-package org.andengine.extension.scripting.opengl.texture.region;
+package org.andengine.extension.scripting.opengl.texture.bitmap;
+
+import java.io.IOException;
+
+import org.andengine.opengl.texture.TextureManager;
+import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
+
+import android.content.res.AssetManager;
 
 /**
  * (c) Zynga 2012
  *
  * @author Nicolas Gramlich <ngramlich@zynga.com>
- * @since 10:27:54 - 02.03.2012
+ * @since 18:26:44 - 05.03.2012
  */
-public class TextureRegionFactoryProxy {
+public class AssetBitmapTextureProxy extends AssetBitmapTexture {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -17,9 +24,17 @@ public class TextureRegionFactoryProxy {
 	// Fields
 	// ===========================================================
 
+	private final long mAddress;
+
 	// ===========================================================
 	// Constructors
 	// ===========================================================
+
+	public AssetBitmapTextureProxy(final long pAddress, final TextureManager pTextureManager, final AssetManager pAssetManager, final String pAssetPath) throws IOException {
+		super(pTextureManager, pAssetManager, pAssetPath);
+
+		this.mAddress = pAddress;
+	}
 
 	// ===========================================================
 	// Getter & Setter

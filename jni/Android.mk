@@ -13,7 +13,10 @@ LOCAL_SRC_FILES		  := src/ScriptingEnvironment.cpp \
 							 src/org/andengine/entity/Entity.cpp \
 							 src/org/andengine/entity/shape/Shape.cpp \
 							 src/org/andengine/entity/primitive/Rectangle.cpp \
-							 src/org/andengine/entity/sprite/Sprite.cpp
+							 src/org/andengine/entity/sprite/Sprite.cpp \
+							 src/org/andengine/opengl/texture/Texture.cpp \
+							 src/org/andengine/opengl/texture/bitmap/AssetBitmapTexture.cpp \
+							 src/org/andengine/opengl/texture/region/TextureRegion.cpp
 
 LOCAL_LDLIBS := -llog
 

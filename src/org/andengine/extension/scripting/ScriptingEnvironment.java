@@ -7,6 +7,9 @@ import org.andengine.extension.scripting.entity.EntityProxy;
 import org.andengine.extension.scripting.entity.primitive.RectangleProxy;
 import org.andengine.extension.scripting.entity.shape.ShapeProxy;
 import org.andengine.extension.scripting.entity.sprite.SpriteProxy;
+import org.andengine.extension.scripting.opengl.texture.TextureProxy;
+import org.andengine.extension.scripting.opengl.texture.bitmap.AssetBitmapTextureProxy;
+import org.andengine.extension.scripting.opengl.texture.region.TextureRegionProxy;
 
 import android.content.Context;
 
@@ -70,6 +73,9 @@ public class ScriptingEnvironment {
 		ShapeProxy.nativeInitClass();
 		RectangleProxy.nativeInitClass();
 		SpriteProxy.nativeInitClass();
+		TextureProxy.nativeInitClass();
+		AssetBitmapTextureProxy.nativeInitClass();
+		TextureRegionProxy.nativeInitClass();
 	}
 
 	private static native void nativeInitClass();
