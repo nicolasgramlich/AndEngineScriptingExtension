@@ -1,6 +1,8 @@
 package org.andengine.extension.scripting;
 
 import org.andengine.engine.Engine;
+import org.andengine.engine.options.EngineOptions;
+import org.andengine.extension.scripting.engine.EngineProxy;
 import org.andengine.extension.scripting.entity.EntityProxy;
 import org.andengine.extension.scripting.entity.primitive.RectangleProxy;
 import org.andengine.extension.scripting.entity.shape.ShapeProxy;
@@ -45,23 +47,32 @@ public class ScriptingEnvironment {
 	// Methods
 	// ===========================================================
 
+	public static Engine onCreateEngine(final EngineOptions pEngineOptions) {
+		return ScriptingEnvironment.nativeOnCreateEngine(pEngineOptions);
+	}
+
+	private static native Engine nativeOnCreateEngine(EngineOptions pEngineOptions);
+
 	/**
 	 * It is critical from which {@link Thread} this method is called!
 	 *
 	 * @param pContext
 	 * @param pAPKPath
-	 * @param pEngine
 	 */
-	public static void init(final Context pContext, final String pAPKPath, final Engine pEngine) {
-		ScriptingEnvironment.nativeInit(pContext, pAPKPath, pEngine);
+	public static void init(final Context pContext, final String pAPKPath) {
+		ScriptingEnvironment.nativeInitClass();
 
+		ScriptingEnvironment.nativeInit(pContext, pAPKPath);
+
+		EngineProxy.nativeInitClass();
 		EntityProxy.nativeInitClass();
 		ShapeProxy.nativeInitClass();
 		RectangleProxy.nativeInitClass();
 		SpriteProxy.nativeInitClass();
 	}
 
-	private static native void nativeInit(final Context pContext, final String pAPKPath, final Engine pEngine);
+	private static native void nativeInitClass();
+	private static native void nativeInit(final Context pContext, final String pAPKPath);
 
 	/**
 	 * TODO read throughly about it before implementing!

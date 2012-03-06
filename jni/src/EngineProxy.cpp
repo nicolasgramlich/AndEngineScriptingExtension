@@ -1,43 +1,38 @@
 #include "EngineProxy.h"
 #include "ScriptingEnvironment.h"
 
-EngineProxy::EngineProxy(jobject pEngine) {
-	// TODO http://android-developers.blogspot.com/2011/11/jni-local-reference-changes-in-ics.html
-	mUnwrapped = pEngine;
+static jclass sEngineProxyClass;
+
+static jmethodID sConstructor;
+static jmethodID sGetVertexBufferObjectManagerMethod;
+static jmethodID sGetTextureManagerMethod;
+static jmethodID sGetFontManagerMethod;
+
+JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_engine_EngineProxy_nativeInitClass(JNIEnv* pJNIEnv, jclass pJClass) {
+	sEngineProxyClass = (jclass)JNI_ENV()->NewGlobalRef(pJClass);
+
+	sConstructor = JNI_ENV()->GetMethodID(sEngineProxyClass, "<init>", "(JLorg/andengine/engine/options/EngineOptions;)V");
+	sGetVertexBufferObjectManagerMethod = JNI_ENV()->GetMethodID(sEngineProxyClass, "getVertexBufferObjectManager", "()Lorg/andengine/opengl/vbo/VertexBufferObjectManager;");
+	sGetTextureManagerMethod = JNI_ENV()->GetMethodID(sEngineProxyClass, "getTextureManager", "()Lorg/andengine/opengl/texture/TextureManager;");
+	sGetFontManagerMethod = JNI_ENV()->GetMethodID(sEngineProxyClass, "getFontManager", "()Lorg/andengine/opengl/font/FontManager;");
+}
+
+// ===========================================================
+// org.andengine.extension.scripting.entity.primitive.RectangleProxy
+// ===========================================================
+
+EngineProxy::EngineProxy(jobject pEngineOptions) {
+	this->mUnwrapped = JNI_ENV()->NewObject(sEngineProxyClass, sConstructor, (jlong)this, pEngineOptions);
 }
 
 jobject EngineProxy::getVertexBufferObjectManager() {
-	jclass clazz = JNI_ENV()->FindClass("org/andengine/engine/Engine");
-
-	jmethodID getVertexBufferObjectManagerMethod = JNI_ENV()->GetMethodID(clazz, "getVertexBufferObjectManager", "()Lorg/andengine/opengl/vbo/VertexBufferObjectManager;");
-	
-	jobject result = JNI_ENV()->CallObjectMethod(this->mUnwrapped, getVertexBufferObjectManagerMethod);
-
-	JNI_ENV()->DeleteLocalRef(clazz);
-
-	return result;
+	return JNI_ENV()->CallObjectMethod(this->mUnwrapped, sGetVertexBufferObjectManagerMethod);
 }
 
 jobject EngineProxy::getTextureManager() {
-	jclass clazz = JNI_ENV()->FindClass("org/andengine/engine/Engine");
-
-	jmethodID getTextureManagerMethod = JNI_ENV()->GetMethodID(clazz, "getTextureManager", "()Lorg/andengine/opengl/texture/TextureManager;");
-	
-	jobject result = JNI_ENV()->CallObjectMethod(this->mUnwrapped, getTextureManagerMethod);
-
-	JNI_ENV()->DeleteLocalRef(clazz);
-
-	return result;
+	return JNI_ENV()->CallObjectMethod(this->mUnwrapped, sGetTextureManagerMethod);
 }
 
 jobject EngineProxy::getFontManager() {
-	jclass clazz = JNI_ENV()->FindClass("org/andengine/engine/Engine");
-
-	jmethodID getFontManagerMethod = JNI_ENV()->GetMethodID(clazz, "getFontManager", "()Lorg/andengine/opengl/font/FontManager;");
-	
-	jobject result = JNI_ENV()->CallObjectMethod(this->mUnwrapped, getFontManagerMethod);
-	
-	JNI_ENV()->DeleteLocalRef(clazz);
-
-	return result;
+	return JNI_ENV()->CallObjectMethod(this->mUnwrapped, sGetFontManagerMethod);
 }

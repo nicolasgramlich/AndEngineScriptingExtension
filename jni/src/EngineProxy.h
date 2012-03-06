@@ -4,10 +4,17 @@
 #include <jni.h>
 #include "Wrapper.h"
 
+extern "C" {
+	// ===========================================================
+	// org.andengine.extension.scripting.ScriptingEnvironment
+	// ===========================================================
+
+	JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_engine_EngineProxy_nativeInitClass(JNIEnv*, jclass);
+}
+
 class EngineProxy : public Wrapper {
 	public:
 		/* Constructors */
-		 // TODO For now the constructor takes a 'Engine' java object, later on it should be able to take sth like a EngineProxyOptions object. 
 		EngineProxy(jobject);
 
 		/* Getter & Setter */
