@@ -1,9 +1,9 @@
-#ifndef EntityProxy_H
-#define EntityProxy_H
+#ifndef Entity_H
+#define Entity_H
 
 #include <jni.h>
-#include "ScriptingEnvironment.h"
-#include "Wrapper.h"
+#include "src/ScriptingEnvironment.h"
+#include "src/Wrapper.h"
 
 extern "C" {
 	// ===========================================================
@@ -16,14 +16,14 @@ extern "C" {
 	JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_EntityProxy_nativeOnDetached(JNIEnv*, jobject, jlong);
 }
 
-class EntityProxy : public Wrapper {
+class Entity : public Wrapper {
 	protected:
 		/* Constructors */ 
-		EntityProxy();
+		Entity();
 
 	public:
 		/* Constructors. */ 
-		EntityProxy(float, float);
+		Entity(float, float);
 
 		/* Getter & Setter. */
 		float getRotation();

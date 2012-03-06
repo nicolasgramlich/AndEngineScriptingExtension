@@ -1,9 +1,9 @@
-#ifndef SpriteProxy_H
-#define SpriteProxy_H
+#ifndef Sprite_H
+#define Sprite_H
 
 #include <jni.h>
-#include "ScriptingEnvironment.h"
-#include "ShapeProxy.h"
+#include "src/ScriptingEnvironment.h"
+#include "src/org/andengine/entity/shape/Shape.h"
 
 extern "C" {
 	// ===========================================================
@@ -17,13 +17,13 @@ extern "C" {
 	JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_sprite_SpriteProxy_nativeOnAreaTouched(JNIEnv*, jobject, jlong, jobject, jfloat, jfloat);
 }
 
-class SpriteProxy : public ShapeProxy {
+class Sprite : public Shape {
 	protected:
 		/* Constructors */
- 		SpriteProxy();
+ 		Sprite();
 	public:
 		/* Constructors */ 
-		SpriteProxy(float, float, float, float, jobject, jobject);
+		Sprite(float, float, float, float, jobject, jobject);
 };
 
 #endif

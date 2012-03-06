@@ -1,9 +1,9 @@
-#ifndef ShapeProxy_H
-#define ShapeProxy_H
+#ifndef Shape_H
+#define Shape_H
 
 #include <jni.h>
-#include "ScriptingEnvironment.h"
-#include "EntityProxy.h"
+#include "src/ScriptingEnvironment.h"
+#include "src/org/andengine/entity/Entity.h"
 
 extern "C" {
 	// ===========================================================
@@ -13,10 +13,10 @@ extern "C" {
 	JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_shape_ShapeProxy_nativeInitClass(JNIEnv*, jclass);
 }
 
-class ShapeProxy : public EntityProxy {
+class Shape : public Entity {
 	protected:
 		/* Constructors */ 
-		ShapeProxy();
+		Shape();
 
 	public:
 		/* Callbacks. */

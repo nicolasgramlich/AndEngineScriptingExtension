@@ -1,5 +1,5 @@
 #include <jni.h>
-#include "ScriptingEnvironment.h"
+#include "src/ScriptingEnvironment.h"
 
 extern "C" {
 	// ===========================================================

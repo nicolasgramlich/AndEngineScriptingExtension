@@ -64,6 +64,7 @@ public class ScriptingEnvironment {
 
 		ScriptingEnvironment.nativeInit(pContext, pAPKPath);
 
+		ContextProxy.nativeInitClass();
 		EngineProxy.nativeInitClass();
 		EntityProxy.nativeInitClass();
 		ShapeProxy.nativeInitClass();

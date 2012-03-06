@@ -1,14 +1,14 @@
-#include "ScriptingEnvironment.h"
+#include "src/ScriptingEnvironment.h"
 // #include <JavaScriptCore/JavaScriptCore.h>
 
 // ===========================================================
 // org.andengine.extension.scripting.ScriptingEnvironment
 // ===========================================================
 
-static jobject sContext;
+static Context* sContext;
 static JavaVM* sJavaVM;
 static JNIEnv* sJNIEnv;
-static EngineProxy* sEngineProxy;
+static Engine* sEngine;
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* pJavaVM, void* pReserved) {
 	sJavaVM = pJavaVM;
@@ -21,7 +21,7 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironme
 }
 
 JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeInit(JNIEnv* pJNIEnv, jclass pJClass, jobject pContext, jstring pAPKPath) {
-	sContext = pContext;
+	sContext = new Context(pContext);
 	sJNIEnv = pJNIEnv;
 
 	setAPKPath(pJNIEnv, pJClass, pAPKPath);
@@ -32,17 +32,21 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironme
 //}
 
 JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeOnCreateEngine(JNIEnv* pJNIEnv, jclass pJClass, jobject pEngineOptions) {
-	sEngineProxy = new EngineProxy(pEngineOptions);
+	sEngine = new Engine(pEngineOptions);
 
-	return sEngineProxy->unwrap();
+	return sEngine->unwrap();
 }
 
 JNIEnv* JNI_ENV() {
 	return sJNIEnv;
 }
 
-EngineProxy* getEngineProxy() {
-	return sEngineProxy;
+Engine* getEngine() {
+	return sEngine;
+}
+
+Context* getContext() {
+	return sContext;
 }
 
 void setAPKPath(JNIEnv* pJNIEnv, jclass pJClass, jstring pAPKPath) {

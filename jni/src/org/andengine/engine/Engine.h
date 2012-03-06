@@ -1,21 +1,21 @@
-#ifndef EngineProxy_H
-#define EngineProxy_H
+#ifndef Engine_H
+#define Engine_H
 
 #include <jni.h>
-#include "Wrapper.h"
+#include "src/Wrapper.h"
 
 extern "C" {
 	// ===========================================================
-	// org.andengine.extension.scripting.ScriptingEnvironment
+	// org.andengine.extension.scripting.engine.EngineProxy
 	// ===========================================================
 
 	JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_engine_EngineProxy_nativeInitClass(JNIEnv*, jclass);
 }
 
-class EngineProxy : public Wrapper {
+class Engine : public Wrapper {
 	public:
 		/* Constructors */
-		EngineProxy(jobject);
+		Engine(jobject);
 
 		/* Getter & Setter */
 		jobject getVertexBufferObjectManager();

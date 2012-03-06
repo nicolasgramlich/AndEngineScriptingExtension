@@ -1,9 +1,9 @@
-#ifndef RectangleProxy_H
-#define RectangleProxy_H
+#ifndef Rectangle_H
+#define Rectangle_H
 
 #include <jni.h>
-#include "ScriptingEnvironment.h"
-#include "ShapeProxy.h"
+#include "src/ScriptingEnvironment.h"
+#include "src/org/andengine/entity/shape/Shape.h"
 
 extern "C" {
 	// ===========================================================
@@ -17,13 +17,13 @@ extern "C" {
 	JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_primitive_RectangleProxy_nativeOnAreaTouched(JNIEnv*, jobject, jlong, jobject, jfloat, jfloat);
 }
 
-class RectangleProxy : public ShapeProxy {
+class Rectangle : public Shape {
 	protected:
 		/* Constructors */
- 		RectangleProxy();
+ 		Rectangle();
 	public:
 		/* Constructors */ 
-		RectangleProxy(float, float, float, float, jobject);
+		Rectangle(float, float, float, float, jobject);
 };
 
 #endif
