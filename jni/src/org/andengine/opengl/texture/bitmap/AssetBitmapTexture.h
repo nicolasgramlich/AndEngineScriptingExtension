@@ -16,10 +16,6 @@ class AssetBitmapTexture : public Texture {
 	public:
 		/* Constructors */
 		AssetBitmapTexture(jobject, jobject, jstring);
-
-		/* Methods. */
-		void load();
-		void unload();
 };
 
 #endif

@@ -1,6 +1,5 @@
 package org.andengine.extension.scripting;
 
-import org.andengine.opengl.texture.region.ITextureRegion;
 
 /**
  * (c) Zynga 2012
@@ -33,7 +32,7 @@ public class Test {
 	// Methods
 	// ===========================================================
 
-	public static native Object test(final ITextureRegion pTextureRegion);
+	public static native Object test();
 
 	// ===========================================================
 	// Inner and Anonymous Classes
