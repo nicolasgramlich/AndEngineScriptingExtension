@@ -5,6 +5,7 @@ import org.andengine.engine.options.EngineOptions;
 import org.andengine.extension.scripting.engine.EngineProxy;
 import org.andengine.extension.scripting.entity.EntityProxy;
 import org.andengine.extension.scripting.entity.primitive.RectangleProxy;
+import org.andengine.extension.scripting.entity.scene.SceneProxy;
 import org.andengine.extension.scripting.entity.shape.ShapeProxy;
 import org.andengine.extension.scripting.entity.sprite.SpriteProxy;
 import org.andengine.extension.scripting.opengl.font.FontManagerProxy;
@@ -88,15 +89,24 @@ public class ScriptingEnvironment {
 		ShapeProxy.nativeInitClass();
 		RectangleProxy.nativeInitClass();
 		SpriteProxy.nativeInitClass();
+		SceneProxy.nativeInitClass();
 	}
 
 	private static native void nativeInitClass();
 	private static native void nativeInit(final Context pContext, final String pAPKPath);
 
-	/**
-	 * TODO read throughly about it before implementing!
-	 */
-	public static native void attachCurrentThread();
+
+	public static void attachCurrentThread() {
+		ScriptingEnvironment.nativeAttachCurrentThread();
+	}
+
+	private static native void nativeAttachCurrentThread();
+
+	public static void detachCurrentThread() {
+		ScriptingEnvironment.nativeDetachCurrentThread();
+	}
+
+	private static native void nativeDetachCurrentThread();
 
 	// ===========================================================
 	// Inner and Anonymous Classes

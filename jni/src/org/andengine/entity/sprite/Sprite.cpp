@@ -16,21 +16,21 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_sprite_Spri
 // ===========================================================
 
 JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_sprite_SpriteProxy_nativeOnAttached(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress) {
-	Sprite* rectangle = (Sprite*)pAddress;
+	Sprite* sprite = (Sprite*)pAddress;
 
-	return rectangle->onAttached();
+	return sprite->onAttached();
 }
 
 JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_sprite_SpriteProxy_nativeOnDetached(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress) {
-	Sprite* rectangle = (Sprite*)pAddress;
+	Sprite* sprite = (Sprite*)pAddress;
 
-	return rectangle->onDetached();
+	return sprite->onDetached();
 }
 
 JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_sprite_SpriteProxy_nativeOnAreaTouched(JNIEnv*, jobject pJObject, jlong pAddress, jobject pSceneTouchEvent, jfloat pTouchAreaLocalX, jfloat pTouchAreaLocalY) {
-	Sprite* rectangle = (Sprite*)pAddress;
+	Sprite* sprite = (Sprite*)pAddress;
 
-	return rectangle->onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+	return sprite->onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
 }
 
 

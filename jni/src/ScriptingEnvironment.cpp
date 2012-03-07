@@ -27,14 +27,26 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironme
 	setAPKPath(pJNIEnv, pJClass, pAPKPath);
 }
 
-//JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeOnCreateEngineOPtions(JNIEnv* pJNIEnv, jclass pJClass) {
-//	
-//}
+JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeAttachCurrentThread(JNIEnv* pJNIEnv, jclass pJClass) {
+	
+}
+
+JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeDetachCurrentThread(JNIEnv* pJNIEnv, jclass pJClass) {
+	
+}
+
+JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeOnCreateEngineOptions(JNIEnv* pJNIEnv, jclass pJClass) {
+	
+}
 
 JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeOnCreateEngine(JNIEnv* pJNIEnv, jclass pJClass, jobject pEngineOptions) {
 	sEngine = new Engine(pEngineOptions);
 
 	return sEngine->unwrap();
+}
+
+JavaVM* JAVA_VM() {
+	return sJavaVM;
 }
 
 JNIEnv* JNI_ENV() {
