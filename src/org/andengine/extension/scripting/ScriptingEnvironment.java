@@ -1,7 +1,6 @@
 package org.andengine.extension.scripting;
 
 import org.andengine.engine.Engine;
-import org.andengine.engine.options.EngineOptions;
 import org.andengine.extension.scripting.engine.EngineProxy;
 import org.andengine.extension.scripting.entity.EntityProxy;
 import org.andengine.extension.scripting.entity.primitive.RectangleProxy;
@@ -55,45 +54,47 @@ public class ScriptingEnvironment {
 	// Methods
 	// ===========================================================
 
-	public static Engine onCreateEngine(final EngineOptions pEngineOptions) {
-		return ScriptingEnvironment.nativeOnCreateEngine(pEngineOptions);
-	}
-
-	private static native Engine nativeOnCreateEngine(EngineOptions pEngineOptions);
-
 	/**
 	 * It is critical from which {@link Thread} this method is called!
 	 *
 	 * @param pContext
 	 * @param pAPKPath
+	 * @param pEngine
 	 */
-	public static void init(final Context pContext, final String pAPKPath) {
+	public static void init(final Context pContext, final String pAPKPath, final Engine pEngine) {
 		ScriptingEnvironment.nativeInitClass();
-		ScriptingEnvironment.nativeInit(pContext, pAPKPath);
 
+		/* Setup. */
 		ContextProxy.nativeInitClass();
-
+		
 		EngineProxy.nativeInitClass();
 
+		/* VBO. */
 		VertexBufferObjectManagerProxy.nativeInitClass();
 
+		/* Texture. */
 		TextureManagerProxy.nativeInitClass();
 		TextureProxy.nativeInitClass();
 		AssetBitmapTextureProxy.nativeInitClass();
 		TextureRegionProxy.nativeInitClass();
 
+		/* Font. */
 		FontManagerProxy.nativeInitClass();
 		FontProxy.nativeInitClass();
 
+		/* Entity. */
 		EntityProxy.nativeInitClass();
 		ShapeProxy.nativeInitClass();
 		RectangleProxy.nativeInitClass();
 		SpriteProxy.nativeInitClass();
 		SceneProxy.nativeInitClass();
+
+		/* Actual init. */
+		ScriptingEnvironment.nativeInit(pContext, pAPKPath, pEngine);
 	}
 
 	private static native void nativeInitClass();
-	private static native void nativeInit(final Context pContext, final String pAPKPath);
+	private static native void nativeInit(final Context pContext, final String pAPKPath, final Engine pEngine);
 
 
 	public static void attachCurrentThread() {

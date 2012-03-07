@@ -21,8 +21,8 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_engine_EngineProxy
 // org.andengine.extension.scripting.engine.EngineProxy
 // ===========================================================
 
-Engine::Engine(jobject pEngineOptions) {
-	this->mUnwrapped = JNI_ENV()->NewObject(sEngineClass, sConstructor, (jlong)this, pEngineOptions);
+Engine::Engine(jobject pEngine) {
+	this->mUnwrapped = pEngine;
 
 	this->mVertexBufferObjectManager = new VertexBufferObjectManager(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sGetVertexBufferObjectManagerMethod));	
 	this->mTextureManager = new TextureManager(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sGetTextureManagerMethod));	

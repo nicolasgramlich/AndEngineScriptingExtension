@@ -17,14 +17,13 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* pJavaVM, void* pReserved) {
 }
 
 JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeInitClass(JNIEnv* pJNIEnv, jclass pJClass) {
-
+	sJNIEnv = pJNIEnv;
 }
 
-JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeInit(JNIEnv* pJNIEnv, jclass pJClass, jobject pContext, jstring pAPKPath) {
+JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeInit(JNIEnv* pJNIEnv, jclass pJClass, jobject pContext, jstring pAPKPath, jobject pEngine) {
 	sContext = new Context(pContext);
-	sJNIEnv = pJNIEnv;
-
 	setAPKPath(pJNIEnv, pJClass, pAPKPath);
+	sEngine = new Engine(pEngine);
 }
 
 JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeAttachCurrentThread(JNIEnv* pJNIEnv, jclass pJClass) {
@@ -33,16 +32,6 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironme
 
 JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeDetachCurrentThread(JNIEnv* pJNIEnv, jclass pJClass) {
 	
-}
-
-JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeOnCreateEngineOptions(JNIEnv* pJNIEnv, jclass pJClass) {
-	
-}
-
-JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeOnCreateEngine(JNIEnv* pJNIEnv, jclass pJClass, jobject pEngineOptions) {
-	sEngine = new Engine(pEngineOptions);
-
-	return sEngine->unwrap();
 }
 
 JavaVM* JAVA_VM() {
