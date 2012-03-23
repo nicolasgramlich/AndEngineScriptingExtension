@@ -58,37 +58,37 @@ JNIEXPORT jint JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironme
 
 	/* Your application code here. This may include JSAPI calls to create your own custom JS objects and run scripts. */
 	/* These should indicate source location for diagnostics. */
-//	{
-//		char* filename;
-//		uint lineno;
-//
-//		/*
-//		 * The return value comes back here -- if it could be a GC thing, you must
-//		 * add it to the GC's "root set" with JS_AddRoot(cx, &thing) where thing
-//		 * is a JSString *, JSObject *, or jsdouble *, and remove the root before
-//		 * rval goes out of scope, or when rval is no longer needed.
-//		 */
-//		jsval rval;
-//		JSBool ok;
-//
-//		/*
-//		 * Some example source in a C string.  Larger, non-null-terminated buffers
-//		 * can be used, if you pass the buffer length to JS_EvaluateScript.
-//		 */
-//		const char* source = "x * f(y)";
-//
+	{
+		char* filename;
+		uint lineno;
+
+		/*
+		 * The return value comes back here -- if it could be a GC thing, you must
+		 * add it to the GC's "root set" with JS_AddRoot(cx, &thing) where thing
+		 * is a JSString *, JSObject *, or jsdouble *, and remove the root before
+		 * rval goes out of scope, or when rval is no longer needed.
+		 */
+		jsval rval;
+		JSBool ok;
+
+		/*
+		 * Some example source in a C string.  Larger, non-null-terminated buffers
+		 * can be used, if you pass the buffer length to JS_EvaluateScript.
+		 */
+		const char* source = "var x=10;x*x;";
+
 //		ok = JS_EvaluateScript(cx, global, source, strlen(source), filename, lineno, &rval);
-//		
+//	
 //		if(ok) {
 //		    /* Should get a number back from the example source. */
 ////		    jsdouble d;
 //		
 ////		    ok = JS_ValueToNumber(cx, rval, &d);
 //		}
-//		LOG_D("[JS] - ");
-//	}
-	/* Cleanup. */
+		LOG_D("[JS] - ...");
+	}
 
+	/* Cleanup. */
 	JS_DestroyContext(cx);
 	JS_DestroyRuntime(rt);
 	JS_ShutDown();
