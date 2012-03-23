@@ -94,6 +94,7 @@ public class ScriptingEnvironment {
 	}
 
 	public static native String getJavaScriptVMVersion();
+	public static native int runScript(final String pCode);
 
 	private static native void nativeInitClass();
 	private static native void nativeInit(final Context pContext, final String pAPKPath, final Engine pEngine);

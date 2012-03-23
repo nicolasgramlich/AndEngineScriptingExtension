@@ -13,6 +13,7 @@ extern "C" {
 	// ===========================================================
 
 	JNIEXPORT jstring JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_getJavaScriptVMVersion(JNIEnv*, jclass);
+	JNIEXPORT jint JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_runScript(JNIEnv*, jclass, jstring);
 
 	JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeInitClass(JNIEnv*, jclass);
 	JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeInit(JNIEnv*, jclass, jobject, jstring, jobject);
