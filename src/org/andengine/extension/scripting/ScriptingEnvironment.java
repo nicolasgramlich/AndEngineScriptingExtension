@@ -93,6 +93,8 @@ public class ScriptingEnvironment {
 		ScriptingEnvironment.nativeInit(pContext, pAPKPath, pEngine);
 	}
 
+	public static native String getJavaScriptVMVersion();
+
 	private static native void nativeInitClass();
 	private static native void nativeInit(final Context pContext, final String pAPKPath, final Engine pEngine);
 

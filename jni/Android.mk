@@ -25,14 +25,8 @@ LOCAL_SRC_FILES				:= src/ScriptingEnvironment.cpp \
 
 LOCAL_LDLIBS 				:= -llog
 
-# LOCAL_SHARED_LIBRARIES	:= andengine_shared
-# LOCAL_SHARED_LIBRARIES	+= cutils_shared
-# LOCAL_SHARED_LIBRARIES	+= icu4c_shared
-# LOCAL_SHARED_LIBRARIES	+= js_shared
+LOCAL_WHOLE_STATIC_LIBRARIES := spidermonkey_static
 
 include $(BUILD_SHARED_LIBRARY)
 
-# $(call import-module, graphic_engines/AndEngine/AndEngine/jni)
-# $(call import-module, JavaScriptCore-X/jsc-android/jni/Source/JavaScriptCore/cutils)
-# $(call import-module, JavaScriptCore-X/jsc-android/platform_external_icu4c)
-# $(call import-module, JavaScriptCore-X/jsc-android/jni)
+$(call import-module,spidermonkey/android)

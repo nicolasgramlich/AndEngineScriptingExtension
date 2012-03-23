@@ -13,7 +13,19 @@ static Engine* sEngine;
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* pJavaVM, void* pReserved) {
 	sJavaVM = pJavaVM;
  
+//	JNIEnv* env;
+//	vm->GetEnv((void**)&env, JNI_VERSION_1_4);
+
+	// Register methods for org.cocos2dx.hellojs.HelloJS
+//	jclass hellojs_class = env->FindClass("org/cocos2dx/hellojs/HelloJS");
+//	env->RegisterNatives(hellojs_class, hellojs_methods, sizeof(hellojs_methods)/sizeof(hellojs_methods[0]));
+
 	return JNI_VERSION_1_4;
+}
+
+JNIEXPORT jstring JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_getJavaScriptVMVersion(JNIEnv* pJNIEnv, jclass pJClass) {
+	const char* version = JS_GetImplementationVersion();
+	return pJNIEnv->NewStringUTF(version);
 }
 
 JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeInitClass(JNIEnv* pJNIEnv, jclass pJClass) {
@@ -27,11 +39,11 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironme
 }
 
 JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeAttachCurrentThread(JNIEnv* pJNIEnv, jclass pJClass) {
-	
+	// TODO
 }
 
 JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_nativeDetachCurrentThread(JNIEnv* pJNIEnv, jclass pJClass) {
-	
+	// TODO
 }
 
 JavaVM* JAVA_VM() {
@@ -51,11 +63,11 @@ Context* getContext() {
 }
 
 void setAPKPath(JNIEnv* pJNIEnv, jclass pJClass, jstring pAPKPath) {
-//	const char* str;
+//	const char* apkPath;
 //	jboolean isCopy;
-//	str = env->GetStringUTFChars(pAPKPath, &isCopy);
-//	if (isCopy) {
-//		setResourcePath(str);
-//		env->ReleaseStringUTFChars(pAPKPath, str);
+//	apkPath = env->GetStringUTFChars(pAPKPath, &isCopy);
+//	if(isCopy) {
+//		setResourcePath(apkPath);
+//		env->ReleaseStringUTFChars(pAPKPath, apkPath);
 //	}
 }
