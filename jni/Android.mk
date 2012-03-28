@@ -9,6 +9,7 @@ LOCAL_SRC_FILES				:= src/ScriptingEnvironment.cpp \
 								src/Context.cpp \
 								src/Wrapper.cpp \
 								src/Test.cpp \
+								src/org/andengine/input/touch/TouchEvent.cpp \
 								src/org/andengine/engine/Engine.cpp \
 								src/org/andengine/entity/Entity.cpp \
 								src/org/andengine/entity/shape/Shape.cpp \

@@ -1,4 +1,4 @@
-#include "src/TouchEvent.h"
+#include "src/org/andengine/input/touch/TouchEvent.h"
 #include "src/ScriptingEnvironment.h"
 
 static jclass sTouchEventClass;
