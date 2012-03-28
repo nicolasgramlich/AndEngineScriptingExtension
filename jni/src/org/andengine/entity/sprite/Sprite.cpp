@@ -7,7 +7,7 @@ static jmethodID sConstructor;
 
 JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_sprite_SpriteProxy_nativeInitClass(JNIEnv* pJNIEnv, jclass pJClass) {
 	sSpriteClass = (jclass)JNI_ENV()->NewGlobalRef(pJClass);
-	
+
 	sConstructor = JNI_ENV()->GetMethodID(sSpriteClass, "<init>", "(JFFFFLorg/andengine/opengl/texture/region/ITextureRegion;Lorg/andengine/opengl/vbo/VertexBufferObjectManager;)V");
 }
 

@@ -6,7 +6,7 @@ package org.andengine.extension.scripting;
  * @author Nicolas Gramlich <ngramlich@zynga.com>
  * @since 17:37:39 - 05.03.2012
  */
-public class ContextProxy {
+public abstract class ContextProxy {
 	// ===========================================================
 	// Constants
 	// ===========================================================

@@ -1,13 +1,12 @@
-package org.andengine.extension.scripting.opengl.texture;
-
+package org.andengine.extension.scripting.input.touch;
 
 /**
  * (c) Zynga 2012
  *
  * @author Nicolas Gramlich <ngramlich@zynga.com>
- * @since 18:43:18 - 05.03.2012
+ * @since 18:59:49 - 26.03.2012
  */
-public abstract class TextureProxy {
+public abstract class TouchEventProxy {
 	// ===========================================================
 	// Constants
 	// ===========================================================

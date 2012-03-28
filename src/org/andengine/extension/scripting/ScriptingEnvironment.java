@@ -7,6 +7,7 @@ import org.andengine.extension.scripting.entity.primitive.RectangleProxy;
 import org.andengine.extension.scripting.entity.scene.SceneProxy;
 import org.andengine.extension.scripting.entity.shape.ShapeProxy;
 import org.andengine.extension.scripting.entity.sprite.SpriteProxy;
+import org.andengine.extension.scripting.input.touch.TouchEventProxy;
 import org.andengine.extension.scripting.opengl.font.FontManagerProxy;
 import org.andengine.extension.scripting.opengl.font.FontProxy;
 import org.andengine.extension.scripting.opengl.texture.TextureManagerProxy;
@@ -30,7 +31,6 @@ public class ScriptingEnvironment {
 
 	static {
 		System.loadLibrary("gnustl_shared");
-//		System.loadLibrary("js");
 		System.loadLibrary("andenginescriptingextension");
 	}
 
@@ -68,6 +68,8 @@ public class ScriptingEnvironment {
 		ContextProxy.nativeInitClass();
 		
 		EngineProxy.nativeInitClass();
+
+		TouchEventProxy.nativeInitClass();
 
 		/* VBO. */
 		VertexBufferObjectManagerProxy.nativeInitClass();

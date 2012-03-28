@@ -1,6 +1,5 @@
 package org.andengine.extension.scripting.opengl.font;
 
-import org.andengine.opengl.font.FontManager;
 
 /**
  * (c) Zynga 2012
@@ -8,7 +7,7 @@ import org.andengine.opengl.font.FontManager;
  * @author Nicolas Gramlich <ngramlich@zynga.com>
  * @since 22:23:51 - 05.03.2012
  */
-public class FontManagerProxy extends FontManager {
+public abstract class FontManagerProxy {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -19,15 +18,9 @@ public class FontManagerProxy extends FontManager {
 	// Fields
 	// ===========================================================
 
-	private final long mAddress;
-
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-
-	public FontManagerProxy(final long pAddress) {
-		this.mAddress = pAddress;
-	}
 
 	// ===========================================================
 	// Getter & Setter

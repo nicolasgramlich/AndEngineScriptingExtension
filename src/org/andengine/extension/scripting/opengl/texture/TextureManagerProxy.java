@@ -1,6 +1,5 @@
 package org.andengine.extension.scripting.opengl.texture;
 
-import org.andengine.opengl.texture.TextureManager;
 
 /**
  * (c) Zynga 2012
@@ -8,7 +7,7 @@ import org.andengine.opengl.texture.TextureManager;
  * @author Nicolas Gramlich <ngramlich@zynga.com>
  * @since 22:28:10 - 05.03.2012
  */
-public class TextureManagerProxy extends TextureManager {
+public abstract class TextureManagerProxy {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -19,15 +18,9 @@ public class TextureManagerProxy extends TextureManager {
 	// Fields
 	// ===========================================================
 
-	private final long mAddress;
-
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-
-	public TextureManagerProxy(final long pAddress) {
-		this.mAddress = pAddress;
-	}
 
 	// ===========================================================
 	// Getter & Setter
