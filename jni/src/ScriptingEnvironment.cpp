@@ -27,72 +27,94 @@ static JSClass global_class = { "global", JSCLASS_GLOBAL_FLAGS, JS_PropertyStub,
 
 /* The error reporter callback. */
 void reportError(JSContext *cx, const char *message, JSErrorReport *report) {
-	fprintf(stderr, "%s:%u:%s\n", report->filename ? report->filename : "<no filename>", (unsigned int) report->lineno, message);
+	LOG_D("%s:%u:%s\n", report->filename ? report->filename : "<no filename>", (unsigned int) report->lineno, message);
 }
 
-JNIEXPORT jint JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_runScript(JNIEnv* pJNIEnv, jclass pJClass, jstring pCode) {
-	/* JS variables. */
-	JSRuntime *rt;
-	JSContext *cx;
-	JSObject *global; 
+JNIEXPORT jint JNICALL Java_org_andengine_extension_scripting_ScriptingEnvironment_runScript(JNIEnv* pJNIEnv, jclass pJClass, jstring pScript) {
+	const char* script = JNI_ENV()->GetStringUTFChars(pScript, 0);
+
+	runScript(script);
+}
+
+int runScript(const char* pScript) {
+	LOG_D("runScript");
+	LOG_D("##############################");
+	LOG_D(pScript);
+	LOG_D("##############################");
 
 	/* Create a JS runtime. */
-	rt = JS_NewRuntime(8L * 1024L * 1024L);
-	if (rt == NULL) return 1;
+	JSRuntime *rt = JS_NewRuntime(8L * 1024L * 1024L);
+	if (rt == NULL) {
+		LOG_D("(rt == NULL)");
+		return 1;
+	}
 
 	/* Create a context. */
-	cx = JS_NewContext(rt, 8192);
-	if (cx == NULL) return 1;
+	JSContext *cx = JS_NewContext(rt, 8192);
+	if (cx == NULL) {
+		LOG_D("(cx == NULL)");
+		return 1;
+	}
 
-//	JS_SetOptions(cx, JSOPTION_VAROBJFIX | JSOPTION_JIT | JSOPTION_METHODJIT);
-	JS_SetOptions(cx, JSOPTION_VAROBJFIX | JSOPTION_METHODJIT);
+	JS_SetOptions(cx, JSOPTION_VAROBJFIX);
 	JS_SetVersion(cx, JSVERSION_LATEST);
 	JS_SetErrorReporter(cx, reportError);
 
 	/* Create the global object in a new compartment. */
-	global = JS_NewCompartmentAndGlobalObject(cx, &global_class, NULL);
-	if (global == NULL) return 1;
-
-	/* Populate the global object with the standard globals, like Object and Array. */
-	if (!JS_InitStandardClasses(cx, global)) return 1;
-
-	/* Your application code here. This may include JSAPI calls to create your own custom JS objects and run scripts. */
-	/* These should indicate source location for diagnostics. */
-	{
-		char* filename;
-		uint lineno;
-
-		/*
-		 * The return value comes back here -- if it could be a GC thing, you must
-		 * add it to the GC's "root set" with JS_AddRoot(cx, &thing) where thing
-		 * is a JSString *, JSObject *, or jsdouble *, and remove the root before
-		 * rval goes out of scope, or when rval is no longer needed.
-		 */
-		jsval rval;
-		JSBool ok;
-
-		/*
-		 * Some example source in a C string.  Larger, non-null-terminated buffers
-		 * can be used, if you pass the buffer length to JS_EvaluateScript.
-		 */
-		const char* source = "var x=10;x*x;";
-
-//		ok = JS_EvaluateScript(cx, global, source, strlen(source), filename, lineno, &rval);
-//	
-//		if(ok) {
-//		    /* Should get a number back from the example source. */
-////		    jsdouble d;
-//		
-////		    ok = JS_ValueToNumber(cx, rval, &d);
-//		}
-		LOG_D("[JS] - ...");
+	JSObject *global =
+	JS_NewCompartmentAndGlobalObject(cx, &global_class, NULL);
+	if (global == NULL) {
+		LOG_D("(global == NULL)");
+		return 1;
 	}
 
-	/* Cleanup. */
+	// Populate the global object with the standard globals,
+	// like Object and Array.
+	if (!JS_InitStandardClasses(cx, global)) {
+		LOG_D("(!JS_InitStandardClasses(cx, global))");
+		return 1;
+	}
+
+	const char *filename = NULL;
+	int lineno = 0;  
+
+	jsval rval;
+	JSBool evaluatedOK = JS_EvaluateScript(cx, global, pScript, strlen(pScript), filename, lineno, &rval);  
+
+	if (JS_FALSE == evaluatedOK) {
+		LOG_D("evaluatedOK == JS_FALSE)");
+		// return 1;
+	} else {
+		if (JSVAL_IS_NULL(rval)) {
+			LOG_D("rval : (JSVAL_IS_NULL(rval)");
+			// return 1;
+		} else if ((JSVAL_IS_BOOLEAN(rval)) &&
+				   (JS_FALSE == (JSVAL_TO_BOOLEAN(rval)))) {
+			LOG_D("rval : (return value is JS_FALSE");
+			// return 1;
+		} else if (JSVAL_IS_STRING(rval)) {
+			JSString *str = JS_ValueToString(cx, rval);  
+			if (NULL == str) {
+				LOG_D("rval : return string is NULL");
+			} else {
+				LOG_D("rval : return string =\n%s\n", JS_EncodeString(cx, str));
+			}
+		} else if (JSVAL_IS_NUMBER(rval)) {
+			double number;
+			if (JS_FALSE == JS_ValueToNumber(cx, rval, &number)) {
+				LOG_D("rval : return number could not be converted");
+			} else {
+				LOG_D("rval : return number =\n%f", number);
+			}
+		}
+	}
+
+	// Cleanup
 	JS_DestroyContext(cx);
 	JS_DestroyRuntime(rt);
 	JS_ShutDown();
 
+	LOG_D("runScript done.");
 	return 0;
 }
 

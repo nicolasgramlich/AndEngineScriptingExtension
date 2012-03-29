@@ -7,8 +7,7 @@ static jmethodID sGetXMethod;
 static jmethodID sGetYMethod;
 
 JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_input_touch_TouchEventProxy_nativeInitClass(JNIEnv* pJNIEnv, jclass pJClass) {
-	jclass contextClass = JNI_ENV()->FindClass("android/content/TouchEvent");
-	sTouchEventClass = (jclass)JNI_ENV()->NewGlobalRef(contextClass);
+	sTouchEventClass = (jclass)JNI_ENV()->NewGlobalRef(pJClass);
 
 	sGetXMethod = JNI_ENV()->GetMethodID(sTouchEventClass, "getX", "()F");
 	sGetYMethod = JNI_ENV()->GetMethodID(sTouchEventClass, "getY", "()F");

@@ -1,5 +1,8 @@
 package org.andengine.extension.scripting.opengl.font;
 
+import org.andengine.opengl.font.FontManager;
+import org.andengine.util.exception.MethodNotSupportedException;
+
 
 /**
  * (c) Zynga 2012
@@ -7,7 +10,7 @@ package org.andengine.extension.scripting.opengl.font;
  * @author Nicolas Gramlich <ngramlich@zynga.com>
  * @since 22:23:51 - 05.03.2012
  */
-public abstract class FontManagerProxy {
+public abstract class FontManagerProxy extends FontManager {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -21,6 +24,10 @@ public abstract class FontManagerProxy {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
+
+	public FontManagerProxy() {
+		throw new MethodNotSupportedException();
+	}
 
 	// ===========================================================
 	// Getter & Setter

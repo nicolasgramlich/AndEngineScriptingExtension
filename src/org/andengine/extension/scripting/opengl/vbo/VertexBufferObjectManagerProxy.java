@@ -1,5 +1,8 @@
 package org.andengine.extension.scripting.opengl.vbo;
 
+import org.andengine.opengl.vbo.VertexBufferObjectManager;
+import org.andengine.util.exception.MethodNotSupportedException;
+
 
 /**
  * (c) Zynga 2012
@@ -7,7 +10,7 @@ package org.andengine.extension.scripting.opengl.vbo;
  * @author Nicolas Gramlich <ngramlich@zynga.com>
  * @since 22:22:46 - 05.03.2012
  */
-public abstract class VertexBufferObjectManagerProxy {
+public abstract class VertexBufferObjectManagerProxy extends VertexBufferObjectManager {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -21,6 +24,10 @@ public abstract class VertexBufferObjectManagerProxy {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
+
+	public VertexBufferObjectManagerProxy() {
+		throw new MethodNotSupportedException();
+	}
 
 	// ===========================================================
 	// Getter & Setter

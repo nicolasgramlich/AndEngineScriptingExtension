@@ -1,5 +1,7 @@
 package org.andengine.extension.scripting.opengl.texture;
 
+import org.andengine.opengl.texture.TextureManager;
+
 
 /**
  * (c) Zynga 2012
@@ -7,7 +9,7 @@ package org.andengine.extension.scripting.opengl.texture;
  * @author Nicolas Gramlich <ngramlich@zynga.com>
  * @since 22:28:10 - 05.03.2012
  */
-public abstract class TextureManagerProxy {
+public abstract class TextureManagerProxy extends TextureManager {
 	// ===========================================================
 	// Constants
 	// ===========================================================

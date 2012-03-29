@@ -28,4 +28,6 @@ Engine* getEngine();
 
 void setAPKPath(JNIEnv*, jclass, jstring);
 
+int runScript(const char* pScript);
+
 #endif
