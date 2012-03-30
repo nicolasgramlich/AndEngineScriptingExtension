@@ -1,5 +1,5 @@
 #include "src/org/andengine/opengl/vbo/VertexBufferObjectManager.h"
-#include "src/ScriptingEnvironment.h"
+#include "src/AndEngineScriptingExtension.h"
 
 static jclass sVertexBufferObjectManagerClass;
 

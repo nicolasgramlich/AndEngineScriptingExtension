@@ -24,7 +24,7 @@ import android.content.Context;
  * @author Nicolas Gramlich <ngramlich@zynga.com>
  * @since 17:01:34 - 28.02.2012
  */
-public class ScriptingEnvironment {
+public class AndEngineScriptingExtension {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -61,8 +61,8 @@ public class ScriptingEnvironment {
 	 * @param pAPKPath
 	 * @param pEngine
 	 */
-	public static void init(final Context pContext, final String pAPKPath, final Engine pEngine) {
-		ScriptingEnvironment.nativeInitClass();
+	public static void init(final Context pContext, final Engine pEngine) {
+		AndEngineScriptingExtension.nativeInitClass();
 
 		/* Setup. */
 		ContextProxy.nativeInitClass();
@@ -92,24 +92,24 @@ public class ScriptingEnvironment {
 		SceneProxy.nativeInitClass();
 
 		/* Actual init. */
-		ScriptingEnvironment.nativeInit(pContext, pAPKPath, pEngine);
+		AndEngineScriptingExtension.nativeInit(pContext, pEngine);
 	}
 
 	public static native String getJavaScriptVMVersion();
 	public static native int runScript(final String pCode);
 
 	private static native void nativeInitClass();
-	private static native void nativeInit(final Context pContext, final String pAPKPath, final Engine pEngine);
+	private static native void nativeInit(final Context pContext, final Engine pEngine);
 
 
 	public static void attachCurrentThread() {
-		ScriptingEnvironment.nativeAttachCurrentThread();
+		AndEngineScriptingExtension.nativeAttachCurrentThread();
 	}
 
 	private static native void nativeAttachCurrentThread();
 
 	public static void detachCurrentThread() {
-		ScriptingEnvironment.nativeDetachCurrentThread();
+		AndEngineScriptingExtension.nativeDetachCurrentThread();
 	}
 
 	private static native void nativeDetachCurrentThread();

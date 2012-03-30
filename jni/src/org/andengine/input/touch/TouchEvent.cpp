@@ -1,5 +1,5 @@
 #include "src/org/andengine/input/touch/TouchEvent.h"
-#include "src/ScriptingEnvironment.h"
+#include "src/AndEngineScriptingExtension.h"
 
 static jclass sTouchEventClass;
 

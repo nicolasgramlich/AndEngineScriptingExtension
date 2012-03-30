@@ -2,7 +2,7 @@
 #define Shape_H
 
 #include <jni.h>
-#include "src/ScriptingEnvironment.h"
+#include "src/AndEngineScriptingExtension.h"
 #include "src/org/andengine/entity/Entity.h"
 
 extern "C" {

@@ -1,5 +1,5 @@
 #include "src/Context.h"
-#include "src/ScriptingEnvironment.h"
+#include "src/AndEngineScriptingExtension.h"
 
 static jclass sContextClass;
 

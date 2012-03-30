@@ -1,5 +1,5 @@
 #include "src/org/andengine/opengl/texture/TextureManager.h"
-#include "src/ScriptingEnvironment.h"
+#include "src/AndEngineScriptingExtension.h"
 
 static jclass sTextureManagerClass;
 

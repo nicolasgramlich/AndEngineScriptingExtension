@@ -1,4 +1,4 @@
-#include "src/ScriptingEnvironment.h"
+#include "src/AndEngineScriptingExtension.h"
 #include "src/Test.h"
 #include "src/Util.h"
 #include "src/org/andengine/entity/primitive/Rectangle.h"

@@ -2,7 +2,7 @@
 #define Entity_H
 
 #include <jni.h>
-#include "src/ScriptingEnvironment.h"
+#include "src/AndEngineScriptingExtension.h"
 #include "src/Wrapper.h"
 
 extern "C" {

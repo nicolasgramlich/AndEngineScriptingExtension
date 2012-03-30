@@ -2,7 +2,7 @@
 #define Rectangle_H
 
 #include <jni.h>
-#include "src/ScriptingEnvironment.h"
+#include "src/AndEngineScriptingExtension.h"
 #include "src/org/andengine/entity/shape/Shape.h"
 #include "src/org/andengine/opengl/vbo/VertexBufferObjectManager.h"
 

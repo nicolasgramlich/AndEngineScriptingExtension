@@ -5,7 +5,8 @@ include $(CLEAR_VARS)
 LOCAL_MODULE				:= andenginescriptingextension_shared
 LOCAL_MODULE_FILENAME		:= libandenginescriptingextension
 LOCAL_CFLAGS				:= -Werror
-LOCAL_SRC_FILES				:= src/ScriptingEnvironment.cpp \
+LOCAL_SRC_FILES				:= src/AndEngineScriptingExtension.cpp \
+								src/ScriptingCore.cpp \
 								src/Context.cpp \
 								src/Wrapper.cpp \
 								src/Test.cpp \

@@ -1,5 +1,5 @@
 #include "src/org/andengine/engine/Engine.h"
-#include "src/ScriptingEnvironment.h"
+#include "src/AndEngineScriptingExtension.h"
 
 static jclass sEngineClass;
 

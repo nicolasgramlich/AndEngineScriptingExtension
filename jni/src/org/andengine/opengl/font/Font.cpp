@@ -1,5 +1,5 @@
 #include "src/org/andengine/opengl/font/Font.h"
-#include "src/ScriptingEnvironment.h"
+#include "src/AndEngineScriptingExtension.h"
 
 static jclass sFontClass;
 
