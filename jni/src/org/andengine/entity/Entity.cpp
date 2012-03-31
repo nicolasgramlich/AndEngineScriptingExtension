@@ -4,6 +4,10 @@
 static jclass sEntityClass;
 
 static jmethodID sConstructor;
+static jmethodID sGetXMethod;
+static jmethodID sGetYMethod;
+static jmethodID sSetXMethod;
+static jmethodID sSetYMethod;
 static jmethodID sGetRotationMethod;
 static jmethodID sSetRotationMethod;
 static jmethodID sGetScaleXMethod;
@@ -14,6 +18,10 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_EntityProxy
 	sEntityClass = (jclass)JNI_ENV()->NewGlobalRef(pJClass);
 
 	sConstructor = JNI_ENV()->GetMethodID(sEntityClass, "<init>", "(JFF)V");
+	sGetXMethod = JNI_ENV()->GetMethodID(sEntityClass, "getX", "()F");
+	sGetYMethod = JNI_ENV()->GetMethodID(sEntityClass, "getY", "()F");
+	sSetXMethod = JNI_ENV()->GetMethodID(sEntityClass, "setX", "(F)V");
+	sSetYMethod = JNI_ENV()->GetMethodID(sEntityClass, "setY", "(F)V");
 	sGetRotationMethod = JNI_ENV()->GetMethodID(sEntityClass, "getRotation", "()F");
 	sSetRotationMethod = JNI_ENV()->GetMethodID(sEntityClass, "setRotation", "(F)V");
 	sGetScaleXMethod = JNI_ENV()->GetMethodID(sEntityClass, "getScaleX", "()F");
@@ -47,6 +55,22 @@ Entity::Entity(float pX, float pY) {
 	this->mUnwrapped = JNI_ENV()->NewObject(sEntityClass, sConstructor, (jlong)this, pX, pY);
 }
 
+
+float Entity::getX() {
+	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sGetXMethod);
+}
+
+float Entity::getY() {
+	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sGetYMethod);
+}
+
+void Entity::setX(float pX) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sSetXMethod, pX);
+}
+
+void Entity::setY(float pY) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sSetYMethod, pY);
+}
 
 float Entity::getRotation() {
 	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sGetRotationMethod);

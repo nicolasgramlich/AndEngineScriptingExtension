@@ -1,4 +1,5 @@
 #include "src/ScriptingCore.h"
+#include "src/org/andengine/entity/S_Entity.h"
 
 /* The class of the global object. */
 static JSClass global_class = { "global", JSCLASS_GLOBAL_FLAGS, JS_PropertyStub, JS_PropertyStub, JS_PropertyStub, JS_StrictPropertyStub, JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub, JSCLASS_NO_OPTIONAL_MEMBERS };
@@ -42,7 +43,7 @@ ScriptingCore::ScriptingCore() {
 	JS_SetProperty(this->mJSContext, this->mGlobal, "andengine", &andengineNamespaceVal);
 
 	/* Register AndEngine classes. */
-//	S_CCPoint::jsCreateClass(this->mJSContext, andengineNamespace, "Point");
+	S_Entity::jsCreateClass(this->mJSContext, andengineNamespace, "Entity");
 //	S_CCSize::jsCreateClass(this->mJSContext, andengineNamespace, "Size");
 //	S_CCRect::jsCreateClass(this->mJSContext, andengineNamespace, "Rect");
 
@@ -62,48 +63,28 @@ const char* ScriptingCore::getJavaScriptVMVersion() {
 	return JS_GetImplementationVersion();
 }
 
-int ScriptingCore::runScript(const char* pScript) {
+bool ScriptingCore::runScript(const char* pScript) {
 	LOG_D("##############################");
 	LOG_D("runScript");
 	LOG_D("##############################");
 	LOG_D(pScript);
 	LOG_D("##############################");
 
-	const char *filename = NULL;
+	const char* filename = NULL;
 	int lineno = 0;  
 
 	jsval rval;
-	JSBool evaluatedOK = JS_EvaluateScript(this->mJSContext, this->mGlobal, pScript, strlen(pScript), filename, lineno, &rval);  
+	JSBool success = JS_EvaluateScript(this->mJSContext, this->mGlobal, pScript, strlen(pScript), filename, lineno, &rval);  
 
-	if (JS_FALSE == evaluatedOK) {
-		LOG_D("evaluatedOK == JS_FALSE)");
-		return 1;
+	if (JS_TRUE == success) {
+		LOG_D("Success!");
 	} else {
-		if (JSVAL_IS_NULL(rval)) {
-			LOG_D("rval : (JSVAL_IS_NULL(rval)");
-			return 1;
-		} else if ((JSVAL_IS_BOOLEAN(rval)) && (JS_FALSE == (JSVAL_TO_BOOLEAN(rval)))) {
-			LOG_D("rval : (return value is JS_FALSE");
-			return 1;
-		} else if (JSVAL_IS_STRING(rval)) {
-			JSString *str = JS_ValueToString(this->mJSContext, rval);  
-			if (NULL == str) {
-				LOG_D("rval : return string is NULL");
-			} else {
-				LOG_D("rval : return string =\n%s\n", JS_EncodeString(this->mJSContext, str));
-			}
-		} else if (JSVAL_IS_NUMBER(rval)) {
-			double number;
-			if (JS_FALSE == JS_ValueToNumber(this->mJSContext, rval, &number)) {
-				LOG_D("rval : return number could not be converted");
-			} else {
-				LOG_D("rval : return number =\n%f", number);
-			}
-		}
+		LOG_D("Fail!");
 	}
 
 	LOG_D("##############################");
 	LOG_D("runScript done.");
 	LOG_D("##############################");
-	return 0;
+
+	return JS_TRUE == success;
 }

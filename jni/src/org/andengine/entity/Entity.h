@@ -26,6 +26,10 @@ class Entity : public Wrapper {
 		Entity(float, float);
 
 		/* Getter & Setter. */
+		float getX();
+		float getY();
+		void setX(float);
+		void setY(float);
 		float getRotation();
 		void setRotation(float);
 		float getScaleX();
