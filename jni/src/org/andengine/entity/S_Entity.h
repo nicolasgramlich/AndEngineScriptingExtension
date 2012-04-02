@@ -3,13 +3,16 @@
 
 #include <jsapi.h>
 #include "src/Util.h"
-#include "src/ScriptingCore.h"
+#include "src/AndEngineScriptingExtension.h"
 #include "src/org/andengine/entity/Entity.h"
 
 class S_Entity : public Entity {
 	JSObject* mJSObject;
 
 	public:
+		bool onAttached();
+		bool onDetached();
+
 		static JSClass* sJSClass;
 		static JSObject* sJSObject;
 
@@ -128,7 +131,5 @@ class S_Entity : public Entity {
 			sJSObject = JS_InitClass(pJSContext, pGlobal, NULL, sJSClass, S_Entity::jsConstructor, 2, properties, NULL, NULL, NULL);
 		};
 };
-JSClass* S_Entity::sJSClass = NULL;
-JSObject* S_Entity::sJSObject = NULL;
 
 #endif

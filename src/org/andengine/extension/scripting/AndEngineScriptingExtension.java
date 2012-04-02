@@ -32,6 +32,10 @@ public class AndEngineScriptingExtension {
 	static {
 		System.loadLibrary("gnustl_shared");
 		System.loadLibrary("andenginescriptingextension");
+
+		// TODO: Register globals (Context and Engine)
+		// TODO: Native Bindings Generator
+		// TODO: JS Bindings Generator
 	}
 
 	// ===========================================================

@@ -26,19 +26,19 @@ class Entity : public Wrapper {
 		Entity(float, float);
 
 		/* Getter & Setter. */
-		float getX();
-		float getY();
-		void setX(float);
-		void setY(float);
-		float getRotation();
-		void setRotation(float);
-		float getScaleX();
-		float getScaleY();
-		void setScale(float);
+		virtual float getX();
+		virtual float getY();
+		virtual void setX(float);
+		virtual void setY(float);
+		virtual float getRotation();
+		virtual void setRotation(float);
+		virtual float getScaleX();
+		virtual float getScaleY();
+		virtual void setScale(float);
 
 		/* Callbacks. */
-		bool onAttached();
-		bool onDetached();
+		virtual bool onAttached();
+		virtual bool onDetached();
 };
 
 #endif

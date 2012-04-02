@@ -13,6 +13,7 @@ LOCAL_SRC_FILES				:= src/AndEngineScriptingExtension.cpp \
 								src/org/andengine/input/touch/TouchEvent.cpp \
 								src/org/andengine/engine/Engine.cpp \
 								src/org/andengine/entity/Entity.cpp \
+								src/org/andengine/entity/S_Entity.cpp \
 								src/org/andengine/entity/shape/Shape.cpp \
 								src/org/andengine/entity/primitive/Rectangle.cpp \
 								src/org/andengine/entity/sprite/Sprite.cpp \

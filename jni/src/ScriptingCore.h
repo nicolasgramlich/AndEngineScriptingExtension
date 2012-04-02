@@ -37,6 +37,8 @@ class ScriptingCore {
 		ScriptingCore();
 		~ScriptingCore();
 
+		JSContext* getJSContext();
+
 		bool runScript(const char*);
 		const char* getJavaScriptVMVersion();		
 };

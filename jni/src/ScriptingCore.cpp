@@ -59,6 +59,10 @@ ScriptingCore::~ScriptingCore() {
 	JS_ShutDown();
 }
 
+JSContext* ScriptingCore::getJSContext() {
+	return this->mJSContext;
+}
+
 const char* ScriptingCore::getJavaScriptVMVersion() {
 	return JS_GetImplementationVersion();
 }

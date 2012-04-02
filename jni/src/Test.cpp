@@ -19,7 +19,8 @@ JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_Test_test(JNIEn
 
 	int size = 100;
 
-	Entity* entity = new Sprite(360 - (size / 2), 240 - (size / 2), size, size, textureRegion, getEngine()->getVertexBufferObjectManager());
+	// Entity* entity = new Sprite(360 - (size / 2), 240 - (size / 2), size, size, textureRegion, getEngine()->getVertexBufferObjectManager());
+	Entity* entity = new Entity(1, 2);
 
 	entity->setRotation(45);
 	entity->setScale(2);

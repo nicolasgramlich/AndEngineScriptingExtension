@@ -20,7 +20,7 @@ class Shape : public Entity {
 
 	public:
 		/* Callbacks. */
-		bool onAreaTouched(jobject pSceneTouchEvent, jfloat pTouchAreaLocalX, jfloat pTouchAreaLocalY);
+		virtual bool onAreaTouched(jobject pSceneTouchEvent, jfloat pTouchAreaLocalX, jfloat pTouchAreaLocalY);
 };
 
 #endif

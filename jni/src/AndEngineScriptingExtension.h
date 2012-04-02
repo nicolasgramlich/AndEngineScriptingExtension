@@ -23,8 +23,11 @@ extern "C" {
 	JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_AndEngineScriptingExtension_nativeDetachCurrentThread(JNIEnv*, jclass);
 }
 
-Context* getContext();
+JavaVM* JAVA_VM();
 JNIEnv* JNI_ENV();
+Context* getContext();
 Engine* getEngine();
+ScriptingCore* getScriptingCore();
+JSContext* getJSContext();
 
 #endif

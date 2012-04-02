@@ -33,13 +33,13 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_EntityProxy
 // org.andengine.extension.scripting.entity.EntityProxy
 // ===========================================================
 
-JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_Entity_nativeOnAttached(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress) {
+JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_EntityProxy_nativeOnAttached(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress) {
 	Entity* entity = (Entity*)pAddress;
 
 	return entity->onAttached();
 }
 
-JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_Entity_nativeOnDetached(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress) {
+JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_EntityProxy_nativeOnDetached(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress) {
 	Entity* entity = (Entity*)pAddress;
 
 	return entity->onDetached();
@@ -93,6 +93,7 @@ float Entity::getScaleY() {
 }
 
 bool Entity::onAttached() {
+	LOG_D("Entity::onAttached");
 	return false;
 }
 

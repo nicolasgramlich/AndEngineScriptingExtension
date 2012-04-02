@@ -54,10 +54,18 @@ JNIEnv* JNI_ENV() {
 	return sJNIEnv;
 }
 
+Context* getContext() {
+	return sContext;
+}
+
 Engine* getEngine() {
 	return sEngine;
 }
 
-Context* getContext() {
-	return sContext;
+ScriptingCore* getScriptingCore() {
+	return sScriptingCore;
+}
+
+JSContext* getJSContext() {
+	return sScriptingCore->getJSContext();
 }
