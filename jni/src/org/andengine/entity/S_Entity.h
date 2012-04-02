@@ -10,8 +10,8 @@ class S_Entity : public Entity {
 	JSObject* mJSObject;
 
 	public:
-		bool onAttached();
-		bool onDetached();
+		virtual bool onAttached();
+		virtual bool onDetached();
 
 		static JSClass* sJSClass;
 		static JSObject* sJSObject;
