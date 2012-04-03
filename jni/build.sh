@@ -2,7 +2,7 @@
 
 NDK_DIRECTORY="/Users/ngramlich/SDKs/Android/ndk/r7b/"
 PROJECT_DIRECTORY="/Users/ngramlich/Workspace/gdk/graphic_engines/AndEngine/AndEngineScriptingExtension/"
-NDK_MODULE_PATH="/Users/ngramlich/Workspace/gdk/graphic_engines/AndEngine"
+NDK_MODULE_PATH="/Users/ngramlich/Workspace/gdk/graphic_engines/AndEngine/AndEngineScriptingExtension"
 
 # Run build:
 pushd ${PROJECT_DIRECTORY}

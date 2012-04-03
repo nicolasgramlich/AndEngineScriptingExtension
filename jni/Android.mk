@@ -24,7 +24,9 @@ LOCAL_SRC_FILES				:= src/AndEngineScriptingExtension.cpp \
 								src/org/andengine/opengl/texture/region/TextureRegion.cpp \
 								src/org/andengine/opengl/font/FontManager.cpp \
 								src/org/andengine/opengl/font/Font.cpp \
-								src/org/andengine/opengl/vbo/VertexBufferObjectManager.cpp
+								src/org/andengine/opengl/vbo/VertexBufferObjectManager.cpp \
+								src/org/andengine/entity/EntityProxy.cpp \
+								src/org/andengine/entity/shape/ShapeProxy.cpp
 
 LOCAL_LDLIBS 				:= -llog
 
