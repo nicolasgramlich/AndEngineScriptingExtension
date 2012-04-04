@@ -24,6 +24,6 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_opengl_vbo_DrawTyp
 // org.andengine.extension.scripting.opengl.vbo.DrawTypeProxy
 // ===========================================================
 
-DrawType::DrawType(jobject pDrawType) {
-	this->mUnwrapped = pDrawType;
+DrawType::DrawType(jobject pDrawTypeProxy) {
+	this->mUnwrapped = pDrawTypeProxy;
 }

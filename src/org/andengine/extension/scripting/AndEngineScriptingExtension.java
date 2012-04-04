@@ -14,6 +14,7 @@ import org.andengine.extension.scripting.opengl.texture.TextureManagerProxy;
 import org.andengine.extension.scripting.opengl.texture.TextureProxy;
 import org.andengine.extension.scripting.opengl.texture.bitmap.AssetBitmapTextureProxy;
 import org.andengine.extension.scripting.opengl.texture.region.TextureRegionProxy;
+import org.andengine.extension.scripting.opengl.vbo.DrawTypeProxy;
 import org.andengine.extension.scripting.opengl.vbo.VertexBufferObjectManagerProxy;
 
 import android.content.Context;
@@ -76,6 +77,7 @@ public class AndEngineScriptingExtension {
 		TouchEventProxy.nativeInitClass();
 
 		/* VBO. */
+		DrawTypeProxy.nativeInitClass();
 		VertexBufferObjectManagerProxy.nativeInitClass();
 
 		/* Texture. */
