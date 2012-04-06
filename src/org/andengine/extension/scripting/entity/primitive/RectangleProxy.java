@@ -1,81 +1,81 @@
 package org.andengine.extension.scripting.entity.primitive;
 
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntityMatcher;
 import org.andengine.entity.primitive.Rectangle;
+import org.andengine.entity.primitive.vbo.IRectangleVertexBufferObject;
+
 import org.andengine.input.touch.TouchEvent;
+
+import org.andengine.opengl.vbo.DrawType;
+import org.andengine.opengl.vbo.VertexBufferObjectManager;
+import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
-/**
- * (c) Zynga 2012
- *
- * @author Nicolas Gramlich <ngramlich@zynga.com>
- * @since 13:24:46 - 01.03.2012
- */
+
 public class RectangleProxy extends Rectangle {
-	// ===========================================================
-	// Constants
-	// ===========================================================
+    private final long mAddress;
 
-	public static native void nativeInitClass();
+    public RectangleProxy(final long pAddress, final float pX, final float pY,
+        final float pWidth, final float pHeight,
+        final VertexBufferObjectManager pVertexBufferObjectManager) {
+        super(pX, pY, pWidth, pHeight, pVertexBufferObjectManager);
+        this.mAddress = pAddress;
+    }
 
-	// ===========================================================
-	// Fields
-	// ===========================================================
+    public RectangleProxy(final long pAddress, final float pX, final float pY,
+        final float pWidth, final float pHeight,
+        final VertexBufferObjectManager pVertexBufferObjectManager,
+        final DrawType pDrawType) {
+        super(pX, pY, pWidth, pHeight, pVertexBufferObjectManager, pDrawType);
+        this.mAddress = pAddress;
+    }
 
-	private final long mAddress;
+    public RectangleProxy(final long pAddress, final float pX, final float pY,
+        final float pWidth, final float pHeight,
+        final IRectangleVertexBufferObject pRectangleVertexBufferObject) {
+        super(pX, pY, pWidth, pHeight, pRectangleVertexBufferObject);
+        this.mAddress = pAddress;
+    }
 
-	// ===========================================================
-	// Constructors
-	// ===========================================================
+    public static native void nativeInitClass();
 
-	public RectangleProxy(final long pAddress, final float pX, final float pY, final float pWidth, final float pHeight, final VertexBufferObjectManager pVertexBufferObjectManager) {
-		super(pX, pY, pWidth, pHeight, pVertexBufferObjectManager);
+    @Override
+    public boolean onAreaTouched(final TouchEvent pSceneTouchEvent,
+        final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+        final boolean handledNative = this.nativeOnAreaTouched(this.mAddress,
+                pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
 
-		this.mAddress = pAddress;
-	}
+        if (handledNative) {
+            return true;
+        } else {
+            return super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX,
+                pTouchAreaLocalY);
+        }
+    }
 
-	// ===========================================================
-	// Getter & Setter
-	// ===========================================================
+    private native boolean nativeOnAreaTouched(final long pAddress,
+        final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX,
+        final float pTouchAreaLocalY);
 
-	// ===========================================================
-	// Methods for/from SuperClass/Interfaces
-	// ===========================================================
+    @Override
+    public void onAttached() {
+        if (!this.nativeOnAttached(this.mAddress)) {
+            super.onAttached();
+        }
+    }
 
-	@Override
-	public void onAttached() {
-		if(!this.nativeOnAttached(this.mAddress)) {
-			super.onAttached();
-		}
-	}
+    private native boolean nativeOnAttached(final long pAddress);
 
-	private native boolean nativeOnAttached(final long pAddress);
+    @Override
+    public void onDetached() {
+        if (!this.nativeOnDetached(this.mAddress)) {
+            super.onDetached();
+        }
+    }
 
-	@Override
-	public void onDetached() {
-		if(!this.nativeOnDetached(this.mAddress)) {
-			super.onDetached();
-		}
-	}
-
-	private native boolean nativeOnDetached(final long pAddress);
-
-	@Override
-	public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-		final boolean handledNative = this.nativeOnAreaTouched(this.mAddress, pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
-		if(handledNative) {
-			return true;
-		} else {
-			return super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
-		}
-	}
-
-	private native boolean nativeOnAreaTouched(final long pAddress, final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY);
-
-	// ===========================================================
-	// Methods
-	// ===========================================================
-
-	// ===========================================================
-	// Inner and Anonymous Classes
-	// ===========================================================
+    private native boolean nativeOnDetached(final long pAddress);
 }

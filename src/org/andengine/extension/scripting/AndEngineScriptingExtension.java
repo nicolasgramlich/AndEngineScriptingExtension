@@ -9,10 +9,12 @@ import org.andengine.extension.scripting.entity.shape.ShapeProxy;
 import org.andengine.extension.scripting.entity.sprite.SpriteProxy;
 import org.andengine.extension.scripting.input.touch.TouchEventProxy;
 import org.andengine.extension.scripting.opengl.font.FontManagerProxy;
-import org.andengine.extension.scripting.opengl.font.FontProxy;
 import org.andengine.extension.scripting.opengl.texture.TextureManagerProxy;
+import org.andengine.extension.scripting.opengl.texture.TextureOptionsProxy;
 import org.andengine.extension.scripting.opengl.texture.TextureProxy;
 import org.andengine.extension.scripting.opengl.texture.bitmap.AssetBitmapTextureProxy;
+import org.andengine.extension.scripting.opengl.texture.bitmap.BitmapTextureFormatProxy;
+import org.andengine.extension.scripting.opengl.texture.bitmap.BitmapTextureProxy;
 import org.andengine.extension.scripting.opengl.texture.region.TextureRegionProxy;
 import org.andengine.extension.scripting.opengl.vbo.DrawTypeProxy;
 import org.andengine.extension.scripting.opengl.vbo.VertexBufferObjectManagerProxy;
@@ -71,6 +73,7 @@ public class AndEngineScriptingExtension {
 
 		/* Setup. */
 		ContextProxy.nativeInitClass();
+		AssetManagerProxy.nativeInitClass();
 		
 		EngineProxy.nativeInitClass();
 
@@ -83,12 +86,15 @@ public class AndEngineScriptingExtension {
 		/* Texture. */
 		TextureManagerProxy.nativeInitClass();
 		TextureProxy.nativeInitClass();
+		BitmapTextureProxy.nativeInitClass();
 		AssetBitmapTextureProxy.nativeInitClass();
 		TextureRegionProxy.nativeInitClass();
+		TextureOptionsProxy.nativeInitClass();
+		BitmapTextureFormatProxy.nativeInitClass();
 
 		/* Font. */
 		FontManagerProxy.nativeInitClass();
-		FontProxy.nativeInitClass();
+//		FontProxy.nativeInitClass();
 
 		/* Entity. */
 		EntityProxy.nativeInitClass();

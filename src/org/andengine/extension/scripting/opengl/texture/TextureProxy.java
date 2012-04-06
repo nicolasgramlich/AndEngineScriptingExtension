@@ -1,49 +1,26 @@
 package org.andengine.extension.scripting.opengl.texture;
 
+import org.andengine.opengl.texture.ITextureStateListener;
 import org.andengine.opengl.texture.PixelFormat;
 import org.andengine.opengl.texture.Texture;
 import org.andengine.opengl.texture.TextureManager;
 import org.andengine.opengl.texture.TextureOptions;
 
+import java.lang.IllegalArgumentException;
 
-/**
- * (c) Zynga 2012
- *
- * @author Nicolas Gramlich <ngramlich@zynga.com>
- * @since 18:43:18 - 05.03.2012
- */
+
 public abstract class TextureProxy extends Texture {
-	// ===========================================================
-	// Constants
-	// ===========================================================
+    private final long mAddress;
 
-	public static native void nativeInitClass();
+    public TextureProxy(final long pAddress,
+        final TextureManager pTextureManager, final PixelFormat pPixelFormat,
+        final TextureOptions pTextureOptions,
+        final ITextureStateListener pTextureStateListener)
+        throws IllegalArgumentException {
+        super(pTextureManager, pPixelFormat, pTextureOptions,
+            pTextureStateListener);
+        this.mAddress = pAddress;
+    }
 
-	// ===========================================================
-	// Fields
-	// ===========================================================
-
-	// ===========================================================
-	// Constructors
-	// ===========================================================
-
-	public TextureProxy(TextureManager pTextureManager, PixelFormat pPixelFormat, TextureOptions pTextureOptions, ITextureStateListener pTextureStateListener) throws IllegalArgumentException {
-		super(pTextureManager, pPixelFormat, pTextureOptions, pTextureStateListener);
-	}
-
-	// ===========================================================
-	// Getter & Setter
-	// ===========================================================
-
-	// ===========================================================
-	// Methods for/from SuperClass/Interfaces
-	// ===========================================================
-
-	// ===========================================================
-	// Methods
-	// ===========================================================
-
-	// ===========================================================
-	// Inner and Anonymous Classes
-	// ===========================================================
+    public static native void nativeInitClass();
 }

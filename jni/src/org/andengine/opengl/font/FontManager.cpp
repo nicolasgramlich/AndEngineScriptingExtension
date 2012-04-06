@@ -1,30 +1,21 @@
+#include <cstdlib>
 #include "src/org/andengine/opengl/font/FontManager.h"
-#include "src/AndEngineScriptingExtension.h"
 
 static jclass sFontManagerClass;
-
-static jmethodID sLoadFontMethod;
-static jmethodID sUnloadFontMethod;
+static jmethodID sConstructor;
 
 JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_opengl_font_FontManagerProxy_nativeInitClass(JNIEnv* pJNIEnv, jclass pJClass) {
 	sFontManagerClass = (jclass)JNI_ENV()->NewGlobalRef(pJClass);
-
-	sLoadFontMethod = JNI_ENV()->GetMethodID(sFontManagerClass, "loadFont", "(Lorg/andengine/opengl/font/Font;)V");
-	sUnloadFontMethod = JNI_ENV()->GetMethodID(sFontManagerClass, "unloadFont", "(Lorg/andengine/opengl/font/Font;)V");
+	sConstructor = JNI_ENV()->GetMethodID(sFontManagerClass, "<init>", "(J)V");
 }
 
-// ===========================================================
-// org.andengine.extension.scripting.opengl.font.FontManagerProxy
-// ===========================================================
-
-FontManager::FontManager(jobject pFontManager) {
-	this->mUnwrapped = pFontManager;
+FontManager::FontManager(jobject pFontManagerProxy) {
+	this->mUnwrapped = pFontManagerProxy;
+}
+jobject FontManager::unwrap() {
+	return this->mUnwrapped;
+}
+FontManager::FontManager() {
+	this->mUnwrapped = JNI_ENV()->NewObject(sFontManagerClass, sConstructor, (jlong)this);
 }
 
-bool FontManager::loadFont(Font* pFont) {
-	return JNI_ENV()->CallBooleanMethod(this->mUnwrapped, sLoadFontMethod, pFont->unwrap());
-}
-
-bool FontManager::unloadFont(Font* pFont) {
-	return JNI_ENV()->CallBooleanMethod(this->mUnwrapped, sUnloadFontMethod, pFont->unwrap());
-}

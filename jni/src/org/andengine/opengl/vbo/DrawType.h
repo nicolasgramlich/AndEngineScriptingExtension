@@ -6,20 +6,17 @@
 #include "src/Wrapper.h"
 
 extern "C" {
-	// ===========================================================
-	// org.andengine.extension.scripting.opengl.vbo.DrawTypeProxy
-	// ===========================================================
-
 	JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_opengl_vbo_DrawTypeProxy_nativeInitClass(JNIEnv*, jclass);
 }
 
 class DrawType : public Wrapper {
+
 	public:
 		DrawType(jobject);
-
 		static DrawType* STATIC;
 		static DrawType* DYNAMIC;
 		static DrawType* STREAM;
-};
 
+};
 #endif
+

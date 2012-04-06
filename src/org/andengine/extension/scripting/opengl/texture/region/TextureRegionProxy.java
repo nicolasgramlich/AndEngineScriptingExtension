@@ -1,50 +1,48 @@
 package org.andengine.extension.scripting.opengl.texture.region;
 
 import org.andengine.opengl.texture.ITexture;
+import org.andengine.opengl.texture.ITexture;
+import org.andengine.opengl.texture.ITexture;
+import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.region.TextureRegion;
 
-/**
- * (c) Zynga 2012
- *
- * @author Nicolas Gramlich <ngramlich@zynga.com>
- * @since 18:55:37 - 05.03.2012
- */
+
 public class TextureRegionProxy extends TextureRegion {
-	// ===========================================================
-	// Constants
-	// ===========================================================
+    private final long mAddress;
 
-	public static native void nativeInitClass();
+    public TextureRegionProxy(final long pAddress, final ITexture pTexture,
+        final float pTextureX, final float pTextureY,
+        final float pTextureWidth, final float pTextureHeight,
+        final boolean pRotated) {
+        super(pTexture, pTextureX, pTextureY, pTextureWidth, pTextureHeight,
+            pRotated);
+        this.mAddress = pAddress;
+    }
 
-	// ===========================================================
-	// Fields
-	// ===========================================================
+    public TextureRegionProxy(final long pAddress, final ITexture pTexture,
+        final float pTextureX, final float pTextureY,
+        final float pTextureWidth, final float pTextureHeight) {
+        super(pTexture, pTextureX, pTextureY, pTextureWidth, pTextureHeight);
+        this.mAddress = pAddress;
+    }
 
-	private final long mAddress;
+    public TextureRegionProxy(final long pAddress, final ITexture pTexture,
+        final float pTextureX, final float pTextureY,
+        final float pTextureWidth, final float pTextureHeight,
+        final float pScale) {
+        super(pTexture, pTextureX, pTextureY, pTextureWidth, pTextureHeight,
+            pScale);
+        this.mAddress = pAddress;
+    }
 
-	// ===========================================================
-	// Constructors
-	// ===========================================================
+    public TextureRegionProxy(final long pAddress, final ITexture pTexture,
+        final float pTextureX, final float pTextureY,
+        final float pTextureWidth, final float pTextureHeight,
+        final float pScale, final boolean pRotated) {
+        super(pTexture, pTextureX, pTextureY, pTextureWidth, pTextureHeight,
+            pScale, pRotated);
+        this.mAddress = pAddress;
+    }
 
-	public TextureRegionProxy(final long pAddress, final ITexture pTexture, final float pTextureX, final float pTextureY, final float pTextureWidth, final float pTextureHeight) {
-		super(pTexture, pTextureX, pTextureY, pTextureWidth, pTextureHeight);
-
-		this.mAddress = pAddress;
-	}
-
-	// ===========================================================
-	// Getter & Setter
-	// ===========================================================
-
-	// ===========================================================
-	// Methods for/from SuperClass/Interfaces
-	// ===========================================================
-
-	// ===========================================================
-	// Methods
-	// ===========================================================
-
-	// ===========================================================
-	// Inner and Anonymous Classes
-	// ===========================================================
+    public static native void nativeInitClass();
 }

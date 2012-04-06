@@ -1,8 +1,5 @@
 package org.andengine.extension.scripting;
 
-import org.andengine.util.exception.MethodNotSupportedException;
-
-import android.content.Context;
 
 /**
  * (c) Zynga 2012
@@ -10,7 +7,7 @@ import android.content.Context;
  * @author Nicolas Gramlich <ngramlich@zynga.com>
  * @since 17:37:39 - 05.03.2012
  */
-public abstract class ContextProxy extends Context {
+public abstract class ContextProxy {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -24,10 +21,6 @@ public abstract class ContextProxy extends Context {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-
-	public ContextProxy() {
-		throw new MethodNotSupportedException();
-	}
 
 	// ===========================================================
 	// Getter & Setter

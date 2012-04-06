@@ -3,6 +3,7 @@
 
 #include <jni.h>
 #include "src/Wrapper.h"
+#include "src/android/content/res/AssetManager.h"
 
 extern "C" {
 	// ===========================================================
@@ -18,7 +19,7 @@ class Context : public Wrapper {
 		Context(jobject);
 
 		/* Getter & Setter */
-		jobject getAssets();
+		AssetManager* getAssetManager();
 };
 
 #endif

@@ -12,7 +12,7 @@ class Wrapper {
 
 	public:
 		/* Unwrapper. */
-		jobject unwrap();
+		virtual jobject unwrap();
 };
 
 #endif

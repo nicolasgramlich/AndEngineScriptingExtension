@@ -5,7 +5,8 @@
 #include <jsapi.h>
 #include "src/Util.h"
 #include "src/ScriptingCore.h"
-#include "src/Context.h"
+#include "src/android/content/Context.h"
+#include "src/android/content/res/AssetManager.h"
 #include "src/org/andengine/engine/Engine.h"
 
 extern "C" {
@@ -22,6 +23,8 @@ extern "C" {
 	JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_AndEngineScriptingExtension_nativeAttachCurrentThread(JNIEnv*, jclass);
 	JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_AndEngineScriptingExtension_nativeDetachCurrentThread(JNIEnv*, jclass);
 }
+
+class Engine;
 
 JavaVM* JAVA_VM();
 JNIEnv* JNI_ENV();

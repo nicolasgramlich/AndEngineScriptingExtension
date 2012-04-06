@@ -1,54 +1,81 @@
 package org.andengine.extension.scripting.opengl.texture.bitmap;
 
-import java.io.IOException;
-
-import org.andengine.opengl.texture.TextureManager;
-import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
-
+import android.content.res.AssetManager;
+import android.content.res.AssetManager;
+import android.content.res.AssetManager;
+import android.content.res.AssetManager;
 import android.content.res.AssetManager;
 
-/**
- * (c) Zynga 2012
- *
- * @author Nicolas Gramlich <ngramlich@zynga.com>
- * @since 18:26:44 - 05.03.2012
- */
+import org.andengine.opengl.texture.ITextureStateListener;
+import org.andengine.opengl.texture.TextureManager;
+import org.andengine.opengl.texture.TextureManager;
+import org.andengine.opengl.texture.TextureManager;
+import org.andengine.opengl.texture.TextureManager;
+import org.andengine.opengl.texture.TextureManager;
+import org.andengine.opengl.texture.TextureOptions;
+import org.andengine.opengl.texture.TextureOptions;
+import org.andengine.opengl.texture.TextureOptions;
+import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
+import org.andengine.opengl.texture.bitmap.BitmapTextureFormat;
+import org.andengine.opengl.texture.bitmap.BitmapTextureFormat;
+import org.andengine.opengl.texture.bitmap.BitmapTextureFormat;
+import org.andengine.opengl.util.GLState;
+import org.andengine.opengl.util.GLState;
+
+import java.io.IOException;
+import java.io.IOException;
+import java.io.IOException;
+import java.io.IOException;
+import java.io.IOException;
+
+
 public class AssetBitmapTextureProxy extends AssetBitmapTexture {
-	// ===========================================================
-	// Constants
-	// ===========================================================
+    private final long mAddress;
 
-	public static native void nativeInitClass();
+    public AssetBitmapTextureProxy(final long pAddress,
+        final TextureManager pTextureManager, final AssetManager pAssetManager,
+        final String pAssetPath) throws IOException {
+        super(pTextureManager, pAssetManager, pAssetPath);
+        this.mAddress = pAddress;
+    }
 
-	// ===========================================================
-	// Fields
-	// ===========================================================
+    public AssetBitmapTextureProxy(final long pAddress,
+        final TextureManager pTextureManager, final AssetManager pAssetManager,
+        final String pAssetPath, final BitmapTextureFormat pBitmapTextureFormat)
+        throws IOException {
+        super(pTextureManager, pAssetManager, pAssetPath, pBitmapTextureFormat);
+        this.mAddress = pAddress;
+    }
 
-	private final long mAddress;
+    public AssetBitmapTextureProxy(final long pAddress,
+        final TextureManager pTextureManager, final AssetManager pAssetManager,
+        final String pAssetPath, final TextureOptions pTextureOptions)
+        throws IOException {
+        super(pTextureManager, pAssetManager, pAssetPath, pTextureOptions);
+        this.mAddress = pAddress;
+    }
 
-	// ===========================================================
-	// Constructors
-	// ===========================================================
+    public AssetBitmapTextureProxy(final long pAddress,
+        final TextureManager pTextureManager, final AssetManager pAssetManager,
+        final String pAssetPath,
+        final BitmapTextureFormat pBitmapTextureFormat,
+        final TextureOptions pTextureOptions) throws IOException {
+        super(pTextureManager, pAssetManager, pAssetPath, pBitmapTextureFormat,
+            pTextureOptions);
+        this.mAddress = pAddress;
+    }
 
-	public AssetBitmapTextureProxy(final long pAddress, final TextureManager pTextureManager, final AssetManager pAssetManager, final String pAssetPath) throws IOException {
-		super(pTextureManager, pAssetManager, pAssetPath);
+    public AssetBitmapTextureProxy(final long pAddress,
+        final TextureManager pTextureManager, final AssetManager pAssetManager,
+        final String pAssetPath,
+        final BitmapTextureFormat pBitmapTextureFormat,
+        final TextureOptions pTextureOptions,
+        final ITextureStateListener pTextureStateListener)
+        throws IOException {
+        super(pTextureManager, pAssetManager, pAssetPath, pBitmapTextureFormat,
+            pTextureOptions, pTextureStateListener);
+        this.mAddress = pAddress;
+    }
 
-		this.mAddress = pAddress;
-	}
-
-	// ===========================================================
-	// Getter & Setter
-	// ===========================================================
-
-	// ===========================================================
-	// Methods for/from SuperClass/Interfaces
-	// ===========================================================
-
-	// ===========================================================
-	// Methods
-	// ===========================================================
-
-	// ===========================================================
-	// Inner and Anonymous Classes
-	// ===========================================================
+    public static native void nativeInitClass();
 }

@@ -1,34 +1,38 @@
 #ifndef Engine_H
 #define Engine_H
 
+#include <memory>
 #include <jni.h>
+#include "src/AndEngineScriptingExtension.h"
 #include "src/Wrapper.h"
+#include "src/org/andengine/engine/options/EngineOptions.h"
 #include "src/org/andengine/opengl/vbo/VertexBufferObjectManager.h"
 #include "src/org/andengine/opengl/texture/TextureManager.h"
 #include "src/org/andengine/opengl/font/FontManager.h"
 
 extern "C" {
-	// ===========================================================
-	// org.andengine.extension.scripting.engine.EngineProxy
-	// ===========================================================
-
 	JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_engine_EngineProxy_nativeInitClass(JNIEnv*, jclass);
 }
 
+class VertexBufferObjectManager; // Forward declatarion
+class TextureManager; // Forward declatarion
+class FontManager; // Forward declatarion
+
 class Engine : public Wrapper {
-	private:
-		VertexBufferObjectManager* mVertexBufferObjectManager;
-		TextureManager* mTextureManager;
-		FontManager* mFontManager;
 
 	public:
-		/* Constructors */
 		Engine(jobject);
+		virtual jobject unwrap();
+		Engine(EngineOptions*);
+		Engine();
+		virtual VertexBufferObjectManager* getVertexBufferObjectManager();
+		virtual TextureManager* getTextureManager();
+		virtual FontManager* getFontManager();
 
-		/* Getter & Setter */
-		VertexBufferObjectManager* getVertexBufferObjectManager();
-		TextureManager* getTextureManager();
-		FontManager* getFontManager();
+	protected:
+
+	private:
+
 };
-
 #endif
+
