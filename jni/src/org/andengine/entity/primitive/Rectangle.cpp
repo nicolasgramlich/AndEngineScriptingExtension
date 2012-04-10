@@ -10,6 +10,9 @@ static jmethodID sMethod__GetHeight;
 static jmethodID sMethod__GetVertexBufferObjectManager;
 static jmethodID sMethod__GetY;
 static jmethodID sMethod__GetX;
+static jmethodID sMethod__SetColor__FFF;
+static jmethodID sMethod__SetColor____org_andengine_util_color_Color__;
+static jmethodID sMethod__SetColor__FFFF;
 static jmethodID sMethod__SetScale__FF;
 static jmethodID sMethod__SetScale__F;
 static jmethodID sMethod__GetRotation;
@@ -24,8 +27,23 @@ static jmethodID sMethod__GetSkewX;
 static jmethodID sMethod__GetSkewY;
 static jmethodID sMethod__SetSkew__FF;
 static jmethodID sMethod__SetSkew__F;
+static jmethodID sMethod__GetRed;
+static jmethodID sMethod__GetGreen;
+static jmethodID sMethod__GetBlue;
+static jmethodID sMethod__GetAlpha;
+static jmethodID sMethod__GetColor;
+static jmethodID sMethod__SetRed__F;
+static jmethodID sMethod__SetGreen__F;
+static jmethodID sMethod__SetBlue__F;
+static jmethodID sMethod__SetAlpha__F;
+static jmethodID sMethod__GetChildCount;
+static jmethodID sMethod__GetChild__I;
+static jmethodID sMethod__GetChild____org_andengine_entity_IEntityMatcher__;
+static jmethodID sMethod__DetachSelf;
 static jmethodID sMethod__DetachChild____org_andengine_entity_IEntityMatcher__;
 static jmethodID sMethod__DetachChild____org_andengine_entity_IEntity__;
+static jmethodID sMethod__SwapChildren__II;
+static jmethodID sMethod__SwapChildren____org_andengine_entity_IEntity____org_andengine_entity_IEntity__;
 
 JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_primitive_RectangleProxy_nativeInitClass(JNIEnv* pJNIEnv, jclass pJClass) {
 	sRectangleClass = (jclass)JNI_ENV()->NewGlobalRef(pJClass);
@@ -37,6 +55,9 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_primitive_R
 	sMethod__GetVertexBufferObjectManager = JNI_ENV()->GetMethodID(sRectangleClass, "getVertexBufferObjectManager", "()Lorg/andengine/opengl/vbo/VertexBufferObjectManager;");
 	sMethod__GetY = JNI_ENV()->GetMethodID(sRectangleClass, "getY", "()F");
 	sMethod__GetX = JNI_ENV()->GetMethodID(sRectangleClass, "getX", "()F");
+	sMethod__SetColor__FFF = JNI_ENV()->GetMethodID(sRectangleClass, "setColor", "(FFF)V");
+	sMethod__SetColor____org_andengine_util_color_Color__ = JNI_ENV()->GetMethodID(sRectangleClass, "setColor", "(Lorg/andengine/util/color/Color;)V");
+	sMethod__SetColor__FFFF = JNI_ENV()->GetMethodID(sRectangleClass, "setColor", "(FFFF)V");
 	sMethod__SetScale__FF = JNI_ENV()->GetMethodID(sRectangleClass, "setScale", "(FF)V");
 	sMethod__SetScale__F = JNI_ENV()->GetMethodID(sRectangleClass, "setScale", "(F)V");
 	sMethod__GetRotation = JNI_ENV()->GetMethodID(sRectangleClass, "getRotation", "()F");
@@ -51,8 +72,23 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_primitive_R
 	sMethod__GetSkewY = JNI_ENV()->GetMethodID(sRectangleClass, "getSkewY", "()F");
 	sMethod__SetSkew__FF = JNI_ENV()->GetMethodID(sRectangleClass, "setSkew", "(FF)V");
 	sMethod__SetSkew__F = JNI_ENV()->GetMethodID(sRectangleClass, "setSkew", "(F)V");
+	sMethod__GetRed = JNI_ENV()->GetMethodID(sRectangleClass, "getRed", "()F");
+	sMethod__GetGreen = JNI_ENV()->GetMethodID(sRectangleClass, "getGreen", "()F");
+	sMethod__GetBlue = JNI_ENV()->GetMethodID(sRectangleClass, "getBlue", "()F");
+	sMethod__GetAlpha = JNI_ENV()->GetMethodID(sRectangleClass, "getAlpha", "()F");
+	sMethod__GetColor = JNI_ENV()->GetMethodID(sRectangleClass, "getColor", "()Lorg/andengine/util/color/Color;");
+	sMethod__SetRed__F = JNI_ENV()->GetMethodID(sRectangleClass, "setRed", "(F)V");
+	sMethod__SetGreen__F = JNI_ENV()->GetMethodID(sRectangleClass, "setGreen", "(F)V");
+	sMethod__SetBlue__F = JNI_ENV()->GetMethodID(sRectangleClass, "setBlue", "(F)V");
+	sMethod__SetAlpha__F = JNI_ENV()->GetMethodID(sRectangleClass, "setAlpha", "(F)V");
+	sMethod__GetChildCount = JNI_ENV()->GetMethodID(sRectangleClass, "getChildCount", "()I");
+	sMethod__GetChild__I = JNI_ENV()->GetMethodID(sRectangleClass, "getChild", "(I)Lorg/andengine/entity/IEntity;");
+	sMethod__GetChild____org_andengine_entity_IEntityMatcher__ = JNI_ENV()->GetMethodID(sRectangleClass, "getChild", "(Lorg/andengine/entity/IEntityMatcher;)Lorg/andengine/entity/IEntity;");
+	sMethod__DetachSelf = JNI_ENV()->GetMethodID(sRectangleClass, "detachSelf", "()Z");
 	sMethod__DetachChild____org_andengine_entity_IEntityMatcher__ = JNI_ENV()->GetMethodID(sRectangleClass, "detachChild", "(Lorg/andengine/entity/IEntityMatcher;)Lorg/andengine/entity/IEntity;");
 	sMethod__DetachChild____org_andengine_entity_IEntity__ = JNI_ENV()->GetMethodID(sRectangleClass, "detachChild", "(Lorg/andengine/entity/IEntity;)Z");
+	sMethod__SwapChildren__II = JNI_ENV()->GetMethodID(sRectangleClass, "swapChildren", "(II)Z");
+	sMethod__SwapChildren____org_andengine_entity_IEntity____org_andengine_entity_IEntity__ = JNI_ENV()->GetMethodID(sRectangleClass, "swapChildren", "(Lorg/andengine/entity/IEntity;Lorg/andengine/entity/IEntity;)Z");
 }
 
 	JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_primitive_RectangleProxy_nativeOnAreaTouched(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress, jobject pSceneTouchEvent, jfloat pTouchAreaLocalX, jfloat pTouchAreaLocalY) {Rectangle* rectangle = (Rectangle*)pAddress;
@@ -99,6 +135,15 @@ jfloat Rectangle::getY() {
 jfloat Rectangle::getX() {
 	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetX);
 }
+void Rectangle::setColor(jfloat pRed, jfloat pGreen, jfloat pBlue) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetColor__FFF, pRed, pGreen, pBlue);
+}
+void Rectangle::setColor(Color* pColor) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetColor____org_andengine_util_color_Color__, pColor->unwrap());
+}
+void Rectangle::setColor(jfloat pRed, jfloat pGreen, jfloat pBlue, jfloat pAlpha) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetColor__FFFF, pRed, pGreen, pBlue, pAlpha);
+}
 void Rectangle::setScale(jfloat pScaleX, jfloat pScaleY) {
 	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetScale__FF, pScaleX, pScaleY);
 }
@@ -141,6 +186,45 @@ void Rectangle::setSkew(jfloat pSkewX, jfloat pSkewY) {
 void Rectangle::setSkew(jfloat pSkew) {
 	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetSkew__F, pSkew);
 }
+jfloat Rectangle::getRed() {
+	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetRed);
+}
+jfloat Rectangle::getGreen() {
+	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetGreen);
+}
+jfloat Rectangle::getBlue() {
+	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetBlue);
+}
+jfloat Rectangle::getAlpha() {
+	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetAlpha);
+}
+Color* Rectangle::getColor() {
+	return new Color(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sMethod__GetColor));
+}
+void Rectangle::setRed(jfloat pRed) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetRed__F, pRed);
+}
+void Rectangle::setGreen(jfloat pGreen) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetGreen__F, pGreen);
+}
+void Rectangle::setBlue(jfloat pBlue) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetBlue__F, pBlue);
+}
+void Rectangle::setAlpha(jfloat pAlpha) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetAlpha__F, pAlpha);
+}
+jint Rectangle::getChildCount() {
+	return JNI_ENV()->CallIntMethod(this->mUnwrapped, sMethod__GetChildCount);
+}
+IEntity* Rectangle::getChild(jint pIndex) {
+	return new Entity(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sMethod__GetChild__I, pIndex));
+}
+IEntity* Rectangle::getChild(IEntityMatcher* pEntityMatcher) {
+	return new Entity(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sMethod__GetChild____org_andengine_entity_IEntityMatcher__, pEntityMatcher->unwrap()));
+}
+jboolean Rectangle::detachSelf() {
+	return JNI_ENV()->CallBooleanMethod(this->mUnwrapped, sMethod__DetachSelf);
+}
 IEntity* Rectangle::detachChild(IEntityMatcher* pEntityMatcher) {
 	return new Entity(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sMethod__DetachChild____org_andengine_entity_IEntityMatcher__, pEntityMatcher->unwrap()));
 }
@@ -149,6 +233,12 @@ jboolean Rectangle::detachChild(IEntity* pEntity) {
 }
 jboolean Rectangle::onAttached() {
 	return false;
+}
+jboolean Rectangle::swapChildren(jint pIndexA, jint pIndexB) {
+	return JNI_ENV()->CallBooleanMethod(this->mUnwrapped, sMethod__SwapChildren__II, pIndexA, pIndexB);
+}
+jboolean Rectangle::swapChildren(IEntity* pEntityA, IEntity* pEntityB) {
+	return JNI_ENV()->CallBooleanMethod(this->mUnwrapped, sMethod__SwapChildren____org_andengine_entity_IEntity____org_andengine_entity_IEntity__, pEntityA->unwrap(), pEntityB->unwrap());
 }
 jboolean Rectangle::onDetached() {
 	return false;

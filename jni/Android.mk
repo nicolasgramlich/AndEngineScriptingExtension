@@ -14,7 +14,12 @@ LOCAL_SRC_FILES				:= \
 								src/android/content/Context.cpp \
 								src/android/content/res/AssetManager.cpp \
 								\
+								src/org/andengine/util/color/Color.cpp \
+								\
 								src/org/andengine/engine/Engine.cpp \
+								\
+								src/org/andengine/input/touch/TouchEvent.cpp \
+								\
 								src/org/andengine/opengl/vbo/DrawType.cpp \
 								src/org/andengine/opengl/vbo/VertexBufferObjectManager.cpp \
 								src/org/andengine/opengl/texture/TextureManager.cpp \
@@ -27,7 +32,7 @@ LOCAL_SRC_FILES				:= \
 								src/org/andengine/opengl/texture/region/BaseTextureRegion.cpp \
 								src/org/andengine/opengl/texture/region/TextureRegion.cpp \
 								src/org/andengine/opengl/font/FontManager.cpp \
-								src/org/andengine/input/touch/TouchEvent.cpp \
+								\
 								src/org/andengine/entity/Entity.cpp \
 								src/org/andengine/entity/shape/Shape.cpp \
 								src/org/andengine/entity/shape/RectangularShape.cpp \

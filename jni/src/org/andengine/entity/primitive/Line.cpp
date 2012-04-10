@@ -12,6 +12,9 @@ static jmethodID sMethod__GetX;
 static jmethodID sMethod__SetX__F;
 static jmethodID sMethod__SetY__F;
 static jmethodID sMethod__GetVertexBufferObjectManager;
+static jmethodID sMethod__SetColor__FFF;
+static jmethodID sMethod__SetColor____org_andengine_util_color_Color__;
+static jmethodID sMethod__SetColor__FFFF;
 static jmethodID sMethod__SetScale__FF;
 static jmethodID sMethod__SetScale__F;
 static jmethodID sMethod__GetRotation;
@@ -24,8 +27,23 @@ static jmethodID sMethod__GetSkewX;
 static jmethodID sMethod__GetSkewY;
 static jmethodID sMethod__SetSkew__FF;
 static jmethodID sMethod__SetSkew__F;
+static jmethodID sMethod__GetRed;
+static jmethodID sMethod__GetGreen;
+static jmethodID sMethod__GetBlue;
+static jmethodID sMethod__GetAlpha;
+static jmethodID sMethod__GetColor;
+static jmethodID sMethod__SetRed__F;
+static jmethodID sMethod__SetGreen__F;
+static jmethodID sMethod__SetBlue__F;
+static jmethodID sMethod__SetAlpha__F;
+static jmethodID sMethod__GetChildCount;
+static jmethodID sMethod__GetChild__I;
+static jmethodID sMethod__GetChild____org_andengine_entity_IEntityMatcher__;
+static jmethodID sMethod__DetachSelf;
 static jmethodID sMethod__DetachChild____org_andengine_entity_IEntityMatcher__;
 static jmethodID sMethod__DetachChild____org_andengine_entity_IEntity__;
+static jmethodID sMethod__SwapChildren__II;
+static jmethodID sMethod__SwapChildren____org_andengine_entity_IEntity____org_andengine_entity_IEntity__;
 
 JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_primitive_LineProxy_nativeInitClass(JNIEnv* pJNIEnv, jclass pJClass) {
 	sLineClass = (jclass)JNI_ENV()->NewGlobalRef(pJClass);
@@ -39,6 +57,9 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_primitive_L
 	sMethod__SetX__F = JNI_ENV()->GetMethodID(sLineClass, "setX", "(F)V");
 	sMethod__SetY__F = JNI_ENV()->GetMethodID(sLineClass, "setY", "(F)V");
 	sMethod__GetVertexBufferObjectManager = JNI_ENV()->GetMethodID(sLineClass, "getVertexBufferObjectManager", "()Lorg/andengine/opengl/vbo/VertexBufferObjectManager;");
+	sMethod__SetColor__FFF = JNI_ENV()->GetMethodID(sLineClass, "setColor", "(FFF)V");
+	sMethod__SetColor____org_andengine_util_color_Color__ = JNI_ENV()->GetMethodID(sLineClass, "setColor", "(Lorg/andengine/util/color/Color;)V");
+	sMethod__SetColor__FFFF = JNI_ENV()->GetMethodID(sLineClass, "setColor", "(FFFF)V");
 	sMethod__SetScale__FF = JNI_ENV()->GetMethodID(sLineClass, "setScale", "(FF)V");
 	sMethod__SetScale__F = JNI_ENV()->GetMethodID(sLineClass, "setScale", "(F)V");
 	sMethod__GetRotation = JNI_ENV()->GetMethodID(sLineClass, "getRotation", "()F");
@@ -51,8 +72,23 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_primitive_L
 	sMethod__GetSkewY = JNI_ENV()->GetMethodID(sLineClass, "getSkewY", "()F");
 	sMethod__SetSkew__FF = JNI_ENV()->GetMethodID(sLineClass, "setSkew", "(FF)V");
 	sMethod__SetSkew__F = JNI_ENV()->GetMethodID(sLineClass, "setSkew", "(F)V");
+	sMethod__GetRed = JNI_ENV()->GetMethodID(sLineClass, "getRed", "()F");
+	sMethod__GetGreen = JNI_ENV()->GetMethodID(sLineClass, "getGreen", "()F");
+	sMethod__GetBlue = JNI_ENV()->GetMethodID(sLineClass, "getBlue", "()F");
+	sMethod__GetAlpha = JNI_ENV()->GetMethodID(sLineClass, "getAlpha", "()F");
+	sMethod__GetColor = JNI_ENV()->GetMethodID(sLineClass, "getColor", "()Lorg/andengine/util/color/Color;");
+	sMethod__SetRed__F = JNI_ENV()->GetMethodID(sLineClass, "setRed", "(F)V");
+	sMethod__SetGreen__F = JNI_ENV()->GetMethodID(sLineClass, "setGreen", "(F)V");
+	sMethod__SetBlue__F = JNI_ENV()->GetMethodID(sLineClass, "setBlue", "(F)V");
+	sMethod__SetAlpha__F = JNI_ENV()->GetMethodID(sLineClass, "setAlpha", "(F)V");
+	sMethod__GetChildCount = JNI_ENV()->GetMethodID(sLineClass, "getChildCount", "()I");
+	sMethod__GetChild__I = JNI_ENV()->GetMethodID(sLineClass, "getChild", "(I)Lorg/andengine/entity/IEntity;");
+	sMethod__GetChild____org_andengine_entity_IEntityMatcher__ = JNI_ENV()->GetMethodID(sLineClass, "getChild", "(Lorg/andengine/entity/IEntityMatcher;)Lorg/andengine/entity/IEntity;");
+	sMethod__DetachSelf = JNI_ENV()->GetMethodID(sLineClass, "detachSelf", "()Z");
 	sMethod__DetachChild____org_andengine_entity_IEntityMatcher__ = JNI_ENV()->GetMethodID(sLineClass, "detachChild", "(Lorg/andengine/entity/IEntityMatcher;)Lorg/andengine/entity/IEntity;");
 	sMethod__DetachChild____org_andengine_entity_IEntity__ = JNI_ENV()->GetMethodID(sLineClass, "detachChild", "(Lorg/andengine/entity/IEntity;)Z");
+	sMethod__SwapChildren__II = JNI_ENV()->GetMethodID(sLineClass, "swapChildren", "(II)Z");
+	sMethod__SwapChildren____org_andengine_entity_IEntity____org_andengine_entity_IEntity__ = JNI_ENV()->GetMethodID(sLineClass, "swapChildren", "(Lorg/andengine/entity/IEntity;Lorg/andengine/entity/IEntity;)Z");
 }
 
 	JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_primitive_LineProxy_nativeOnAreaTouched(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress, jobject pSceneTouchEvent, jfloat pTouchAreaLocalX, jfloat pTouchAreaLocalY) {Line* line = (Line*)pAddress;
@@ -105,6 +141,15 @@ VertexBufferObjectManager* Line::getVertexBufferObjectManager() {
 jboolean Line::onAreaTouched(TouchEvent* pSceneTouchEvent, jfloat pTouchAreaLocalX, jfloat pTouchAreaLocalY) {
 	return false;
 }
+void Line::setColor(jfloat pRed, jfloat pGreen, jfloat pBlue) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetColor__FFF, pRed, pGreen, pBlue);
+}
+void Line::setColor(Color* pColor) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetColor____org_andengine_util_color_Color__, pColor->unwrap());
+}
+void Line::setColor(jfloat pRed, jfloat pGreen, jfloat pBlue, jfloat pAlpha) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetColor__FFFF, pRed, pGreen, pBlue, pAlpha);
+}
 void Line::setScale(jfloat pScaleX, jfloat pScaleY) {
 	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetScale__FF, pScaleX, pScaleY);
 }
@@ -141,6 +186,45 @@ void Line::setSkew(jfloat pSkewX, jfloat pSkewY) {
 void Line::setSkew(jfloat pSkew) {
 	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetSkew__F, pSkew);
 }
+jfloat Line::getRed() {
+	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetRed);
+}
+jfloat Line::getGreen() {
+	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetGreen);
+}
+jfloat Line::getBlue() {
+	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetBlue);
+}
+jfloat Line::getAlpha() {
+	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetAlpha);
+}
+Color* Line::getColor() {
+	return new Color(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sMethod__GetColor));
+}
+void Line::setRed(jfloat pRed) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetRed__F, pRed);
+}
+void Line::setGreen(jfloat pGreen) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetGreen__F, pGreen);
+}
+void Line::setBlue(jfloat pBlue) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetBlue__F, pBlue);
+}
+void Line::setAlpha(jfloat pAlpha) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetAlpha__F, pAlpha);
+}
+jint Line::getChildCount() {
+	return JNI_ENV()->CallIntMethod(this->mUnwrapped, sMethod__GetChildCount);
+}
+IEntity* Line::getChild(jint pIndex) {
+	return new Entity(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sMethod__GetChild__I, pIndex));
+}
+IEntity* Line::getChild(IEntityMatcher* pEntityMatcher) {
+	return new Entity(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sMethod__GetChild____org_andengine_entity_IEntityMatcher__, pEntityMatcher->unwrap()));
+}
+jboolean Line::detachSelf() {
+	return JNI_ENV()->CallBooleanMethod(this->mUnwrapped, sMethod__DetachSelf);
+}
 IEntity* Line::detachChild(IEntityMatcher* pEntityMatcher) {
 	return new Entity(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sMethod__DetachChild____org_andengine_entity_IEntityMatcher__, pEntityMatcher->unwrap()));
 }
@@ -149,6 +233,12 @@ jboolean Line::detachChild(IEntity* pEntity) {
 }
 jboolean Line::onAttached() {
 	return false;
+}
+jboolean Line::swapChildren(jint pIndexA, jint pIndexB) {
+	return JNI_ENV()->CallBooleanMethod(this->mUnwrapped, sMethod__SwapChildren__II, pIndexA, pIndexB);
+}
+jboolean Line::swapChildren(IEntity* pEntityA, IEntity* pEntityB) {
+	return JNI_ENV()->CallBooleanMethod(this->mUnwrapped, sMethod__SwapChildren____org_andengine_entity_IEntity____org_andengine_entity_IEntity__, pEntityA->unwrap(), pEntityB->unwrap());
 }
 jboolean Line::onDetached() {
 	return false;

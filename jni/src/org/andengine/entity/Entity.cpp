@@ -6,6 +6,9 @@ static jmethodID sConstructor;
 static jmethodID sConstructor__FF;
 static jmethodID sMethod__GetY;
 static jmethodID sMethod__GetX;
+static jmethodID sMethod__SetColor__FFF;
+static jmethodID sMethod__SetColor____org_andengine_util_color_Color__;
+static jmethodID sMethod__SetColor__FFFF;
 static jmethodID sMethod__SetScale__FF;
 static jmethodID sMethod__SetScale__F;
 static jmethodID sMethod__GetRotation;
@@ -20,8 +23,23 @@ static jmethodID sMethod__GetSkewX;
 static jmethodID sMethod__GetSkewY;
 static jmethodID sMethod__SetSkew__FF;
 static jmethodID sMethod__SetSkew__F;
+static jmethodID sMethod__GetRed;
+static jmethodID sMethod__GetGreen;
+static jmethodID sMethod__GetBlue;
+static jmethodID sMethod__GetAlpha;
+static jmethodID sMethod__GetColor;
+static jmethodID sMethod__SetRed__F;
+static jmethodID sMethod__SetGreen__F;
+static jmethodID sMethod__SetBlue__F;
+static jmethodID sMethod__SetAlpha__F;
+static jmethodID sMethod__GetChildCount;
+static jmethodID sMethod__GetChild__I;
+static jmethodID sMethod__GetChild____org_andengine_entity_IEntityMatcher__;
+static jmethodID sMethod__DetachSelf;
 static jmethodID sMethod__DetachChild____org_andengine_entity_IEntityMatcher__;
 static jmethodID sMethod__DetachChild____org_andengine_entity_IEntity__;
+static jmethodID sMethod__SwapChildren__II;
+static jmethodID sMethod__SwapChildren____org_andengine_entity_IEntity____org_andengine_entity_IEntity__;
 
 JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_EntityProxy_nativeInitClass(JNIEnv* pJNIEnv, jclass pJClass) {
 	sEntityClass = (jclass)JNI_ENV()->NewGlobalRef(pJClass);
@@ -29,6 +47,9 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_EntityProxy
 	sConstructor__FF = JNI_ENV()->GetMethodID(sEntityClass, "<init>", "(JFF)V");
 	sMethod__GetY = JNI_ENV()->GetMethodID(sEntityClass, "getY", "()F");
 	sMethod__GetX = JNI_ENV()->GetMethodID(sEntityClass, "getX", "()F");
+	sMethod__SetColor__FFF = JNI_ENV()->GetMethodID(sEntityClass, "setColor", "(FFF)V");
+	sMethod__SetColor____org_andengine_util_color_Color__ = JNI_ENV()->GetMethodID(sEntityClass, "setColor", "(Lorg/andengine/util/color/Color;)V");
+	sMethod__SetColor__FFFF = JNI_ENV()->GetMethodID(sEntityClass, "setColor", "(FFFF)V");
 	sMethod__SetScale__FF = JNI_ENV()->GetMethodID(sEntityClass, "setScale", "(FF)V");
 	sMethod__SetScale__F = JNI_ENV()->GetMethodID(sEntityClass, "setScale", "(F)V");
 	sMethod__GetRotation = JNI_ENV()->GetMethodID(sEntityClass, "getRotation", "()F");
@@ -43,8 +64,23 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_EntityProxy
 	sMethod__GetSkewY = JNI_ENV()->GetMethodID(sEntityClass, "getSkewY", "()F");
 	sMethod__SetSkew__FF = JNI_ENV()->GetMethodID(sEntityClass, "setSkew", "(FF)V");
 	sMethod__SetSkew__F = JNI_ENV()->GetMethodID(sEntityClass, "setSkew", "(F)V");
+	sMethod__GetRed = JNI_ENV()->GetMethodID(sEntityClass, "getRed", "()F");
+	sMethod__GetGreen = JNI_ENV()->GetMethodID(sEntityClass, "getGreen", "()F");
+	sMethod__GetBlue = JNI_ENV()->GetMethodID(sEntityClass, "getBlue", "()F");
+	sMethod__GetAlpha = JNI_ENV()->GetMethodID(sEntityClass, "getAlpha", "()F");
+	sMethod__GetColor = JNI_ENV()->GetMethodID(sEntityClass, "getColor", "()Lorg/andengine/util/color/Color;");
+	sMethod__SetRed__F = JNI_ENV()->GetMethodID(sEntityClass, "setRed", "(F)V");
+	sMethod__SetGreen__F = JNI_ENV()->GetMethodID(sEntityClass, "setGreen", "(F)V");
+	sMethod__SetBlue__F = JNI_ENV()->GetMethodID(sEntityClass, "setBlue", "(F)V");
+	sMethod__SetAlpha__F = JNI_ENV()->GetMethodID(sEntityClass, "setAlpha", "(F)V");
+	sMethod__GetChildCount = JNI_ENV()->GetMethodID(sEntityClass, "getChildCount", "()I");
+	sMethod__GetChild__I = JNI_ENV()->GetMethodID(sEntityClass, "getChild", "(I)Lorg/andengine/entity/IEntity;");
+	sMethod__GetChild____org_andengine_entity_IEntityMatcher__ = JNI_ENV()->GetMethodID(sEntityClass, "getChild", "(Lorg/andengine/entity/IEntityMatcher;)Lorg/andengine/entity/IEntity;");
+	sMethod__DetachSelf = JNI_ENV()->GetMethodID(sEntityClass, "detachSelf", "()Z");
 	sMethod__DetachChild____org_andengine_entity_IEntityMatcher__ = JNI_ENV()->GetMethodID(sEntityClass, "detachChild", "(Lorg/andengine/entity/IEntityMatcher;)Lorg/andengine/entity/IEntity;");
 	sMethod__DetachChild____org_andengine_entity_IEntity__ = JNI_ENV()->GetMethodID(sEntityClass, "detachChild", "(Lorg/andengine/entity/IEntity;)Z");
+	sMethod__SwapChildren__II = JNI_ENV()->GetMethodID(sEntityClass, "swapChildren", "(II)Z");
+	sMethod__SwapChildren____org_andengine_entity_IEntity____org_andengine_entity_IEntity__ = JNI_ENV()->GetMethodID(sEntityClass, "swapChildren", "(Lorg/andengine/entity/IEntity;Lorg/andengine/entity/IEntity;)Z");
 }
 
 	JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_EntityProxy_nativeOnAttached(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress) {Entity* entity = (Entity*)pAddress;
@@ -69,6 +105,15 @@ jfloat Entity::getY() {
 }
 jfloat Entity::getX() {
 	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetX);
+}
+void Entity::setColor(jfloat pRed, jfloat pGreen, jfloat pBlue) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetColor__FFF, pRed, pGreen, pBlue);
+}
+void Entity::setColor(Color* pColor) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetColor____org_andengine_util_color_Color__, pColor->unwrap());
+}
+void Entity::setColor(jfloat pRed, jfloat pGreen, jfloat pBlue, jfloat pAlpha) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetColor__FFFF, pRed, pGreen, pBlue, pAlpha);
 }
 void Entity::setScale(jfloat pScaleX, jfloat pScaleY) {
 	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetScale__FF, pScaleX, pScaleY);
@@ -112,6 +157,45 @@ void Entity::setSkew(jfloat pSkewX, jfloat pSkewY) {
 void Entity::setSkew(jfloat pSkew) {
 	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetSkew__F, pSkew);
 }
+jfloat Entity::getRed() {
+	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetRed);
+}
+jfloat Entity::getGreen() {
+	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetGreen);
+}
+jfloat Entity::getBlue() {
+	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetBlue);
+}
+jfloat Entity::getAlpha() {
+	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetAlpha);
+}
+Color* Entity::getColor() {
+	return new Color(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sMethod__GetColor));
+}
+void Entity::setRed(jfloat pRed) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetRed__F, pRed);
+}
+void Entity::setGreen(jfloat pGreen) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetGreen__F, pGreen);
+}
+void Entity::setBlue(jfloat pBlue) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetBlue__F, pBlue);
+}
+void Entity::setAlpha(jfloat pAlpha) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetAlpha__F, pAlpha);
+}
+jint Entity::getChildCount() {
+	return JNI_ENV()->CallIntMethod(this->mUnwrapped, sMethod__GetChildCount);
+}
+IEntity* Entity::getChild(jint pIndex) {
+	return new Entity(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sMethod__GetChild__I, pIndex));
+}
+IEntity* Entity::getChild(IEntityMatcher* pEntityMatcher) {
+	return new Entity(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sMethod__GetChild____org_andengine_entity_IEntityMatcher__, pEntityMatcher->unwrap()));
+}
+jboolean Entity::detachSelf() {
+	return JNI_ENV()->CallBooleanMethod(this->mUnwrapped, sMethod__DetachSelf);
+}
 IEntity* Entity::detachChild(IEntityMatcher* pEntityMatcher) {
 	return new Entity(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sMethod__DetachChild____org_andengine_entity_IEntityMatcher__, pEntityMatcher->unwrap()));
 }
@@ -120,6 +204,12 @@ jboolean Entity::detachChild(IEntity* pEntity) {
 }
 jboolean Entity::onAttached() {
 	return false;
+}
+jboolean Entity::swapChildren(jint pIndexA, jint pIndexB) {
+	return JNI_ENV()->CallBooleanMethod(this->mUnwrapped, sMethod__SwapChildren__II, pIndexA, pIndexB);
+}
+jboolean Entity::swapChildren(IEntity* pEntityA, IEntity* pEntityB) {
+	return JNI_ENV()->CallBooleanMethod(this->mUnwrapped, sMethod__SwapChildren____org_andengine_entity_IEntity____org_andengine_entity_IEntity__, pEntityA->unwrap(), pEntityB->unwrap());
 }
 jboolean Entity::onDetached() {
 	return false;

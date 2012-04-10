@@ -4,6 +4,11 @@ import org.andengine.entity.IEntity;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntityMatcher;
 import org.andengine.entity.IEntityMatcher;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.primitive.vbo.IRectangleVertexBufferObject;
@@ -14,6 +19,9 @@ import org.andengine.opengl.vbo.DrawType;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
+
+import org.andengine.util.color.Color;
+import org.andengine.util.color.Color;
 
 
 public class RectangleProxy extends Rectangle {

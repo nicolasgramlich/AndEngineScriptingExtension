@@ -5,9 +5,16 @@
 #include <jni.h>
 #include "src/AndEngineScriptingExtension.h"
 #include "src/org/andengine/entity/Entity.h"
+#include "src/org/andengine/util/color/Color.h"
 #include "src/org/andengine/entity/IEntity.h"
+#include "src/org/andengine/entity/IEntity.h"
+#include "src/org/andengine/util/color/Color.h"
 #include "src/org/andengine/entity/IEntity.h"
 #include "src/org/andengine/entity/IEntityMatcher.h"
+#include "src/org/andengine/entity/IEntity.h"
+#include "src/org/andengine/entity/IEntityMatcher.h"
+#include "src/org/andengine/entity/IEntity.h"
+#include "src/org/andengine/entity/IEntity.h"
 #include "src/org/andengine/entity/IEntity.h"
 #include "src/org/andengine/entity/IEntity.h"
 
@@ -26,6 +33,9 @@ class Scene : public Entity {
 		Scene(jint);
 		virtual jfloat getY();
 		virtual jfloat getX();
+		virtual void setColor(jfloat, jfloat, jfloat);
+		virtual void setColor(Color*);
+		virtual void setColor(jfloat, jfloat, jfloat, jfloat);
 		virtual void setScale(jfloat, jfloat);
 		virtual void setScale(jfloat);
 		virtual jfloat getRotation();
@@ -40,9 +50,24 @@ class Scene : public Entity {
 		virtual jfloat getSkewY();
 		virtual void setSkew(jfloat, jfloat);
 		virtual void setSkew(jfloat);
+		virtual jfloat getRed();
+		virtual jfloat getGreen();
+		virtual jfloat getBlue();
+		virtual jfloat getAlpha();
+		virtual Color* getColor();
+		virtual void setRed(jfloat);
+		virtual void setGreen(jfloat);
+		virtual void setBlue(jfloat);
+		virtual void setAlpha(jfloat);
+		virtual jint getChildCount();
+		virtual IEntity* getChild(jint);
+		virtual IEntity* getChild(IEntityMatcher*);
+		virtual jboolean detachSelf();
 		virtual IEntity* detachChild(IEntityMatcher*);
 		virtual jboolean detachChild(IEntity*);
 		virtual jboolean onAttached();
+		virtual jboolean swapChildren(jint, jint);
+		virtual jboolean swapChildren(IEntity*, IEntity*);
 		virtual jboolean onDetached();
 
 	protected:

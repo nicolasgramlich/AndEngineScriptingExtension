@@ -4,6 +4,11 @@ import org.andengine.entity.IEntity;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntityMatcher;
 import org.andengine.entity.IEntityMatcher;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.sprite.vbo.ISpriteVertexBufferObject;
@@ -44,6 +49,9 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
+
+import org.andengine.util.color.Color;
+import org.andengine.util.color.Color;
 
 
 public class SpriteProxy extends Sprite {

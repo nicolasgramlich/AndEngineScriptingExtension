@@ -4,6 +4,11 @@ import org.andengine.entity.IEntity;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntityMatcher;
 import org.andengine.entity.IEntityMatcher;
 import org.andengine.entity.primitive.Line;
 import org.andengine.entity.primitive.vbo.ILineVertexBufferObject;
@@ -17,6 +22,9 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
+
+import org.andengine.util.color.Color;
+import org.andengine.util.color.Color;
 
 
 public class LineProxy extends Line {

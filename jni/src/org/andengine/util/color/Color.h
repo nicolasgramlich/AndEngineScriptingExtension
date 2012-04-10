@@ -20,6 +20,14 @@ class Color : public Wrapper {
 		Color(jfloat, jfloat, jfloat);
 		Color(jfloat, jfloat, jfloat, jfloat);
 		Color();
+		virtual jfloat getRed();
+		virtual jfloat getGreen();
+		virtual jfloat getBlue();
+		virtual jfloat getAlpha();
+		virtual void setRed(jfloat);
+		virtual void setGreen(jfloat);
+		virtual void setBlue(jfloat);
+		virtual void setAlpha(jfloat);
 
 	protected:
 

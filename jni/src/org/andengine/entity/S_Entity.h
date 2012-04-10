@@ -25,23 +25,34 @@ class S_Entity : public Entity {
 		S_Entity(JSObject*, float, float);
 
 		static JSBool jsConstructor(JSContext* pJSContext, uint32_t pArgumentCount, jsval* pArguments) {
-			JSObject* obj = JS_NewObject(pJSContext, S_Entity::sJSClass, S_Entity::sJSObject, NULL);
+			/* Not called as constructor? */
+			if (!JS_IsConstructing(pJSContext, pArguments)) {
+				return JS_FALSE;
+			}
+			
+			S_Entity* cObject = NULL;
+			JSObject* jsObject = NULL;
+			if(cObject == NULL && pArgumentCount == 2) {
+				double x;
+				double y;
+	
+				if(JS_ConvertArguments(pJSContext, pArgumentCount, JS_ARGV(pJSContext, pArguments), "dd", &x, &y)) {
+					jsObject = JS_NewObject(pJSContext, S_Entity::sJSClass, S_Entity::sJSObject, NULL);
 
-			double x;
-			double y;
-
-			if(!JS_ConvertArguments(pJSContext, pArgumentCount, JS_ARGV(pJSContext, pArguments), "dd", &x, &y)) {
+					cObject = new S_Entity(jsObject, x, y);
+	        	}
+        	}
+        	
+        	if(cObject == NULL || jsObject == NULL) {
         		return JS_FALSE;
         	}
 
-			S_Entity* cobj = new S_Entity(obj, x, y);
-
 			pointerShell_t* pt = (pointerShell_t*)JS_malloc(pJSContext, sizeof(pointerShell_t));
 			pt->flags = 0;
-			pt->data = cobj;
+			pt->data = cObject;
 
-			JS_SetPrivate(obj, pt);
-			JS_SET_RVAL(pJSContext, pArguments, OBJECT_TO_JSVAL(obj));
+			JS_SetPrivate(jsObject, pt);
+			JS_SET_RVAL(pJSContext, pArguments, OBJECT_TO_JSVAL(jsObject));
 
 			return JS_TRUE;
 		};
@@ -57,17 +68,17 @@ class S_Entity : public Entity {
 		};
 
 		static JSBool jsPropertyGet(JSContext* pJSContext, JSObject* pJSObject, jsid pJSID, jsval* pJSVal) {
-			S_Entity* cobj; 
-			JSGET_PTRSHELL(S_Entity, cobj, pJSObject);
-			if(!cobj) {
+			S_Entity* cObject; 
+			JSGET_PTRSHELL(S_Entity, cObject, pJSObject);
+			if(!cObject) {
 				return JS_FALSE;
 			}
 			switch(JSID_TO_INT(pJSID)) {
 				case kX:
-					JS_NewNumberValue(pJSContext, cobj->getX(), pJSVal);
+					JS_NewNumberValue(pJSContext, cObject->getX(), pJSVal);
 					return JS_TRUE;
 				case kY:
-					JS_NewNumberValue(pJSContext, cobj->getY(), pJSVal);
+					JS_NewNumberValue(pJSContext, cObject->getY(), pJSVal);
 					return JS_TRUE;
 				default:
 					return JS_FALSE;
@@ -75,9 +86,9 @@ class S_Entity : public Entity {
 		};
 
 		static JSBool jsPropertySet(JSContext* pJSContext, JSObject* pJSObject, jsid pJSID, JSBool pStrict, jsval* pJSVal) {
-			S_Entity* cobj;
-			JSGET_PTRSHELL(S_Entity, cobj, pJSObject);
-			if(!cobj) {
+			S_Entity* cObject;
+			JSGET_PTRSHELL(S_Entity, cObject, pJSObject);
+			if(!cObject) {
 				return JS_FALSE;
 			}
 			switch(JSID_TO_INT(pJSID)) {
@@ -85,14 +96,14 @@ class S_Entity : public Entity {
 					{ 
 						double tmp;
 						JS_ValueToNumber(pJSContext, *pJSVal, &tmp);
-						cobj->setX(tmp);
+						cObject->setX(tmp);
 						return JS_TRUE;
 					}
 				case kY:
 					{
 						double tmp;
 						JS_ValueToNumber(pJSContext, *pJSVal, &tmp);
-						cobj->setY(tmp);
+						cObject->setY(tmp);
 						return JS_TRUE;
 					}
 				default:

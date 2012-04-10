@@ -6,8 +6,16 @@ import org.andengine.entity.IEntity;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.IEntityMatcher;
 import org.andengine.entity.IEntityMatcher;
 import org.andengine.entity.scene.CameraScene;
+
+import org.andengine.util.color.Color;
+import org.andengine.util.color.Color;
 
 
 public class CameraSceneProxy extends CameraScene {
