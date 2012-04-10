@@ -4,6 +4,13 @@
 JSClass* S_Entity::sJSClass = NULL;
 JSObject* S_Entity::sJSObject = NULL;
 
+S_Entity::S_Entity(JSObject* pJSObject) : Entity() {
+	this->mJSObject = pJSObject;
+}
+S_Entity::S_Entity(JSObject* pJSObject, float pX, float pY) : Entity(pX, pY) {
+	this->mJSObject = pJSObject;
+}
+
 jboolean S_Entity::onAttached() {
 	JSContext* jsContext = getJSContext();
 	JSBool found;
