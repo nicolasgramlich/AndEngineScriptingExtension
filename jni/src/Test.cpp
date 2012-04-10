@@ -20,14 +20,14 @@
 JNIEXPORT jobject JNICALL Java_org_andengine_extension_scripting_Test_test(JNIEnv* pJNIEnv, jclass pJClass) {
 	Engine* engine = getEngine();
 	Context* context = getContext();
-	AssetManager assetManager = context->getAssetManager();
+	AssetManager* assetManager = context->getAssetManager();
 
 	/* Fetch managers. */
 	TextureManager* textureManager = engine->getTextureManager();
 	VertexBufferObjectManager* vertexBufferObjectManager = engine->getVertexBufferObjectManager();
 
 	/* Create texture. */
-	AssetBitmapTexture texture(textureManager, &assetManager, JNI_ENV()->NewStringUTF("gfx/box.png")); //, BitmapTextureFormat::RGBA_4444);
+	AssetBitmapTexture texture(textureManager, assetManager, JNI_ENV()->NewStringUTF("gfx/box.png")); //, BitmapTextureFormat::RGBA_4444);
 	texture.load();
 
 	/* Extract TextureRegion. */

@@ -19,7 +19,7 @@ class Context : public Wrapper {
 		Context(jobject);
 
 		/* Getter & Setter */
-		AssetManager getAssetManager();
+		AssetManager* getAssetManager();
 };
 
 #endif
