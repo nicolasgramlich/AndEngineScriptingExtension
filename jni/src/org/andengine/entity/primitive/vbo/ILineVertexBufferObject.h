@@ -9,6 +9,7 @@
 class ILineVertexBufferObject : public IVertexBufferObject {
 
 	public:
+		virtual ~ILineVertexBufferObject() { };
 		virtual jobject unwrap() = 0;
 		virtual VertexBufferObjectManager* getVertexBufferObjectManager() = 0;
 

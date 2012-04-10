@@ -9,6 +9,7 @@
 class IVertexBufferObject : public IDisposable {
 
 	public:
+		virtual ~IVertexBufferObject() { };
 		virtual jobject unwrap() = 0;
 		virtual VertexBufferObjectManager* getVertexBufferObjectManager() = 0;
 

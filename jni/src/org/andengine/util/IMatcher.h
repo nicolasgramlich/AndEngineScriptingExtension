@@ -7,6 +7,7 @@
 class IMatcher {
 
 	public:
+		virtual ~IMatcher() { };
 		virtual jobject unwrap() = 0;
 
 };

@@ -5,6 +5,8 @@ static jclass sHUDClass;
 static jmethodID sConstructor;
 static jmethodID sMethod__GetY;
 static jmethodID sMethod__GetX;
+static jmethodID sMethod__SetScale__FF;
+static jmethodID sMethod__SetScale__F;
 static jmethodID sMethod__GetRotation;
 static jmethodID sMethod__SetRotation__F;
 static jmethodID sMethod__AttachChild____org_andengine_entity_IEntity__;
@@ -13,8 +15,6 @@ static jmethodID sMethod__SetX__F;
 static jmethodID sMethod__SetY__F;
 static jmethodID sMethod__GetScaleX;
 static jmethodID sMethod__GetScaleY;
-static jmethodID sMethod__SetScale__F;
-static jmethodID sMethod__SetScale__FF;
 static jmethodID sMethod__GetSkewX;
 static jmethodID sMethod__GetSkewY;
 static jmethodID sMethod__SetSkew__FF;
@@ -27,6 +27,8 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_engine_camera_hud_
 	sConstructor = JNI_ENV()->GetMethodID(sHUDClass, "<init>", "(J)V");
 	sMethod__GetY = JNI_ENV()->GetMethodID(sHUDClass, "getY", "()F");
 	sMethod__GetX = JNI_ENV()->GetMethodID(sHUDClass, "getX", "()F");
+	sMethod__SetScale__FF = JNI_ENV()->GetMethodID(sHUDClass, "setScale", "(FF)V");
+	sMethod__SetScale__F = JNI_ENV()->GetMethodID(sHUDClass, "setScale", "(F)V");
 	sMethod__GetRotation = JNI_ENV()->GetMethodID(sHUDClass, "getRotation", "()F");
 	sMethod__SetRotation__F = JNI_ENV()->GetMethodID(sHUDClass, "setRotation", "(F)V");
 	sMethod__AttachChild____org_andengine_entity_IEntity__ = JNI_ENV()->GetMethodID(sHUDClass, "attachChild", "(Lorg/andengine/entity/IEntity;)V");
@@ -35,8 +37,6 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_engine_camera_hud_
 	sMethod__SetY__F = JNI_ENV()->GetMethodID(sHUDClass, "setY", "(F)V");
 	sMethod__GetScaleX = JNI_ENV()->GetMethodID(sHUDClass, "getScaleX", "()F");
 	sMethod__GetScaleY = JNI_ENV()->GetMethodID(sHUDClass, "getScaleY", "()F");
-	sMethod__SetScale__F = JNI_ENV()->GetMethodID(sHUDClass, "setScale", "(F)V");
-	sMethod__SetScale__FF = JNI_ENV()->GetMethodID(sHUDClass, "setScale", "(FF)V");
 	sMethod__GetSkewX = JNI_ENV()->GetMethodID(sHUDClass, "getSkewX", "()F");
 	sMethod__GetSkewY = JNI_ENV()->GetMethodID(sHUDClass, "getSkewY", "()F");
 	sMethod__SetSkew__FF = JNI_ENV()->GetMethodID(sHUDClass, "setSkew", "(FF)V");
@@ -45,14 +45,10 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_engine_camera_hud_
 	sMethod__DetachChild____org_andengine_entity_IEntity__ = JNI_ENV()->GetMethodID(sHUDClass, "detachChild", "(Lorg/andengine/entity/IEntity;)Z");
 }
 
-JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_engine_camera_hud_HUDProxy_nativeOnAttached(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress) {
-	HUD* hUD = (HUD*)pAddress;
-	return hUD->onAttached();
-}
-JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_engine_camera_hud_HUDProxy_nativeOnDetached(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress) {
-	HUD* hUD = (HUD*)pAddress;
-	return hUD->onDetached();
-}
+	JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_engine_camera_hud_HUDProxy_nativeOnAttached(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress) {HUD* hUD = (HUD*)pAddress;
+return hUD->onAttached();}
+	JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_engine_camera_hud_HUDProxy_nativeOnDetached(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress) {HUD* hUD = (HUD*)pAddress;
+return hUD->onDetached();}
 
 HUD::HUD(jobject pHUDProxy) {
 	this->mUnwrapped = pHUDProxy;
@@ -68,6 +64,12 @@ jfloat HUD::getY() {
 }
 jfloat HUD::getX() {
 	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetX);
+}
+void HUD::setScale(jfloat pScaleX, jfloat pScaleY) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetScale__FF, pScaleX, pScaleY);
+}
+void HUD::setScale(jfloat pScale) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetScale__F, pScale);
 }
 jfloat HUD::getRotation() {
 	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetRotation);
@@ -92,12 +94,6 @@ jfloat HUD::getScaleX() {
 }
 jfloat HUD::getScaleY() {
 	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetScaleY);
-}
-void HUD::setScale(jfloat pScale) {
-	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetScale__F, pScale);
-}
-void HUD::setScale(jfloat pScaleX, jfloat pScaleY) {
-	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetScale__FF, pScaleX, pScaleY);
 }
 jfloat HUD::getSkewX() {
 	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetSkewX);

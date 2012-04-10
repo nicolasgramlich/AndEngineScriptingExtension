@@ -25,6 +25,8 @@ class HUD : public CameraScene {
 		HUD();
 		virtual jfloat getY();
 		virtual jfloat getX();
+		virtual void setScale(jfloat, jfloat);
+		virtual void setScale(jfloat);
 		virtual jfloat getRotation();
 		virtual void setRotation(jfloat);
 		virtual void attachChild(IEntity*);
@@ -33,8 +35,6 @@ class HUD : public CameraScene {
 		virtual void setY(jfloat);
 		virtual jfloat getScaleX();
 		virtual jfloat getScaleY();
-		virtual void setScale(jfloat);
-		virtual void setScale(jfloat, jfloat);
 		virtual jfloat getSkewX();
 		virtual jfloat getSkewY();
 		virtual void setSkew(jfloat, jfloat);

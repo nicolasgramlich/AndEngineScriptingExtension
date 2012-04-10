@@ -8,9 +8,9 @@
 class ITouchArea {
 
 	public:
+		virtual ~ITouchArea() { };
 		virtual jobject unwrap() = 0;
 		virtual jboolean onAreaTouched(TouchEvent*, jfloat, jfloat) = 0;
-
 };
 #endif
 

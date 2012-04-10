@@ -7,6 +7,7 @@
 class ITextureRegion {
 
 	public:
+		virtual ~ITextureRegion() { };
 		virtual jobject unwrap() = 0;
 		virtual jfloat getWidth() = 0;
 		virtual jfloat getHeight() = 0;

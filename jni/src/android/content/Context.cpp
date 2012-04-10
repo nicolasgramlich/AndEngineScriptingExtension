@@ -19,6 +19,6 @@ Context::Context(jobject pContext) {
 	this->mUnwrapped = pContext;
 }
 
-AssetManager* Context::getAssetManager() {
-	return new AssetManager(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sGetAssetsMethod));
+AssetManager Context::getAssetManager() {
+	return AssetManager(JNI_ENV()->CallObjectMethod(this->mUnwrapped, sGetAssetsMethod));
 }

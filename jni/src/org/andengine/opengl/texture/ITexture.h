@@ -9,6 +9,7 @@
 class ITexture {
 
 	public:
+		virtual ~ITexture() { };
 		virtual jobject unwrap() = 0;
 		virtual void load() = 0;
 		virtual void load(GLState*) = 0;

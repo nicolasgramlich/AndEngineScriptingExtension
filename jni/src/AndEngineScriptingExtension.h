@@ -2,6 +2,7 @@
 #define AndEngineScriptingExtension_H
 
 #include <jni.h>
+#include <string>
 #include <jsapi.h>
 #include "src/Util.h"
 #include "src/ScriptingCore.h"
@@ -32,5 +33,19 @@ Context* getContext();
 Engine* getEngine();
 ScriptingCore* getScriptingCore();
 JSContext* getJSContext();
+
+/*
+std::string convertJStringToStdString(jstring pJString) {
+	const char* chars = JNI_ENV()->GetStringUTFChars(pJString, NULL);
+	std::string result(chars);
+	JNI_ENV()->ReleaseStringUTFChars(pJString, chars); 
+	return result;
+}
+
+jstring convertStdStringToJString(std::string pString) {
+	const char* chars = 
+	JNI_ENV()->NewStringUTF(chars);
+	
+}*/
 
 #endif

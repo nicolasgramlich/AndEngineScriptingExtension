@@ -7,6 +7,7 @@
 class ITextureStateListener {
 
 	public:
+		virtual ~ITextureStateListener() { };
 		virtual jobject unwrap() = 0;
 
 };

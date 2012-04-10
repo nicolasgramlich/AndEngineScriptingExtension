@@ -7,6 +7,7 @@
 class IUpdateHandler {
 
 	public:
+		virtual ~IUpdateHandler() { };
 		virtual jobject unwrap() = 0;
 
 };

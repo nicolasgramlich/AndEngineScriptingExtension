@@ -9,6 +9,7 @@
 class IRectangleVertexBufferObject : public IVertexBufferObject {
 
 	public:
+		virtual ~IRectangleVertexBufferObject() { };
 		virtual jobject unwrap() = 0;
 		virtual VertexBufferObjectManager* getVertexBufferObjectManager() = 0;
 

@@ -7,6 +7,7 @@
 class IDrawHandler {
 
 	public:
+		virtual ~IDrawHandler() { };
 		virtual jobject unwrap() = 0;
 
 };

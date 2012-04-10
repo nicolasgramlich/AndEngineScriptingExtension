@@ -7,6 +7,7 @@
 class IDisposable {
 
 	public:
+		virtual ~IDisposable() { };
 		virtual jobject unwrap() = 0;
 
 };

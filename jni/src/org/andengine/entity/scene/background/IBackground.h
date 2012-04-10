@@ -9,6 +9,7 @@
 class IBackground : public IDrawHandler, public IUpdateHandler {
 
 	public:
+		virtual ~IBackground() { };
 		virtual jobject unwrap() = 0;
 
 };

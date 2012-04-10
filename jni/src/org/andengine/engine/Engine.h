@@ -14,9 +14,9 @@ extern "C" {
 	JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_engine_EngineProxy_nativeInitClass(JNIEnv*, jclass);
 }
 
-class VertexBufferObjectManager; // Forward declatarion
-class TextureManager; // Forward declatarion
-class FontManager; // Forward declatarion
+class VertexBufferObjectManager; // Forward declaration
+class FontManager; // Forward declaration
+class TextureManager; // Forward declaration
 
 class Engine : public Wrapper {
 

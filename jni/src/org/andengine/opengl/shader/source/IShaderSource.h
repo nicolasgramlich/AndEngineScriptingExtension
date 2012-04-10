@@ -7,6 +7,7 @@
 class IShaderSource {
 
 	public:
+		virtual ~IShaderSource() { };
 		virtual jobject unwrap() = 0;
 
 };

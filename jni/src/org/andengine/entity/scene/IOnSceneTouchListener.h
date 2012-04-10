@@ -7,6 +7,7 @@
 class IOnSceneTouchListener {
 
 	public:
+		virtual ~IOnSceneTouchListener() { };
 		virtual jobject unwrap() = 0;
 
 };

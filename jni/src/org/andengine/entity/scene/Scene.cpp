@@ -6,6 +6,8 @@ static jmethodID sConstructor;
 static jmethodID sConstructor__I;
 static jmethodID sMethod__GetY;
 static jmethodID sMethod__GetX;
+static jmethodID sMethod__SetScale__FF;
+static jmethodID sMethod__SetScale__F;
 static jmethodID sMethod__GetRotation;
 static jmethodID sMethod__SetRotation__F;
 static jmethodID sMethod__AttachChild____org_andengine_entity_IEntity__;
@@ -14,8 +16,6 @@ static jmethodID sMethod__SetX__F;
 static jmethodID sMethod__SetY__F;
 static jmethodID sMethod__GetScaleX;
 static jmethodID sMethod__GetScaleY;
-static jmethodID sMethod__SetScale__F;
-static jmethodID sMethod__SetScale__FF;
 static jmethodID sMethod__GetSkewX;
 static jmethodID sMethod__GetSkewY;
 static jmethodID sMethod__SetSkew__FF;
@@ -29,6 +29,8 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_scene_Scene
 	sConstructor__I = JNI_ENV()->GetMethodID(sSceneClass, "<init>", "(JI)V");
 	sMethod__GetY = JNI_ENV()->GetMethodID(sSceneClass, "getY", "()F");
 	sMethod__GetX = JNI_ENV()->GetMethodID(sSceneClass, "getX", "()F");
+	sMethod__SetScale__FF = JNI_ENV()->GetMethodID(sSceneClass, "setScale", "(FF)V");
+	sMethod__SetScale__F = JNI_ENV()->GetMethodID(sSceneClass, "setScale", "(F)V");
 	sMethod__GetRotation = JNI_ENV()->GetMethodID(sSceneClass, "getRotation", "()F");
 	sMethod__SetRotation__F = JNI_ENV()->GetMethodID(sSceneClass, "setRotation", "(F)V");
 	sMethod__AttachChild____org_andengine_entity_IEntity__ = JNI_ENV()->GetMethodID(sSceneClass, "attachChild", "(Lorg/andengine/entity/IEntity;)V");
@@ -37,8 +39,6 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_scene_Scene
 	sMethod__SetY__F = JNI_ENV()->GetMethodID(sSceneClass, "setY", "(F)V");
 	sMethod__GetScaleX = JNI_ENV()->GetMethodID(sSceneClass, "getScaleX", "()F");
 	sMethod__GetScaleY = JNI_ENV()->GetMethodID(sSceneClass, "getScaleY", "()F");
-	sMethod__SetScale__F = JNI_ENV()->GetMethodID(sSceneClass, "setScale", "(F)V");
-	sMethod__SetScale__FF = JNI_ENV()->GetMethodID(sSceneClass, "setScale", "(FF)V");
 	sMethod__GetSkewX = JNI_ENV()->GetMethodID(sSceneClass, "getSkewX", "()F");
 	sMethod__GetSkewY = JNI_ENV()->GetMethodID(sSceneClass, "getSkewY", "()F");
 	sMethod__SetSkew__FF = JNI_ENV()->GetMethodID(sSceneClass, "setSkew", "(FF)V");
@@ -47,14 +47,10 @@ JNIEXPORT void JNICALL Java_org_andengine_extension_scripting_entity_scene_Scene
 	sMethod__DetachChild____org_andengine_entity_IEntity__ = JNI_ENV()->GetMethodID(sSceneClass, "detachChild", "(Lorg/andengine/entity/IEntity;)Z");
 }
 
-JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_scene_SceneProxy_nativeOnAttached(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress) {
-	Scene* scene = (Scene*)pAddress;
-	return scene->onAttached();
-}
-JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_scene_SceneProxy_nativeOnDetached(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress) {
-	Scene* scene = (Scene*)pAddress;
-	return scene->onDetached();
-}
+	JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_scene_SceneProxy_nativeOnAttached(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress) {Scene* scene = (Scene*)pAddress;
+return scene->onAttached();}
+	JNIEXPORT jboolean JNICALL Java_org_andengine_extension_scripting_entity_scene_SceneProxy_nativeOnDetached(JNIEnv* pJNIEnv, jobject pJObject, jlong pAddress) {Scene* scene = (Scene*)pAddress;
+return scene->onDetached();}
 
 Scene::Scene(jobject pSceneProxy) {
 	this->mUnwrapped = pSceneProxy;
@@ -73,6 +69,12 @@ jfloat Scene::getY() {
 }
 jfloat Scene::getX() {
 	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetX);
+}
+void Scene::setScale(jfloat pScaleX, jfloat pScaleY) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetScale__FF, pScaleX, pScaleY);
+}
+void Scene::setScale(jfloat pScale) {
+	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetScale__F, pScale);
 }
 jfloat Scene::getRotation() {
 	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetRotation);
@@ -97,12 +99,6 @@ jfloat Scene::getScaleX() {
 }
 jfloat Scene::getScaleY() {
 	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetScaleY);
-}
-void Scene::setScale(jfloat pScale) {
-	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetScale__F, pScale);
-}
-void Scene::setScale(jfloat pScaleX, jfloat pScaleY) {
-	JNI_ENV()->CallVoidMethod(this->mUnwrapped, sMethod__SetScale__FF, pScaleX, pScaleY);
 }
 jfloat Scene::getSkewX() {
 	return JNI_ENV()->CallFloatMethod(this->mUnwrapped, sMethod__GetSkewX);

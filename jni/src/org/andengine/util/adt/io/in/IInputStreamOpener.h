@@ -7,6 +7,7 @@
 class IInputStreamOpener {
 
 	public:
+		virtual ~IInputStreamOpener() { };
 		virtual jobject unwrap() = 0;
 
 };

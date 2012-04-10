@@ -7,6 +7,7 @@
 class IResolutionPolicy {
 
 	public:
+		virtual ~IResolutionPolicy() { };
 		virtual jobject unwrap() = 0;
 
 };

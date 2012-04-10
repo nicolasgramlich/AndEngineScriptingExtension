@@ -45,14 +45,14 @@ class Line : public Shape {
 		virtual void setY(jfloat);
 		virtual VertexBufferObjectManager* getVertexBufferObjectManager();
 		virtual jboolean onAreaTouched(TouchEvent*, jfloat, jfloat);
+		virtual void setScale(jfloat, jfloat);
+		virtual void setScale(jfloat);
 		virtual jfloat getRotation();
 		virtual void setRotation(jfloat);
 		virtual void attachChild(IEntity*);
 		virtual jboolean attachChild(IEntity*, jint);
 		virtual jfloat getScaleX();
 		virtual jfloat getScaleY();
-		virtual void setScale(jfloat);
-		virtual void setScale(jfloat, jfloat);
 		virtual jfloat getSkewX();
 		virtual jfloat getSkewY();
 		virtual void setSkew(jfloat, jfloat);

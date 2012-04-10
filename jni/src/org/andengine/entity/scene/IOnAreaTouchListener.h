@@ -9,9 +9,9 @@
 class IOnAreaTouchListener {
 
 	public:
+		virtual ~IOnAreaTouchListener() { };
 		virtual jobject unwrap() = 0;
 		virtual jboolean onAreaTouched(TouchEvent*, ITouchArea*, jfloat, jfloat) = 0;
-
 };
 #endif
 

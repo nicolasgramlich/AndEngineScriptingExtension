@@ -8,6 +8,7 @@
 class IEntityMatcher : public IMatcher {
 
 	public:
+		virtual ~IEntityMatcher() { };
 		virtual jobject unwrap() = 0;
 
 };

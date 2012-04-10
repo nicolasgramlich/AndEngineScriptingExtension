@@ -9,6 +9,7 @@
 class ISpriteVertexBufferObject : public IVertexBufferObject {
 
 	public:
+		virtual ~ISpriteVertexBufferObject() { };
 		virtual jobject unwrap() = 0;
 		virtual VertexBufferObjectManager* getVertexBufferObjectManager() = 0;
 
